@@ -1,0 +1,63 @@
+﻿<Window x:Class="M138ADemo.MainSettings"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:M138ADemo"
+        mc:Ignorable="d"
+        Title="MainSettings" Height="450" Width="800" MinHeight="450" MinWidth="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0" Grid.ColumnSpan="4" Margin="0, 0, 0, 10">
+            <MenuItem  Header=" File" FontSize="16" Width="50" Margin="0, 8, 0, 0">
+                <MenuItem Header="Открыть файл с состоянием машины"></MenuItem>
+            </MenuItem>
+        </Menu>
+        <Border Style="{StaticResource BorderStyle}" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" MaxHeight="80">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <StackPanel Orientation="Vertical">
+                    <RadioButton x:Name="mEncrypt" Margin="10, 10, 0, 0" IsChecked="True"></RadioButton>
+                    <RadioButton x:Name="mDecrypt" Margin="10, 14, 0, 0"></RadioButton>
+                </StackPanel>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Зашифровать" FontSize="15" Margin="5, 7"></TextBlock>
+                    <TextBlock Text="Расшифровать" FontSize="15" Margin="5, 0,0,0"></TextBlock>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+       
+        <Border Style="{StaticResource BorderStyle}" Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" MinHeight="60" MaxHeight="80">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <StackPanel Orientation="Vertical">
+                    <RadioButton x:Name="mManualRadioButtom" IsChecked="True" Margin="10, 15, 0, 0"></RadioButton>
+                    <RadioButton x:Name="mAutomaticRadioButton" Margin="10,15,0,0"></RadioButton>
+                </StackPanel>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Самостоятельно" FontSize="16" Margin="10, 10,0,0"></TextBlock>
+                    <TextBlock Text="Автоматически" FontSize="16" Margin="10, 8,0,0"></TextBlock>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+        <Button Grid.Row="5"  Grid.Column="3" Template="{StaticResource RoundButton}" MaxHeight="50"
+                Margin="15" Background="Aqua" Content="Далее" FontSize="15"
+                x:Name="mNextButton"></Button>
+
+        <TextBlock Grid.Row ="1" Grid.Column="0" Grid.ColumnSpan="1" Margin="5, 20, 5, 10" TextAlignment="Center"> Введите текст для <LineBreak/> шифровки/дешифровки:</TextBlock>
+        <Border Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource BorderStyle}" Margin="0, 0, 0, 15" MinHeight="50" MaxHeight="80">
+            <TextBox x:Name="mMessagetextBox" Background="Transparent" Margin="10, 15, 10, 10" TextAlignment="Center" FontSize="12"></TextBox>
+        </Border>
+    </Grid>
+</Window>

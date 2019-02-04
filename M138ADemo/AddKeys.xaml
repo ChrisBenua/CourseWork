@@ -1,0 +1,61 @@
+﻿<Window x:Class="M138ADemo.AddKeys"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:M138ADemo"
+        mc:Ignorable="d"
+        Title="AddKeys" Height="450" Width="800" MinHeight="450">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+         
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Menu Grid.ColumnSpan="8">
+            <MenuItem Header ="Выбрать..." Margin="15">
+                <MenuItem Header="Выбрать все"></MenuItem>
+                <Separator></Separator>
+                <MenuItem Header="Удалить все"></MenuItem>
+                <MenuItem Header="Засшифровать с ключами из файла"></MenuItem>
+            </MenuItem>
+        </Menu>
+        <Border Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="4"
+                Style="{StaticResource BorderStyle}" Margin="60, 30, 60, 30" MaxHeight="75" MinHeight="60">
+            <TextBlock  x:Name="mNumberOfKeysSelected" Margin="20" TextAlignment="Center"></TextBlock>
+        </Border>
+        <Button Grid.Row="2" Grid.ColumnSpan="2" Template="{StaticResource RoundButton}"
+                Background="Aqua" Margin="20, 40" Content="Случайные ключи" FontSize="15" x:Name="RandomKeyButton" MaxHeight="35"></Button>
+        
+        <Button Grid.Row="2" Grid.ColumnSpan="2" Grid.Column="2" Template="{StaticResource RoundButton}"
+                Background="Aqua" Margin="20,40" Content="Сегодняшние ключи" FontSize="15" x:Name="TodayKeyButton" MaxHeight="35"></Button>
+
+        <Button Grid.Row="2" Grid.Column="4" Grid.ColumnSpan="2" Template="{StaticResource RoundButton}"
+                Margin="20,40" Background="Aqua" Content="Ключи для пары" FontSize="15" x:Name="PairKeysButton" MaxHeight="35"></Button>
+
+        <Button Grid.Row="2" Grid.Column="6" Grid.ColumnSpan="2" Template="{StaticResource RoundButton}"
+                Margin="20,40" Background="Aqua" Content="Свои ключи" FontSize="15" x:Name="AddUserKeyButton" MaxHeight="35"></Button>
+
+        <Button Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="2" Template="{StaticResource RoundButton}"
+                Margin="20,40" Background="Aqua" Content="Просмотреть ключи" FontSize="15" x:Name="ShowKeysButton" MaxHeight="35"></Button>
+
+        <Button Grid.Row="3" Grid.Column="6" Grid.ColumnSpan="2" Template="{StaticResource RoundButton}" Margin="20, 40"
+                Background="Aqua" MaxHeight="35" Content="Далее" x:Name="mNextButton" FontSize="15"></Button>
+
+        <TextBlock x:Name="mWarninTextBlock" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Foreground="Red" MaxHeight="60" Height="60" 
+                   VerticalAlignment="Center" Margin="20, 5, 20, 5"></TextBlock>
+
+    </Grid>
+</Window>
