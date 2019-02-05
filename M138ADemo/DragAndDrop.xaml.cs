@@ -26,6 +26,11 @@ using DragEventArgs = System.Windows.DragEventArgs;
 using DragEventHandler = System.Windows.DragEventHandler;
 using MessageBox = System.Windows.Forms.MessageBox;
 using PropertyPath = System.Windows.PropertyPath;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
+using System.Xml.Serialization;
+using System.Xml.Linq;
 
 namespace M138ADemo
 {
@@ -168,6 +173,88 @@ namespace M138ADemo
                     }
                 }
             };
+
+            mSaveAsMenuItem.Click += MSaveAsMenuItem_Click;
+            mOpenMenuItem.Click += MOpenMenuItem_Click;
+        }
+
+        private void MOpenMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            Microsoft.Win32.OpenFileDialog dialog = new Microsoft.Win32.OpenFileDialog();
+            dialog.DefaultExt = ".xml";
+            dialog.Filter = "XML-File | *.xml";
+            dialog.InitialDirectory = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
+            Nullable<bool> result = dialog.ShowDialog();
+            if (result == true)
+            {
+                string fileName = dialog.FileName;
+                DeviceState state = new DeviceState();
+
+                XmlSerializer serializer = new XmlSerializer(state.GetType());
+
+                StreamReader reader = new StreamReader(fileName);
+                state = (DeviceState)serializer.Deserialize(reader);
+
+                keys.Clear();
+                
+                foreach (var el in state.keys)
+                {
+                    el.CopyToArr();
+                    keys.Add(el);
+                }
+
+                reader.Close();
+
+                //UpdateHighlightedCells();
+                //Task.Delay(1000).ContinueWith(t => UpdateHighlightedCells());
+
+                AsyncUtils.DelayCall(1000, UpdateHighlightedCells);
+                AsyncUtils.DelayCall(1000, SetBackGround);
+
+                /*XDocument doc = XDocument.Load(fileName);
+                DeviceState state = new DeviceState();
+                var fd = doc.Element("DeviceState");
+                var ks = doc.Element("keys");
+                var kms = doc.Elements("KeyModel");
+                state.keys = new ObservableCollection<KeyModel>(doc.Element("keys").Elements("KeyModel").Select(f =>
+                new KeyModel(f.Element("_key").Value, 
+                int.Parse(f.Element("_idNumber").Value), 
+                int.Parse(f.Element("_shift").Value))));*/
+            }
+        }
+
+        private void MSaveAsMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            Microsoft.Win32.SaveFileDialog dialog = new Microsoft.Win32.SaveFileDialog();
+            dialog.DefaultExt = ".xml";
+            dialog.Filter = "XML-File | *.xml";
+            dialog.InitialDirectory = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
+            Nullable<bool> result = dialog.ShowDialog();
+
+            if (result == true)
+            {
+                string fileName = dialog.FileName;
+                /*Stream stream = File.Open(fileName, FileMode.Create);
+                BinaryFormatter formatter = new BinaryFormatter();
+                DeviceState state = new DeviceState(keys);
+                formatter.Serialize(stream, state);
+                stream.Close();*/
+                DeviceState state = new DeviceState(keys);
+
+                System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
+                XmlSerializer serializer = new XmlSerializer(state.GetType());
+
+                using (MemoryStream stream = new MemoryStream())
+                {
+                    serializer.Serialize(stream, state);
+                    stream.Position = 0;
+                    doc.Load(stream);
+                    doc.Save(fileName);
+                }
+
+                //SoapFormatter formatter = new SoapFormatter();
+            }
+
         }
 
         private void AdjustShifts()

@@ -8,18 +8,54 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
+
 
 namespace M138ADemo
 {
+    [Serializable()]
+    [XmlType("KeyModel")]
     public class KeyModel : INotifyPropertyChanged
     {
-        private string _key;
-        private int _idNumber;
-        private int _shift;
+
+       /* public override void ReadXml(XmlReader reader)
+        {
+            reader.Read();
+            if (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == GetType().ToString())
+            {
+                _key = reader["_key"];
+                _idNumber = int.Parse(reader["_idNumber"]);
+                _shift = int.Parse(reader["_shift"]);
+                CopyToArr();
+            }
+        }
+
+        public override void WriteXml(XmlWriter writer)
+        {
+            writer.WriteStartElement(GetType().ToString());
+            writer.WriteAttributeString("_key", _key);
+            writer.WriteAttributeString("_idNumber", _idNumber.ToString());
+            writer.WriteAttributeString("_shift", _shift.ToString());
+            writer.WriteEndElement();
+        }
+        */
+        [XmlElement("_key")]
+        public string _key;
+        [XmlElement("_idNumber")]
+        public int _idNumber;
+        [XmlElement("_shift")]
+        public int _shift;
+        [XmlIgnore]
         private string[] _keyarr;
 
-        private void CopyToArr()
+        public void CopyToArr()
         {
+            if (_keyarr.Length != _key.Length)
+            {
+                _keyarr = new string[_key.Length];
+            }
             for (int i = 0; i < _key.Length; ++i)
             {
                 _keyarr[i] = new string(Helper.ToUpper(_key[i]), 1);
@@ -27,13 +63,13 @@ namespace M138ADemo
 
             //_keyarr[_key.Length] = ' ';
         }
-
+        [XmlIgnore]
         public string StrIdNumber
         {
             get { return _idNumber.ToString(); }
         }
-      
 
+        [XmlIgnore]
         public int LastIndex
         {
             get
@@ -42,6 +78,7 @@ namespace M138ADemo
             }
         }
 
+        [XmlIgnore]
         public string[] KeyArr
         {
             get
@@ -83,6 +120,7 @@ namespace M138ADemo
             }
         }
 
+        [XmlIgnore]
         public string Key
         {
             get
@@ -109,6 +147,7 @@ namespace M138ADemo
             }
         }
 
+        [XmlIgnore]
         public int IdNumber
         {
             get
@@ -127,6 +166,7 @@ namespace M138ADemo
             }
         }
 
+        [XmlIgnore]
         public int Shift
         {
             get { return _shift; }
@@ -204,11 +244,59 @@ namespace M138ADemo
             this.Shift = sh;
         }
 
+       /* public XmlSchema GetSchema()
+        {
+            return null;
+        }
+
+        public void ReadXml(XmlReader reader)
+        {
+            //reader.Read();
+            //if (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == GetType().ToString())
+            {
+                _key = reader["_key"];
+                _idNumber = int.Parse(reader["_idNumber"]);
+                _shift = int.Parse(reader["_shift"]);
+                CopyToArr();
+            }//
+            reader.Read();
+            reader.Read();
+
+            _key = reader.Value;
+            reader.Read();
+            reader.Read();
+            reader.Read();
+
+            _idNumber = int.Parse(reader.Value);
+            reader.Read();
+            reader.Read();
+            reader.Read();
+
+            _shift = int.Parse(reader.Value);
+            CopyToArr();
+            reader.Read();
+            reader.Read();
+        }
+
+        public void WriteXml(XmlWriter writer)
+        {
+            //writer.WriteElementString("_key", _key);
+            //writer.WriteStartElement(GetType().ToString());
+            writer.WriteElementString("_key", _key);
+            writer.WriteElementString("_idNumber", _idNumber.ToString());
+            writer.WriteElementString("_shift", _shift.ToString());
+           // writer.WriteEndElement();
+        }
+    */
+        [field: NonSerialized()]
         public event PropertyChangedEventHandler PropertyChanged;
     }
 
+    [Serializable()]
+    [XmlType("DeviceState")]
     public class DeviceState
     {
+        [XmlArray]
         public ObservableCollection<KeyModel> keys;
 
         public DeviceState()
@@ -222,6 +310,11 @@ namespace M138ADemo
         }
 
         public DeviceState(ObservableCollection<KeyModel> lst)
+        {
+            keys = new ObservableCollection<KeyModel>(lst);
+        }
+
+        public DeviceState(BindingList<KeyModel> lst)
         {
             keys = new ObservableCollection<KeyModel>(lst);
         }
