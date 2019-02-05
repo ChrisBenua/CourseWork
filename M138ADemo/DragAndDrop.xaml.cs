@@ -50,10 +50,22 @@ namespace M138ADemo
         private static ImageBrush DefaultRowBrush = new ImageBrush(Helper.PapSource);
         public DragAndDrop()
         {
-           
-            for (int i = 0; i < Configuration.lst.Count; ++i)
+            if (Configuration.deviceState != null)
             {
-                keys.Add(new KeyModel(Configuration.lst[i].second, Configuration.lst[i].first));
+                keys.Clear();
+
+                foreach (var el in Configuration.deviceState.keys)
+                {
+                    el.CopyToArr();
+                    keys.Add(el);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < Configuration.lst.Count; ++i)
+                {
+                    keys.Add(new KeyModel(Configuration.lst[i].second, Configuration.lst[i].first));
+                }
             }
             AdjustShifts();
             InitializeComponent();
@@ -92,20 +104,29 @@ namespace M138ADemo
                     Property = DataGridCell.IsSelectedProperty,
                     Value = true,
                     Setters = { new Setter()
-                    {
-                        Property = DataGridCell.BorderThicknessProperty,
-                        Value = new Thickness(2,2,2,2)
-                    }, new Setter()
                         {
-                            Property = BackgroundProperty,
-                            Value = null,
-                        }, new Setter()
+                            Property = BorderBrushProperty,
+                            Value = Brushes.Black,
+                        },
+                        new Setter()
                         {
                             Property = ForegroundProperty,
                             Value = Brushes.Black
-                        }}
+                        }, new Setter()
+                        {
+                            Property = BackgroundProperty,
+                            Value = DefaultRowBrush
+                        }, new Setter()
+                        {
+                            Property = BorderThicknessProperty,
+                            Value = DefaultThickness
+                        }
+                    }
                 } }
             };
+
+            myGrid.SelectedCellsChanged += MyGrid_SelectedCellsChanged;
+            
             myGrid.CanUserResizeRows = false;
             myGrid.CanUserResizeColumns = false;
             myGrid.GridLinesVisibility = DataGridGridLinesVisibility.None;
@@ -176,6 +197,27 @@ namespace M138ADemo
 
             mSaveAsMenuItem.Click += MSaveAsMenuItem_Click;
             mOpenMenuItem.Click += MOpenMenuItem_Click;
+        }
+
+        private void MyGrid_SelectedCellsChanged(object sender, SelectedCellsChangedEventArgs e)
+        {
+            if (e.AddedCells.Count > 0)
+            {
+                for (int row = 0; row < keys.Count; ++row)
+                {
+                    for (int col = 0; col < 2; ++col)
+                    {
+                        var cell = GetCell(row, col);
+                        cell.Background = null;
+                        cell.BorderBrush = null;
+                    }
+                }
+            }
+            else
+            {
+                SetBackGround();
+            }
+
         }
 
         private void MOpenMenuItem_Click(object sender, RoutedEventArgs e)
@@ -542,6 +584,8 @@ namespace M138ADemo
             Console.WriteLine();
             //60 - по моим измерениям
             if (e.GetPosition(this).Y > this.Height - 60) return;
+
+            if (this.Width - 35.5 <= e.GetPosition(this).X) return;
 
             if (e.GetPosition(this).Y < 30)
             {

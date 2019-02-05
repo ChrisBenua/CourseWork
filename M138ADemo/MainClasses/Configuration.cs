@@ -6,10 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace M138ADemo
 {
-
     public class Pair<T, T1>
     {
         public T first;
@@ -35,6 +35,8 @@ namespace M138ADemo
         public static SortedSet<int> forbiddenKeys = new SortedSet<int>();
 
         public static ObservableCollection<Pair<int, String>> lst = new ObservableCollection<Pair<int, string>>();
+
+        public static DeviceState deviceState = null;
 
         public static int DecryptIndex { get; set; }
 

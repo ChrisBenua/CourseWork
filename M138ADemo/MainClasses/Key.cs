@@ -229,12 +229,28 @@ namespace M138ADemo
 
         public void AdjustShiftEncrypt(char ch)
         {
+            if (ch >= 'a' && ch <= 'z' && _key[0] >= 'A' && _key[0] <= 'Z')
+            {
+                ch = Helper.ToUpper(ch);
+            }
+            if (Helper.isUpperAlpha(ch) && !Helper.isUpperAlpha(_key[0]))
+            {
+                ch = Char.ToLower(ch);
+            }
             int ind = _key.IndexOf(ch);
             this.Shift = -ind;
         }
 
         public void AdjustShiftDecrypt(char ch)
         {
+            if (ch >= 'a' && ch <= 'z' && _key[0] >= 'A' && _key[0] <= 'Z')
+            {
+                ch = Helper.ToUpper(ch);
+            }
+            if (Helper.isUpperAlpha(ch) && !Helper.isUpperAlpha(_key[0]))
+            {
+                ch = Char.ToLower(ch);
+            }
             int ind = _key.IndexOf(ch);
             int sh = Configuration.DecryptIndex - ind - 1;
             if (sh > 0)
@@ -332,5 +348,54 @@ namespace M138ADemo
             }
             return keys[row].GetCurrentChar(ind);
         }
+    }
+
+       [XmlType("KeyForPersistance")]
+    public class KeyForPersistance
+    {
+        [XmlElement("Id")]
+        public int Id { get; set; }
+        [XmlElement("Key")]
+        public string Key { get; set; }
+
+        public KeyForPersistance()
+        {
+            Id = 0;
+            Key = "";
+        }
+
+        public KeyForPersistance(int id, string key)
+        {
+            Id = id;
+            Key = key;
+        }
+
+        public KeyForPersistance(Pair<int, String> p)
+        {
+            Id = p.first;
+            Key = p.second;
+        }
+    }
+
+    [XmlType("KeysContainer")]
+    public class KeysContainer
+    {
+        [XmlElement("keys")]
+        public ObservableCollection<KeyForPersistance> keys;
+
+        public KeysContainer()
+        {
+            keys = new ObservableCollection<KeyForPersistance>();
+        }
+
+        public KeysContainer(ObservableCollection<Pair<int, String>> keys)
+        {
+            this.keys = new ObservableCollection<KeyForPersistance>();
+            foreach (var el in keys)
+            {
+                this.keys.Add(new KeyForPersistance(el));
+            }
+        }
+
     }
 }

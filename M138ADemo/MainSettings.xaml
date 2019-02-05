@@ -23,7 +23,7 @@
         </Grid.RowDefinitions>
         <Menu Grid.Row="0" Grid.ColumnSpan="4" Margin="0, 0, 0, 10">
             <MenuItem  Header=" File" FontSize="16" Width="50" Margin="0, 8, 0, 0">
-                <MenuItem Header="Открыть файл с состоянием машины"></MenuItem>
+                <MenuItem x:Name="mOpenMenuItem" Header="Открыть..."></MenuItem>
             </MenuItem>
         </Menu>
         <Border Style="{StaticResource BorderStyle}" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" MaxHeight="80">

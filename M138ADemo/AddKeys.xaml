@@ -26,10 +26,9 @@
         </Grid.ColumnDefinitions>
         <Menu Grid.ColumnSpan="8">
             <MenuItem Header ="Выбрать..." Margin="15">
-                <MenuItem Header="Выбрать все"></MenuItem>
-                <Separator></Separator>
-                <MenuItem Header="Удалить все"></MenuItem>
-                <MenuItem Header="Засшифровать с ключами из файла"></MenuItem>
+
+                <MenuItem x:Name="mSaveKeysMenuItem" Header="Сохранить ключи"></MenuItem>
+                <MenuItem x:Name="mOpenKeysMenuItem" Header="Загрузить ключи"></MenuItem>
             </MenuItem>
         </Menu>
         <Border Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="4"

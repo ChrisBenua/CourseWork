@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Xml.Serialization;
 
 namespace M138ADemo
 {
@@ -28,6 +30,35 @@ namespace M138ADemo
 
             mNextButton.IsEnabled = false;
             mNextButton.Background = Brushes.LightGray;
+            mOpenMenuItem.Click += MOpenMenuItem_Click;
+        }
+
+        private void MOpenMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            Microsoft.Win32.OpenFileDialog dialog = new Microsoft.Win32.OpenFileDialog();
+            dialog.DefaultExt = ".xml";
+            dialog.Filter = "XML-File | *.xml";
+            dialog.InitialDirectory = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
+            Nullable<bool> result = dialog.ShowDialog();
+            if (result == true)
+            {
+                string fileName = dialog.FileName;
+                DeviceState state = new DeviceState();
+
+                XmlSerializer serializer = new XmlSerializer(state.GetType());
+
+                StreamReader reader = new StreamReader(fileName);
+                state = (DeviceState)serializer.Deserialize(reader);
+
+                Configuration.deviceState = state;
+
+                reader.Close();
+
+                DragAndDrop w = new DragAndDrop();
+                w.Show();
+                this.Close();
+
+            }
         }
 
         private void MMessagetextBox_TextChanged(object sender, TextChangedEventArgs e)

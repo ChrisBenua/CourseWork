@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace M138ADemo
 {
@@ -70,6 +73,63 @@ namespace M138ADemo
                 UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
             };
             mNextButton.SetBinding(Button.BackgroundProperty, buttonColorBinding);
+
+            mOpenKeysMenuItem.Click += MOpenKeysMenuItem_Click;
+            mSaveKeysMenuItem.Click += MSaveKeysMenuItem_Click;
+        }
+
+        private void MSaveKeysMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new Microsoft.Win32.SaveFileDialog();
+            dialog.InitialDirectory = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
+            dialog.DefaultExt = ".xml";
+            dialog.Filter = "XML-File | *.xml";
+            var result = dialog.ShowDialog();
+
+            if (result == true)
+            {
+                string fileName = dialog.FileName;
+                KeysContainer cont = new KeysContainer(Configuration.lst);
+                XmlDocument doc = new XmlDocument();
+                XmlSerializer serializer = new XmlSerializer(cont.GetType());
+
+                using (MemoryStream stream = new MemoryStream())
+                {
+                    serializer.Serialize(stream, cont);
+                    stream.Position = 0;
+                    doc.Load(stream);
+                    doc.Save(fileName);
+                }
+            }
+
+        }
+
+        private void MOpenKeysMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            Microsoft.Win32.OpenFileDialog dialog = new Microsoft.Win32.OpenFileDialog();
+            dialog.DefaultExt = ".xml";
+            dialog.Filter = "XML-File | *.xml";
+            dialog.InitialDirectory = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
+            Nullable<bool> result = dialog.ShowDialog();
+            if (result == true)
+            {
+                string fileName = dialog.FileName;
+                KeysContainer state = new KeysContainer();
+
+                XmlSerializer serializer = new XmlSerializer(state.GetType());
+
+                StreamReader reader = new StreamReader(fileName);
+                state = (KeysContainer)serializer.Deserialize(reader);
+
+                Configuration.lst.Clear();
+
+                foreach (var el in state.keys)
+                {
+                    Configuration.lst.Add(Pair<int, string>.MakePair(el.Id, el.Key));
+                }
+
+                reader.Close();
+            }
         }
 
         private void MNextButton_Click(object sender, RoutedEventArgs e)
