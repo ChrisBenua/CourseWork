@@ -6,12 +6,69 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Data;
+using System.Windows.Forms;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using M138ADemo.MainClasses;
 
 namespace M138ADemo
 {
+
+    public static class IOHelper
+    {
+        public static (DeviceState, string) LoadDeviceState(string fileName)
+        {
+            RecentFiles.MachineStatesShared.AddFileToRecents(fileName);
+
+            //CurrentFilePath = fileName;
+
+            DeviceState state = new DeviceState();
+
+            System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(state.GetType());
+
+            System.IO.StreamReader reader = new System.IO.StreamReader(fileName);
+            try
+            {
+                state = (DeviceState)serializer.Deserialize(reader);
+            }
+            catch (InvalidCastException)
+            {
+                reader.Close();
+                MessageBox.Show("Вы уверены, что открываете файл с состоянием машины?", "Ошибка", System.Windows.Forms.MessageBoxButtons.OK);
+                return (null, null);
+            }
+            catch (InvalidOperationException)
+            {
+                reader.Close();
+                System.Windows.Forms.MessageBox.Show("Вы уверены, что открываете файл с состоянием машины?", "Ошибка", System.Windows.Forms.MessageBoxButtons.OK);
+                return (null, null);
+            }
+            reader.Close();
+            return (state, fileName);
+        }
+
+        public static DeviceState SaveDeviceState(string toFileName, List<KeyModel> lst)
+        {
+            RecentFiles.MachineStatesShared.AddFileToRecents(toFileName);
+
+
+            DeviceState state = new DeviceState(lst);
+
+            System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
+            System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(state.GetType());
+
+            using (System.IO.MemoryStream stream = new System.IO.MemoryStream())
+            {
+                serializer.Serialize(stream, state);
+                stream.Position = 0;
+                doc.Load(stream);
+                doc.Save(toFileName);
+            }
+            return state;
+        }
+    }
+
     public static class Helper
     {
         public static ImageSource DarkPapSource = new BitmapImage(new Uri("pack://application:,,,/Images/image.jpg"));

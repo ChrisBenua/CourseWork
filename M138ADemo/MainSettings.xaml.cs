@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Xml.Serialization;
+using M138ADemo.MainClasses;
 
 namespace M138ADemo
 {
@@ -21,6 +22,7 @@ namespace M138ADemo
     /// </summary>
     public partial class MainSettings : Window
     {
+
         public MainSettings()
         {
             InitializeComponent();
@@ -31,6 +33,63 @@ namespace M138ADemo
             mNextButton.IsEnabled = false;
             mNextButton.Background = Brushes.LightGray;
             mOpenMenuItem.Click += MOpenMenuItem_Click;
+
+            RecentFiles.MachineStatesShared.LoadFilesFromDisk();
+            RecentFiles.KeysCollectionShared.LoadFilesFromDisk();
+
+            //mOpenRecentsMenuItem.ItemsSource = RecentFiles.MachineStatesShared.ShortenedNamesMenuItems;
+
+            mOpenRecentsMenuItem.DataContext = RecentFiles.MachineStatesShared;
+
+            mOpenRecentsMenuItem.ItemsSource = RecentFiles.MachineStatesShared.ShortenedNamesMenuItems;
+            RecentFiles.MachineStatesShared.PropertyChanged += MachineStatesShared_PropertyChanged; ;
+            for (int i = 0; i < mOpenRecentsMenuItem.Items.Count; ++i)
+            {
+                System.Windows.Controls.MenuItem menuItem = (System.Windows.Controls.MenuItem)mOpenRecentsMenuItem.Items[i];
+                if (menuItem != null)
+                {
+                    menuItem.Click += MenuItem_Click;
+                }
+            }
+        }
+
+        private void MachineStatesShared_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            mOpenRecentsMenuItem.ItemsSource = RecentFiles.MachineStatesShared.ShortenedNamesMenuItems;
+
+            for (int i = 0; i < mOpenRecentsMenuItem.Items.Count; ++i)
+            {
+                System.Windows.Controls.MenuItem menuItem = (System.Windows.Controls.MenuItem)mOpenRecentsMenuItem.Items[i];
+                if (menuItem != null)
+                {
+                    menuItem.Click += MenuItem_Click;
+                }
+            }
+        }
+
+        private void MenuItem_Click(object sender, EventArgs e)
+        {
+            //To find full path to element
+            int senderIndex = mOpenRecentsMenuItem.Items.IndexOf(sender);
+
+            Console.WriteLine((mOpenRecentsMenuItem.Items[senderIndex] as System.Windows.Controls.MenuItem).Header);
+
+            if (senderIndex == -1)
+            {
+                MessageBox.Show("Странная ошибка, очень, такого не должно случаться", "Странная Ошибка");
+                return;
+            } 
+
+            string openedWindowTitle = null;
+            DeviceState state = null;
+
+            (state, openedWindowTitle) = IOHelper.LoadDeviceState(RecentFiles.MachineStatesShared.RecentFileNames[senderIndex]);
+
+            Configuration.deviceState = state;
+
+            DragAndDrop w = new DragAndDrop();
+            w.CurrentFilePath = openedWindowTitle;
+            w.Show();
         }
 
         private void MOpenMenuItem_Click(object sender, RoutedEventArgs e)
@@ -43,18 +102,37 @@ namespace M138ADemo
             if (result == true)
             {
                 string fileName = dialog.FileName;
+
+                /*RecentFiles.MachineStatesShared.AddFileToRecents(fileName);
+
                 DeviceState state = new DeviceState();
 
                 XmlSerializer serializer = new XmlSerializer(state.GetType());
 
                 StreamReader reader = new StreamReader(fileName);
-                state = (DeviceState)serializer.Deserialize(reader);
+                try
+                {
+                    state = (DeviceState)serializer.Deserialize(reader);
+                }
+                catch (InvalidCastException ex)
+                {
+                    reader.Close();
+                    System.Windows.Forms.MessageBox.Show("Вы уверены, что открываете файл с состоянием машины?", "Ошибка", System.Windows.Forms.MessageBoxButtons.OK);
+                    return;
+                }
+                catch (InvalidOperationException ex)
+                {
+                    reader.Close();
+                    System.Windows.Forms.MessageBox.Show("Вы уверены, что открываете файл с состоянием машины?", "Ошибка", System.Windows.Forms.MessageBoxButtons.OK);
+                    return;
+                }*/
 
-                Configuration.deviceState = state;
+                var tuple = IOHelper.LoadDeviceState(fileName);
 
-                reader.Close();
+                Configuration.deviceState = tuple.Item1;
 
                 DragAndDrop w = new DragAndDrop();
+                w.CurrentFilePath = fileName;
                 w.Show();
                 this.Close();
 

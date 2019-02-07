@@ -31,6 +31,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using System.Xml.Serialization;
 using System.Xml.Linq;
+using M138ADemo.MainClasses;
 
 namespace M138ADemo
 {
@@ -48,6 +49,22 @@ namespace M138ADemo
         private int simpleWidths = 30;
         private static ImageBrush darkRowBrush = new ImageBrush(Helper.DarkPapSource);
         private static ImageBrush DefaultRowBrush = new ImageBrush(Helper.PapSource);
+        private string currentFilePath = "Untitled";
+
+        public string CurrentFilePath
+        {
+            get => currentFilePath;
+            set
+            {
+                if (value != null)
+                {
+                    this.Title = value;
+                    currentFilePath = value;
+                }
+            }
+        }
+
+        private bool abortSaving = false;
         public DragAndDrop()
         {
             if (Configuration.deviceState != null)
@@ -59,6 +76,8 @@ namespace M138ADemo
                     el.CopyToArr();
                     keys.Add(el);
                 }
+
+                //UpdateWindowTitle();
             }
             else
             {
@@ -136,8 +155,8 @@ namespace M138ADemo
             myGrid.ItemsSource = keys;
             for (int i = 0; i < 29 + 26; ++i)
             {
-                var row = new DataGridTextColumn();
-                row.Width = new DataGridLength(30);
+                var column = new DataGridTextColumn();
+                column.Width = new DataGridLength(30);
                 
                 
                 if (i <= 1)
@@ -164,16 +183,16 @@ namespace M138ADemo
                 }*/
                 else
                 {
-                    row.Binding = new Binding()
+                    column.Binding = new Binding()
                     {
                         Path = new PropertyPath($"KeyArr[{i - 2}]"),
                         //Converter = new CharToStringConverter(),
-                        Mode = BindingMode.TwoWay,
+                        //Mode = BindingMode.TwoWay,
                         UpdateSourceTrigger =  UpdateSourceTrigger.PropertyChanged,
                         BindsDirectlyToSource = true,
                     };
-                    row.Header = (i - 2).ToString();
-                    myGrid.Columns.Add(row);
+                    column.Header = (i - 2).ToString();
+                    myGrid.Columns.Add(column);
 
                 }
             }
@@ -197,6 +216,21 @@ namespace M138ADemo
 
             mSaveAsMenuItem.Click += MSaveAsMenuItem_Click;
             mOpenMenuItem.Click += MOpenMenuItem_Click;
+            this.Closing += DragAndDrop_Closing;
+        }
+
+        private void DragAndDrop_Closing(object sender, CancelEventArgs e)
+        {
+            if (this.Title == "Untitled" && !abortSaving)
+            {
+                var res = MessageBox.Show("Вы не сохранили файл, все данные будут утерены, если вы решите выйти", "Предупреждение", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+                if (res == System.Windows.Forms.DialogResult.OK)
+                {
+                    abortSaving = true;
+                    this.Close();
+                }
+
+            }
         }
 
         private void MyGrid_SelectedCellsChanged(object sender, SelectedCellsChangedEventArgs e)
@@ -229,39 +263,55 @@ namespace M138ADemo
             Nullable<bool> result = dialog.ShowDialog();
             if (result == true)
             {
+              
                 string fileName = dialog.FileName;
+                /*
+                RecentFiles.MachineStatesShared.AddFileToRecents(fileName);
+
+                CurrentFilePath = fileName;
+
                 DeviceState state = new DeviceState();
 
                 XmlSerializer serializer = new XmlSerializer(state.GetType());
 
                 StreamReader reader = new StreamReader(fileName);
-                state = (DeviceState)serializer.Deserialize(reader);
-
-                keys.Clear();
-                
-                foreach (var el in state.keys)
+                try
                 {
-                    el.CopyToArr();
-                    keys.Add(el);
+                    state = (DeviceState)serializer.Deserialize(reader);
                 }
+                catch (InvalidCastException)
+                {
+                    reader.Close();
+                    MessageBox.Show("Вы уверены, что открываете файл с состоянием машины?", "Ошибка", MessageBoxButtons.OK);
+                    return;
+                }
+                catch (InvalidOperationException)
+                {
+                    reader.Close();
+                    System.Windows.Forms.MessageBox.Show("Вы уверены, что открываете файл с состоянием машины?", "Ошибка", System.Windows.Forms.MessageBoxButtons.OK);
+                    return;
+                }
+                */
+                DeviceState state = null;
+                string newWindowTitle = null;
 
-                reader.Close();
+                (state, newWindowTitle) = IOHelper.LoadDeviceState(fileName);
 
-                //UpdateHighlightedCells();
-                //Task.Delay(1000).ContinueWith(t => UpdateHighlightedCells());
+                CurrentFilePath = newWindowTitle;
 
-                AsyncUtils.DelayCall(1000, UpdateHighlightedCells);
-                AsyncUtils.DelayCall(1000, SetBackGround);
+                if (state != null)
+                {
+                    keys.Clear();
 
-                /*XDocument doc = XDocument.Load(fileName);
-                DeviceState state = new DeviceState();
-                var fd = doc.Element("DeviceState");
-                var ks = doc.Element("keys");
-                var kms = doc.Elements("KeyModel");
-                state.keys = new ObservableCollection<KeyModel>(doc.Element("keys").Elements("KeyModel").Select(f =>
-                new KeyModel(f.Element("_key").Value, 
-                int.Parse(f.Element("_idNumber").Value), 
-                int.Parse(f.Element("_shift").Value))));*/
+                    foreach (var el in state.keys)
+                    {
+                        el.CopyToArr();
+                        keys.Add(el);
+                    }
+                    Configuration.deviceState = state;
+                    AsyncUtils.DelayCall(1000, UpdateHighlightedCells);
+                    AsyncUtils.DelayCall(1000, SetBackGround);
+                }
             }
         }
 
@@ -276,23 +326,9 @@ namespace M138ADemo
             if (result == true)
             {
                 string fileName = dialog.FileName;
-                /*Stream stream = File.Open(fileName, FileMode.Create);
-                BinaryFormatter formatter = new BinaryFormatter();
-                DeviceState state = new DeviceState(keys);
-                formatter.Serialize(stream, state);
-                stream.Close();*/
-                DeviceState state = new DeviceState(keys);
+                CurrentFilePath = fileName;
 
-                System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
-                XmlSerializer serializer = new XmlSerializer(state.GetType());
-
-                using (MemoryStream stream = new MemoryStream())
-                {
-                    serializer.Serialize(stream, state);
-                    stream.Position = 0;
-                    doc.Load(stream);
-                    doc.Save(fileName);
-                }
+                IOHelper.SaveDeviceState(fileName, new List<KeyModel>(keys));
 
                 //SoapFormatter formatter = new SoapFormatter();
             }

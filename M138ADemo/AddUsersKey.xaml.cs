@@ -237,6 +237,8 @@ namespace M138ADemo
             }
         }
 
+       
+
         bool CheckAllKeysAreFilled()
         {
             bool ans = true;
@@ -270,7 +272,7 @@ namespace M138ADemo
 
         private void ItemOnClick(object sender, RoutedEventArgs e)
         {
-            if (numberOfLines > 29)
+            if (numberOfLines > Helper.MaxKeys)
             {
                 MessageBox.Show("Ошибка", "Слишком много строк", MessageBoxButton.OK);
             }

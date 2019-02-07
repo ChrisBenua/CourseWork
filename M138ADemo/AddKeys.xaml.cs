@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Xml;
 using System.Xml.Serialization;
+using M138ADemo.MainClasses;
 
 namespace M138ADemo
 {
@@ -25,7 +26,7 @@ namespace M138ADemo
         public AddKeys()
         {
             InitializeComponent();
-           AddUserKeyButton.Click += AddUserKeyButtonOnClick;
+            AddUserKeyButton.Click += AddUserKeyButtonOnClick;
             ShowKeysButton.Click += ShowKeysButtonOnClick;
             PairKeysButton.Click += PairKeysButtonOnClick;
             RandomKeyButton.Click += RandomKeyButton_Click;
@@ -89,6 +90,9 @@ namespace M138ADemo
             if (result == true)
             {
                 string fileName = dialog.FileName;
+
+                RecentFiles.KeysCollectionShared.AddFileToRecents(fileName);
+
                 KeysContainer cont = new KeysContainer(Configuration.lst);
                 XmlDocument doc = new XmlDocument();
                 XmlSerializer serializer = new XmlSerializer(cont.GetType());
