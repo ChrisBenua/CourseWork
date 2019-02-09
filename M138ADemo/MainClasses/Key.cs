@@ -201,7 +201,7 @@ namespace M138ADemo
             _shift = 0;
         }
 
-        public KeyModel(string key, int id, int shift) : this(key, id)
+        public KeyModel(string key, int id, int shift)
         {
             _key = key;
             _keyarr = new string[key.Length];

@@ -10,7 +10,7 @@ namespace M138ADemo.MainClasses
 {
     public class RecentFiles : INotifyPropertyChanged
     {
-
+        public const string shortenedNamesMenuItemsPropertyName = "ShortenedNamesMenuItems";
         const string machineEndPoint = "\\machineStatesRecents.txt";
         const string keysCollectionEndPoint = "\\keysCollectionsRecents.txt";
 
@@ -25,7 +25,7 @@ namespace M138ADemo.MainClasses
                 _recentFileNames = value;
                 NotifyPropertyChanged();
                 NotifyPropertyChanged("ShortenedNames");
-                NotifyPropertyChanged("ShortenedNamesMenuItems");
+                NotifyPropertyChanged(shortenedNamesMenuItemsPropertyName);
             }
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -77,6 +78,47 @@ namespace M138ADemo
 
             mOpenKeysMenuItem.Click += MOpenKeysMenuItem_Click;
             mSaveKeysMenuItem.Click += MSaveKeysMenuItem_Click;
+
+            RecentFiles.KeysCollectionShared.PropertyChanged += UpdateRecentKeysMenuItems;
+            SetMenuItems();
+        }
+
+        private void UpdateRecentKeysMenuItems(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == RecentFiles.shortenedNamesMenuItemsPropertyName)
+            {
+                SetMenuItems();
+            }
+        }
+
+        private void SetMenuItems()
+        {
+            mOpenRecentKeysMenuItem.ItemsSource = RecentFiles.KeysCollectionShared.ShortenedNamesMenuItems;
+            foreach (var el in mOpenRecentKeysMenuItem.Items)
+            {
+                MenuItem menuItem = (el as MenuItem);
+                if (menuItem != null)
+                {
+                    menuItem.Click += OpenRecentMenuItem_Click;
+                }
+            }
+        }
+
+        private void OpenRecentMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            int senderIndex = mOpenRecentKeysMenuItem.Items.IndexOf(sender);
+            if (senderIndex == -1)
+            {
+                MessageBox.Show("Очень странная ошибка", "Такого не должно быть, но случилось...");
+                return;
+            }
+
+            string filePath = RecentFiles.KeysCollectionShared.RecentFileNames[senderIndex];
+
+            Configuration.lst.Clear();
+
+            KeysContainer container = IOHelper.LoadKeysContainer(filePath);
+            Array.ForEach<KeyForPersistance>(container.keys.ToArray(), (el) => Configuration.lst.Add(Pair<int, String>.MakePair(el.Id, el.Key)));
         }
 
         private void MSaveKeysMenuItem_Click(object sender, RoutedEventArgs e)
@@ -118,6 +160,9 @@ namespace M138ADemo
             if (result == true)
             {
                 string fileName = dialog.FileName;
+
+                RecentFiles.KeysCollectionShared.AddFileToRecents(fileName);
+
                 KeysContainer state = new KeysContainer();
 
                 XmlSerializer serializer = new XmlSerializer(state.GetType());

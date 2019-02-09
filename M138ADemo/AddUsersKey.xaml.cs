@@ -221,7 +221,7 @@ namespace M138ADemo
         {
             if (!CheckAllKeysAreFilled())
             {
-                MessageBox.Show("Ошибка", "Все ключи должны быть заполнены польностью", MessageBoxButton.OK);
+                MessageBox.Show("Ошибка", "Все ключи должны быть заполнены полностью", MessageBoxButton.OK);
             }
             else if (!CheckKeyNumbers())
             {

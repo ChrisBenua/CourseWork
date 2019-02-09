@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -17,6 +18,59 @@ namespace M138ADemo
 
     public static class IOHelper
     {
+
+        public static KeysContainer LoadKeysContainer(string fileName)
+        {
+            RecentFiles.KeysCollectionShared.AddFileToRecents(fileName);
+
+            //CurrentFilePath = fileName;
+
+            KeysContainer state = new KeysContainer();
+
+            System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(state.GetType());
+
+            System.IO.StreamReader reader = new System.IO.StreamReader(fileName);
+            try
+            {
+                state = (KeysContainer)serializer.Deserialize(reader);
+            }
+            catch (InvalidCastException)
+            {
+                MessageBox.Show("Вы уверены, что открываете файл с состоянием машины?", "Ошибка", System.Windows.Forms.MessageBoxButtons.OK);
+                return null;
+            }
+            catch (InvalidOperationException)
+            {
+                System.Windows.Forms.MessageBox.Show("Вы уверены, что открываете файл с состоянием машины?", "Ошибка", System.Windows.Forms.MessageBoxButtons.OK);
+                return null;
+            }
+            finally
+            {
+                reader.Close();
+            }
+            return state;
+        }
+
+        public static KeysContainer SaveKeysContainer(string toFileName, ObservableCollection<Pair<int, String>> lst)
+        {
+            RecentFiles.KeysCollectionShared.AddFileToRecents(toFileName);
+
+
+            KeysContainer state = new KeysContainer(lst);
+
+            System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
+            System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(state.GetType());
+
+            using (System.IO.MemoryStream stream = new System.IO.MemoryStream())
+            {
+                serializer.Serialize(stream, state);
+                stream.Position = 0;
+                doc.Load(stream);
+                doc.Save(toFileName);
+            }
+            return state;
+        }
+
         public static (DeviceState, string) LoadDeviceState(string fileName)
         {
             RecentFiles.MachineStatesShared.AddFileToRecents(fileName);

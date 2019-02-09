@@ -244,6 +244,7 @@ namespace M138ADemo
             }
             else
             {
+                Configuration.lst.Clear();
                 for (int row = 1; row < numberOfLines; ++row)
                 {
                     Configuration.lst.Add(ConstructKey(row));
@@ -381,7 +382,7 @@ namespace M138ADemo
 
         bool CheckKeyNumbers()
         {
-            SortedSet<int> set = new SortedSet<int>(Configuration.forbiddenKeys);
+            SortedSet<int> set = new SortedSet<int>();
             for (int i = 0; i < numberOfLines; ++i)
             {
                 if (textBoxs[i, 1] != null && textBoxs[i, 1].Text.Length > 0)

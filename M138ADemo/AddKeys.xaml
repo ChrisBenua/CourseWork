@@ -29,6 +29,7 @@
 
                 <MenuItem x:Name="mSaveKeysMenuItem" Header="Сохранить ключи"></MenuItem>
                 <MenuItem x:Name="mOpenKeysMenuItem" Header="Загрузить ключи"></MenuItem>
+                <MenuItem x:Name="mOpenRecentKeysMenuItem" Header="Загрузить недавние"></MenuItem>
             </MenuItem>
         </Menu>
         <Border Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="4"

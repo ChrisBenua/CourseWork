@@ -64,7 +64,6 @@ namespace M138ADemo
             }
         }
 
-        private bool abortSaving = false;
         public DragAndDrop()
         {
             if (Configuration.deviceState != null)
@@ -77,7 +76,6 @@ namespace M138ADemo
                     keys.Add(el);
                 }
 
-                //UpdateWindowTitle();
             }
             else
             {
@@ -86,8 +84,12 @@ namespace M138ADemo
                     keys.Add(new KeyModel(Configuration.lst[i].second, Configuration.lst[i].first));
                 }
             }
+
+
+
             AdjustShifts();
             InitializeComponent();
+            this.Title = CurrentFilePath;
             staticGrid = myGrid;
             staticGrid.Loaded += StaticGridOnLoaded;
             darkRowBrush.Transform = new ScaleTransform(1, 0.85);
@@ -221,15 +223,11 @@ namespace M138ADemo
 
         private void DragAndDrop_Closing(object sender, CancelEventArgs e)
         {
-            if (this.Title == "Untitled" && !abortSaving)
+            if (this.Title == "Untitled" )
             {
                 var res = MessageBox.Show("Вы не сохранили файл, все данные будут утерены, если вы решите выйти", "Предупреждение", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
-                if (res == System.Windows.Forms.DialogResult.OK)
-                {
-                    abortSaving = true;
-                    this.Close();
-                }
 
+                e.Cancel = res != System.Windows.Forms.DialogResult.OK;
             }
         }
 
