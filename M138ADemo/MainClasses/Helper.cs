@@ -21,7 +21,6 @@ namespace M138ADemo
 
         public static KeysContainer LoadKeysContainer(string fileName)
         {
-            RecentFiles.KeysCollectionShared.AddFileToRecents(fileName);
 
             //CurrentFilePath = fileName;
 
@@ -29,19 +28,24 @@ namespace M138ADemo
 
             System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(state.GetType());
 
-            System.IO.StreamReader reader = new System.IO.StreamReader(fileName);
+            System.IO.StreamReader reader = null;
             try
             {
+                reader = new System.IO.StreamReader(fileName);
                 state = (KeysContainer)serializer.Deserialize(reader);
+                RecentFiles.KeysCollectionShared.AddFileToRecents(fileName);
+
             }
             catch (InvalidCastException)
             {
                 MessageBox.Show("Вы уверены, что открываете файл с состоянием машины?", "Ошибка", System.Windows.Forms.MessageBoxButtons.OK);
+                RecentFiles.KeysCollectionShared.DeleteFileFromRecents(fileName);
                 return null;
             }
             catch (InvalidOperationException)
             {
                 System.Windows.Forms.MessageBox.Show("Вы уверены, что открываете файл с состоянием машины?", "Ошибка", System.Windows.Forms.MessageBoxButtons.OK);
+                RecentFiles.KeysCollectionShared.DeleteFileFromRecents(fileName);
                 return null;
             }
             finally
@@ -73,32 +77,41 @@ namespace M138ADemo
 
         public static (DeviceState, string) LoadDeviceState(string fileName)
         {
-            RecentFiles.MachineStatesShared.AddFileToRecents(fileName);
 
             //CurrentFilePath = fileName;
 
             DeviceState state = new DeviceState();
 
             System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(state.GetType());
-
-            System.IO.StreamReader reader = new System.IO.StreamReader(fileName);
+            System.IO.StreamReader reader = null;
             try
             {
+                reader = new System.IO.StreamReader(fileName);
                 state = (DeviceState)serializer.Deserialize(reader);
+                RecentFiles.MachineStatesShared.AddFileToRecents(fileName);
             }
             catch (InvalidCastException)
             {
-                reader.Close();
                 MessageBox.Show("Вы уверены, что открываете файл с состоянием машины?", "Ошибка", System.Windows.Forms.MessageBoxButtons.OK);
+                RecentFiles.MachineStatesShared.DeleteFileFromRecents(fileName);
                 return (null, null);
             }
             catch (InvalidOperationException)
             {
-                reader.Close();
                 System.Windows.Forms.MessageBox.Show("Вы уверены, что открываете файл с состоянием машины?", "Ошибка", System.Windows.Forms.MessageBoxButtons.OK);
+                RecentFiles.MachineStatesShared.DeleteFileFromRecents(fileName);
                 return (null, null);
             }
-            reader.Close();
+            catch (System.IO.IOException ex)
+            {
+                System.Windows.Forms.MessageBox.Show("Кажется, что файл удален?", "Ошибка", System.Windows.Forms.MessageBoxButtons.OK);
+                RecentFiles.MachineStatesShared.DeleteFileFromRecents(fileName);
+                return (null, null);
+            }
+            finally
+            {
+                reader?.Close();
+            }
             return (state, fileName);
         }
 
@@ -111,15 +124,33 @@ namespace M138ADemo
 
             System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
             System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(state.GetType());
-
-            using (System.IO.MemoryStream stream = new System.IO.MemoryStream())
+            try
             {
-                serializer.Serialize(stream, state);
-                stream.Position = 0;
-                doc.Load(stream);
-                doc.Save(toFileName);
+                using (System.IO.MemoryStream stream = new System.IO.MemoryStream())
+                {
+                    serializer.Serialize(stream, state);
+                    stream.Position = 0;
+                    doc.Load(stream);
+                    doc.Save(toFileName);
+                }
+                return state;
             }
-            return state;
+            catch (InvalidOperationException ex)
+            {
+                MessageBox.Show("Не получается сохранить файл", "Ошибка", MessageBoxButtons.OK);
+                Console.WriteLine(ex.Message);
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                MessageBox.Show("Кажется, вы пытаетесь сохранить пустое состояние машины", "Ошибка", MessageBoxButtons.OK);
+                Console.WriteLine(ex.Message);
+            }
+            catch (System.Xml.XmlException ex)
+            {
+                MessageBox.Show("НЕ получается записать состояние в файл", "Ошибка", MessageBoxButtons.OK);
+                Console.WriteLine(ex.Message);
+            }
+            return null;
         }
     }
 

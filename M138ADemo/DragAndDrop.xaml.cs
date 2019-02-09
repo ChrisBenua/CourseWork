@@ -398,7 +398,11 @@ namespace M138ADemo
             {
                 if (header != null)
                 {
-                    HighlightSelectedRow(int.Parse((string)header.Content) + 2);
+                    int headerIndex = int.Parse((string)header.Content);
+                    if (headerIndex <= 26)
+                    {
+                        HighlightSelectedRow(int.Parse((string)header.Content) + 2);
+                    }
                 }
             }
 
@@ -496,7 +500,7 @@ namespace M138ADemo
                 return;
             }
             int ind = row.GetIndex();
-            if (keys[ind].Shift < 26)
+            if (keys[ind].Shift < 0)
             {
                 keys[ind].Shift = keys[ind].Shift + 1;
                 UpdateHighlightedCells(ind);

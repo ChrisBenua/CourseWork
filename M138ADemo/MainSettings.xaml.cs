@@ -84,12 +84,14 @@ namespace M138ADemo
             DeviceState state = null;
 
             (state, openedWindowTitle) = IOHelper.LoadDeviceState(RecentFiles.MachineStatesShared.RecentFileNames[senderIndex]);
+            if (state != null)
+            {
+                Configuration.deviceState = state;
 
-            Configuration.deviceState = state;
-
-            DragAndDrop w = new DragAndDrop();
-            w.CurrentFilePath = openedWindowTitle;
-            w.Show();
+                DragAndDrop w = new DragAndDrop();
+                w.CurrentFilePath = openedWindowTitle;
+                w.Show();
+            }
         }
 
         private void MOpenMenuItem_Click(object sender, RoutedEventArgs e)
@@ -103,39 +105,16 @@ namespace M138ADemo
             {
                 string fileName = dialog.FileName;
 
-                /*RecentFiles.MachineStatesShared.AddFileToRecents(fileName);
-
-                DeviceState state = new DeviceState();
-
-                XmlSerializer serializer = new XmlSerializer(state.GetType());
-
-                StreamReader reader = new StreamReader(fileName);
-                try
-                {
-                    state = (DeviceState)serializer.Deserialize(reader);
-                }
-                catch (InvalidCastException ex)
-                {
-                    reader.Close();
-                    System.Windows.Forms.MessageBox.Show("Вы уверены, что открываете файл с состоянием машины?", "Ошибка", System.Windows.Forms.MessageBoxButtons.OK);
-                    return;
-                }
-                catch (InvalidOperationException ex)
-                {
-                    reader.Close();
-                    System.Windows.Forms.MessageBox.Show("Вы уверены, что открываете файл с состоянием машины?", "Ошибка", System.Windows.Forms.MessageBoxButtons.OK);
-                    return;
-                }*/
-
                 var tuple = IOHelper.LoadDeviceState(fileName);
+                if (tuple.Item1 != null)
+                {
+                    Configuration.deviceState = tuple.Item1;
 
-                Configuration.deviceState = tuple.Item1;
-
-                DragAndDrop w = new DragAndDrop();
-                w.CurrentFilePath = fileName;
-                w.Show();
-                this.Close();
-
+                    DragAndDrop w = new DragAndDrop();
+                    w.CurrentFilePath = fileName;
+                    w.Show();
+                    this.Close();
+                }
             }
         }
 

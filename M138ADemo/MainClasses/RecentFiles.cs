@@ -75,6 +75,15 @@ namespace M138ADemo.MainClasses
 
         }
 
+        public void DeleteFileFromRecents(string fileName)
+        {
+            RecentFileNames.RemoveAll((s) => s == fileName);
+
+            RenewStoredRecentList();
+
+            NotifyPropertyChanged("ShortenedNamesMenuItems");
+        }
+
         private string getFilePath()
         {
             string filePath = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);

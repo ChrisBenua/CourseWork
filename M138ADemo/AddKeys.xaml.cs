@@ -133,19 +133,7 @@ namespace M138ADemo
             {
                 string fileName = dialog.FileName;
 
-                RecentFiles.KeysCollectionShared.AddFileToRecents(fileName);
-
-                KeysContainer cont = new KeysContainer(Configuration.lst);
-                XmlDocument doc = new XmlDocument();
-                XmlSerializer serializer = new XmlSerializer(cont.GetType());
-
-                using (MemoryStream stream = new MemoryStream())
-                {
-                    serializer.Serialize(stream, cont);
-                    stream.Position = 0;
-                    doc.Load(stream);
-                    doc.Save(fileName);
-                }
+                IOHelper.SaveKeysContainer(fileName, Configuration.lst);
             }
 
         }
@@ -161,23 +149,19 @@ namespace M138ADemo
             {
                 string fileName = dialog.FileName;
 
-                RecentFiles.KeysCollectionShared.AddFileToRecents(fileName);
-
-                KeysContainer state = new KeysContainer();
-
-                XmlSerializer serializer = new XmlSerializer(state.GetType());
-
-                StreamReader reader = new StreamReader(fileName);
-                state = (KeysContainer)serializer.Deserialize(reader);
+                
+                var state = IOHelper.LoadKeysContainer(fileName);
 
                 Configuration.lst.Clear();
 
-                foreach (var el in state.keys)
-                {
-                    Configuration.lst.Add(Pair<int, string>.MakePair(el.Id, el.Key));
-                }
+                //if (state != null)
+                //{
 
-                reader.Close();
+                    foreach (var el in state?.keys)
+                    {
+                        Configuration.lst.Add(Pair<int, string>.MakePair(el.Id, el.Key));
+                    }
+                //}
             }
         }
 
