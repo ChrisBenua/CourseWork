@@ -40,6 +40,7 @@ namespace M138ADemo
     /// </summary>
     public partial class DragAndDrop : Window
     {
+        private DeviceState lastState = new DeviceState();
         private static Thickness DefaultThickness = new Thickness(2, 2, 2.2, 2);
         public static BindingList<KeyModel> keys = new BindingList<KeyModel>();
         public static DataGrid staticGrid;
@@ -69,7 +70,7 @@ namespace M138ADemo
             if (Configuration.deviceState != null)
             {
                 keys.Clear();
-
+                lastState.SafeInit(Configuration.deviceState.keys);
                 foreach (var el in Configuration.deviceState.keys)
                 {
                     el.CopyToArr();
@@ -83,6 +84,7 @@ namespace M138ADemo
                 {
                     keys.Add(new KeyModel(Configuration.lst[i].second, Configuration.lst[i].first));
                 }
+                lastState.SafeInit(keys);
             }
 
 
@@ -90,8 +92,7 @@ namespace M138ADemo
             AdjustShifts();
             InitializeComponent();
             this.Title = CurrentFilePath;
-            staticGrid = myGrid;
-            staticGrid.Loaded += StaticGridOnLoaded;
+            myGrid.Loaded += StaticGridOnLoaded;
             darkRowBrush.Transform = new ScaleTransform(1, 0.85);
             
             myGrid.RowStyle = new Style()
@@ -221,9 +222,25 @@ namespace M138ADemo
             this.Closing += DragAndDrop_Closing;
         }
 
+        private bool DidUserMadeChanges()
+        {
+            if (lastState.keys.Count == keys.Count)
+            {
+                foreach (var el in lastState.keys)
+                {
+                    if ((keys.Where((arg) => arg.IdNumber == el.IdNumber && arg.Key == el.Key && arg.Shift == el.Shift)).Count() != (lastState.keys.Where((arg) => arg.IdNumber == el.IdNumber && arg.Key == el.Key && arg.Shift == el.Shift)).Count())
+                    {
+                        return true;
+                    } 
+                }
+            }
+            return false;
+
+        }
+
         private void DragAndDrop_Closing(object sender, CancelEventArgs e)
         {
-            if (this.Title == "Untitled" )
+            if (this.Title == "Untitled" || DidUserMadeChanges())
             {
                 var res = MessageBox.Show("Вы не сохранили файл, все данные будут утерены, если вы решите выйти", "Предупреждение", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
 
@@ -306,6 +323,7 @@ namespace M138ADemo
                         el.CopyToArr();
                         keys.Add(el);
                     }
+                    lastState.SafeInit(state.keys);
                     Configuration.deviceState = state;
                     AsyncUtils.DelayCall(1000, UpdateHighlightedCells);
                     AsyncUtils.DelayCall(1000, SetBackGround);
@@ -326,8 +344,11 @@ namespace M138ADemo
                 string fileName = dialog.FileName;
                 CurrentFilePath = fileName;
 
-                IOHelper.SaveDeviceState(fileName, new List<KeyModel>(keys));
-
+                var savedState = IOHelper.SaveDeviceState(fileName, new List<KeyModel>(keys));
+                if (savedState != null)
+                {
+                    lastState.SafeInit(savedState.keys);
+                }
                 //SoapFormatter formatter = new SoapFormatter();
             }
 
@@ -353,7 +374,7 @@ namespace M138ADemo
             }
         }
 
-        private static void SetBackGround()
+        private void SetBackGround()
         {
             for (int row = 0; row < keys.Count; ++row)
             {
@@ -373,7 +394,7 @@ namespace M138ADemo
             }
         }
 
-        private static void SetBackGround(int row)
+        private void SetBackGround(int row)
         {
             for (int col = 2; col < 29 + 26; ++col)
             {
@@ -438,7 +459,7 @@ namespace M138ADemo
             myGrid.SelectedIndex = -1;
         }
 
-        private static DataTemplate getDataTemplate(int cnt)
+        private DataTemplate getDataTemplate(int cnt)
         {
             DataTemplate template = new DataTemplate();
             FrameworkElementFactory factory = new FrameworkElementFactory(typeof(Button));
@@ -466,7 +487,7 @@ namespace M138ADemo
             return null;
         }
 
-        private static void BtnOnClickLeft(object sender, RoutedEventArgs e)
+        private void BtnOnClickLeft(object sender, RoutedEventArgs e)
         {
             
             var row = GetDataGridRow(sender);
@@ -492,7 +513,7 @@ namespace M138ADemo
             keys.Insert(ind, curr);*/
         }
 
-        private static void BtnOnClickRight(object sender, RoutedEventArgs e)
+        private void BtnOnClickRight(object sender, RoutedEventArgs e)
         {
             var row = GetDataGridRow(sender);
             if (row == null)
@@ -517,7 +538,7 @@ namespace M138ADemo
             keys.Insert(ind, curr);*/
         }
 
-        private static void UpdateHighlightedCells()
+        private void UpdateHighlightedCells()
         {
             for (int i = 0; i < keys.Count; ++i)
             {
@@ -551,7 +572,7 @@ namespace M138ADemo
             }
         }
 
-        private static void UpdateHighlightedCells(int row)
+        private void UpdateHighlightedCells(int row)
         {
             for (int j = 0; j < keys[0].Key.Length * 2 + 3; ++j)
             {
@@ -635,9 +656,10 @@ namespace M138ADemo
                 return;
             }
             currRowIndex = GetCurrentRowIndex(e.GetPosition);
+            UpdateHighlightedCells();
             if (currRowIndex < 0)
             {
-                UpdateHighlightedCells();
+                //UpdateHighlightedCells();
                 UnselectRows();
                 return;
             }
@@ -721,9 +743,9 @@ namespace M138ADemo
             return row;
         }
 
-        private static DataGridCell GetCell(int row, int column)
+        private DataGridCell GetCell(int row, int column)
         {
-            var rowContainer = GetRow(staticGrid, row);
+            var rowContainer = GetRow(myGrid, row);
 
             if (rowContainer != null)
             {

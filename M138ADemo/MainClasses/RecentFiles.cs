@@ -13,6 +13,7 @@ namespace M138ADemo.MainClasses
         public const string shortenedNamesMenuItemsPropertyName = "ShortenedNamesMenuItems";
         const string machineEndPoint = "\\machineStatesRecents.txt";
         const string keysCollectionEndPoint = "\\keysCollectionsRecents.txt";
+        const int maxCapacity = 6;
 
         private List<string> _recentFileNames;
 
@@ -141,11 +142,19 @@ namespace M138ADemo.MainClasses
             }
         }
 
+        public List<string> ShortenedNamesPrefix
+        {
+            get
+            {
+                return RecentFileNames.Take(maxCapacity).ToList().ConvertAll<String>((filename) => filename.Split('\\').Last());
+            }
+        }
+
         public List<System.Windows.Controls.MenuItem> ShortenedNamesMenuItems
         {
             get
             {
-                return ShortenedNames.ConvertAll<System.Windows.Controls.MenuItem>((fileName) =>
+                return ShortenedNamesPrefix.ConvertAll<System.Windows.Controls.MenuItem>((fileName) =>
                 {
                     var item = new System.Windows.Controls.MenuItem();
                     item.Header = fileName;

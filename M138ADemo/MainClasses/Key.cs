@@ -210,6 +210,15 @@ namespace M138ADemo
             _shift = shift;
         }
 
+        public KeyModel(KeyModel other)
+        {
+            _key = String.Copy(other._key);
+            _keyarr = new string[_key.Length];
+            CopyToArr();
+            _idNumber = other._idNumber;
+            _shift = other._shift;
+        }
+
         public string GetCurrentChar(int ind)
         {
             if (ind + _shift < 0)
@@ -314,6 +323,24 @@ namespace M138ADemo
     {
         [XmlArray]
         public ObservableCollection<KeyModel> keys;
+
+        public void SafeInit(ObservableCollection<KeyModel> obs)
+        {
+            keys = new ObservableCollection<KeyModel>();
+            foreach (var el in obs)
+            {
+                keys.Add(new KeyModel(el));
+            }
+        }
+
+        public void SafeInit(BindingList<KeyModel> obs)
+        {
+            keys = new ObservableCollection<KeyModel>();
+            foreach (var el in obs)
+            {
+                keys.Add(new KeyModel(el));
+            }
+        }
 
         public DeviceState()
         {

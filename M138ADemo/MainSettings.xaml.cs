@@ -22,10 +22,10 @@ namespace M138ADemo
     /// </summary>
     public partial class MainSettings : Window
     {
-
         public MainSettings()
         {
             InitializeComponent();
+            
             mNextButton.Click += mNextButtonOnClick;
             mMessagetextBox.TextChanged += MMessagetextBox_TextChanged;
             //Configuration.Message = mMessagetextBox.Text;
@@ -52,6 +52,8 @@ namespace M138ADemo
                 }
             }
         }
+
+        
 
         private void MachineStatesShared_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
