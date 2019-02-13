@@ -14,6 +14,8 @@
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -60,13 +62,20 @@
     <Compile Include="DecryptAddKeys.xaml.cs">
       <DependentUpon>DecryptAddKeys.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DocsWindow.xaml.cs">
+      <DependentUpon>DocsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DragAndDrop.xaml.cs">
       <DependentUpon>DragAndDrop.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainClasses\Key.cs" />
     <Compile Include="MainClasses\RecentFiles.cs" />
     <Compile Include="MainClasses\RelayCommand.cs" />
-    <Compile Include="MainSettingsViewModel.cs" />
+    <Compile Include="Models\AddKeysModel.cs" />
+    <Compile Include="ViewModels\AddKeysViewModel.cs" />
+    <Compile Include="ViewModels\DocsWIndowViewModel.cs" />
+    <Compile Include="ViewModels\MainSettingsViewModel.cs" />
+    <Compile Include="Models\DocsWindowModel.cs" />
     <Compile Include="Models\MainSettingsModel.cs" />
     <Compile Include="RandomKeysWindow.xaml.cs">
       <DependentUpon>RandomKeysWindow.xaml</DependentUpon>
@@ -96,6 +105,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="DecryptAddKeys.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DocsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -16,6 +16,8 @@ using System.Windows.Shapes;
 using System.Xml;
 using System.Xml.Serialization;
 using M138ADemo.MainClasses;
+using M138ADemo.ViewModels;
+using M138ADemo.Services;
 
 namespace M138ADemo
 {
@@ -24,10 +26,88 @@ namespace M138ADemo
     /// </summary>
     public partial class AddKeys : Window
     {
+
+        private AddKeysViewModel viewModel;
+
         public AddKeys()
         {
             InitializeComponent();
-            AddUserKeyButton.Click += AddUserKeyButtonOnClick;
+            viewModel = new AddKeysViewModel(new DefaultDialogService());
+            AddUserKeyButton.Command = viewModel.OpenAnotherWindowCommand;
+            AddUserKeyButton.CommandParameter = AddKeysViewModel.WindowsToBeOpened.AddUsersKeysButton;
+
+            ShowKeysButton.Command = viewModel.OpenAnotherWindowCommand;
+            ShowKeysButton.CommandParameter = AddKeysViewModel.WindowsToBeOpened.ShowKeysButton;
+
+            PairKeysButton.Command = viewModel.OpenAnotherWindowCommand;
+            PairKeysButton.CommandParameter = AddKeysViewModel.WindowsToBeOpened.PairKeysButton;
+
+            RandomKeyButton.Command = viewModel.OpenAnotherWindowCommand;
+            RandomKeyButton.CommandParameter = AddKeysViewModel.WindowsToBeOpened.RandomKeysButton;
+
+            TodayKeyButton.Command = viewModel.OpenAnotherWindowCommand;
+            TodayKeyButton.CommandParameter = AddKeysViewModel.WindowsToBeOpened.TodayKeysButton;
+
+            mNextButton.Command = viewModel.OpenAnotherWindowCommand;
+            mNextButton.CommandParameter = AddKeysViewModel.WindowsToBeOpened.NextButton;
+
+            Binding binding = new Binding()
+            {
+                Source = viewModel.Keys,
+                Path = new PropertyPath("Count"),
+                //Mode = BindingMode.OneWay,
+                Converter = new IntToStringConverter("Кол-во ключей:"),
+                BindsDirectlyToSource = true,
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+            };
+            mNumberOfKeysSelected.SetBinding(TextBlock.TextProperty, binding);
+
+            Binding warningBinding = new Binding
+            {
+                Source = viewModel.Keys,
+                Path = new PropertyPath("Count"),
+                Converter = new WarningIntToStringConverter(),
+                BindsDirectlyToSource = true,
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+            };
+            mWarninTextBlock.SetBinding(TextBlock.TextProperty, warningBinding);
+
+            Binding buttonDisableBinding = new Binding
+            {
+                Source = viewModel.Keys,
+                Path = new PropertyPath("Count"),
+                Converter = new WarningIntToBoolConverter(),
+                BindsDirectlyToSource = true,
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+            };
+            mNextButton.SetBinding(Button.IsEnabledProperty, buttonDisableBinding);
+
+            Binding buttonColorBinding = new Binding
+            {
+                Source = viewModel.Keys,
+                Path = new PropertyPath("Count"),
+                Converter = new IsEnabledToColorConverter(Brushes.Aqua, Brushes.LightGray),
+                BindsDirectlyToSource = true,
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+            };
+            mNextButton.SetBinding(Button.BackgroundProperty, buttonColorBinding);
+
+            mOpenKeysMenuItem.Command = viewModel.OpenFileCommand;
+            mSaveKeysMenuItem.Command = viewModel.SaveFileCommand;
+
+            Binding openRecentFilesMenuItemsBinding = new Binding
+            {
+                Source = viewModel.MenuItems,
+                BindsDirectlyToSource = true,
+                NotifyOnSourceUpdated = true,
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+            };
+
+            mOpenRecentKeysMenuItem.SetBinding(MenuItem.ItemsSourceProperty, openRecentFilesMenuItemsBinding);
+
+            viewModel.NotifyToCloseEvent += ViewModel_NotifyToCloseEvent;
+
+            /*AddUserKeyButton.Click += AddUserKeyButtonOnClick;
             ShowKeysButton.Click += ShowKeysButtonOnClick;
             PairKeysButton.Click += PairKeysButtonOnClick;
             RandomKeyButton.Click += RandomKeyButton_Click;
@@ -80,126 +160,14 @@ namespace M138ADemo
             mSaveKeysMenuItem.Click += MSaveKeysMenuItem_Click;
 
             RecentFiles.KeysCollectionShared.PropertyChanged += UpdateRecentKeysMenuItems;
-            SetMenuItems();
+            SetMenuItems();*/
         }
 
-        private void UpdateRecentKeysMenuItems(object sender, PropertyChangedEventArgs e)
+        private void ViewModel_NotifyToCloseEvent()
         {
-            if (e.PropertyName == RecentFiles.shortenedNamesMenuItemsPropertyName)
-            {
-                SetMenuItems();
-            }
-        }
-
-        private void SetMenuItems()
-        {
-            mOpenRecentKeysMenuItem.ItemsSource = RecentFiles.KeysCollectionShared.ShortenedNamesMenuItems;
-            foreach (var el in mOpenRecentKeysMenuItem.Items)
-            {
-                MenuItem menuItem = (el as MenuItem);
-                if (menuItem != null)
-                {
-                    menuItem.Click += OpenRecentMenuItem_Click;
-                }
-            }
-        }
-
-        private void OpenRecentMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            int senderIndex = mOpenRecentKeysMenuItem.Items.IndexOf(sender);
-            if (senderIndex == -1)
-            {
-                MessageBox.Show("Очень странная ошибка", "Такого не должно быть, но случилось...");
-                return;
-            }
-
-            string filePath = RecentFiles.KeysCollectionShared.RecentFileNames[senderIndex];
-
-            Configuration.lst.Clear();
-
-            KeysContainer container = IOHelper.LoadKeysContainer(filePath);
-            Array.ForEach<KeyForPersistance>(container.keys.ToArray(), (el) => Configuration.lst.Add(Pair<int, String>.MakePair(el.Id, el.Key)));
-        }
-
-        private void MSaveKeysMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            var dialog = new Microsoft.Win32.SaveFileDialog();
-            dialog.InitialDirectory = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
-            dialog.DefaultExt = ".xml";
-            dialog.Filter = "XML-File | *.xml";
-            var result = dialog.ShowDialog();
-
-            if (result == true)
-            {
-                string fileName = dialog.FileName;
-
-                IOHelper.SaveKeysContainer(fileName, Configuration.lst);
-            }
-
-        }
-
-        private void MOpenKeysMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            Microsoft.Win32.OpenFileDialog dialog = new Microsoft.Win32.OpenFileDialog();
-            dialog.DefaultExt = ".xml";
-            dialog.Filter = "XML-File | *.xml";
-            dialog.InitialDirectory = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
-            Nullable<bool> result = dialog.ShowDialog();
-            if (result == true)
-            {
-                string fileName = dialog.FileName;
-
-                
-                var state = IOHelper.LoadKeysContainer(fileName);
-
-                Configuration.lst.Clear();
-
-                //if (state != null)
-                //{
-
-                    foreach (var el in state?.keys)
-                    {
-                        Configuration.lst.Add(Pair<int, string>.MakePair(el.Id, el.Key));
-                    }
-                //}
-            }
-        }
-
-        private void MNextButton_Click(object sender, RoutedEventArgs e)
-        {
-            DragAndDrop w = new DragAndDrop();
-            w.Show();
             this.Close();
         }
 
-        private void TodayKeyButton_Click(object sender, RoutedEventArgs e)
-        {
-            TodayKeysWindow w = new TodayKeysWindow();
-            w.Show();
-        }
-
-        private void RandomKeyButton_Click(object sender, RoutedEventArgs e)
-        {
-            RandomKeysWindow w = new RandomKeysWindow();
-            w.Show();
-        }
-
-        private void PairKeysButtonOnClick(object sender, RoutedEventArgs e)
-        {
-            KeysForPair w = new KeysForPair();
-            w.Show();
-        }
-
-        private void ShowKeysButtonOnClick(object sender, RoutedEventArgs e)
-        {
-            ShowKeys w = new ShowKeys();
-            w.Show();
-        }
-
-        private void AddUserKeyButtonOnClick(object sender, RoutedEventArgs e)
-        {
-            AddUsersKey w = new AddUsersKey();
-            w.Show();
-        }
+        
     }
 }

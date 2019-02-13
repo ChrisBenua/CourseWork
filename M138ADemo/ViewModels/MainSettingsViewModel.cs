@@ -177,6 +177,20 @@ namespace M138ADemo
             }
         }
 
+        private RelayCommand _openDocsCommand;
+
+        public RelayCommand OpenDocsCommand
+        {
+            get
+            {
+                return _openDocsCommand ?? (_openDocsCommand = new RelayCommand(obj =>
+                {
+                    DocsWindow w = new DocsWindow();
+                    w.Show();
+                }));
+            }
+        }
+
         public event Action<String> OnOpenRecentFileHappend;
         public event Action<String> OnOpenFileHappend;
         public event Action<bool> OnSaveHappend;

@@ -141,6 +141,7 @@ namespace M138ADemo
             mOpenRecentsMenuItem.ItemsSource = RecentFiles.MachineStatesShared.ShortenedNamesMenuItems;
             RecentFiles.MachineStatesShared.PropertyChanged += MachineStatesShared_PropertyChanged;
 
+            mOpenDocsMenuItem.Command = viewModel.OpenDocsCommand;
             SetMenuItemsCommands();
         }
 
