@@ -38,7 +38,7 @@ namespace M138ADemo
                 if (messageBoxCaption[0] == 'У')
                 {
                     Configuration.lst.Clear();
-                    DateTime time = new DateTime();
+                    DateTime time = DateTime.Today;
                     Configuration.lst.Clear();
                     foreach (var el in Generator.GenerateRandomKeys(res, time.DayOfYear + 366 * time.Year))
                     {

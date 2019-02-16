@@ -23,7 +23,7 @@ namespace M138ADemo
             }
             numberOfKeys = Math.Min(maxNumberOfKeys, numberOfKeys);
             var list = new ObservableCollection<Pair<int, string>>();
-            var set = new SortedSet<int>();
+            var set = new SortedSet<int>(Configuration.forbiddenKeys);
             for (int i = 0; i < numberOfKeys; ++i)
             {
                 var charSet = new SortedSet<char>();

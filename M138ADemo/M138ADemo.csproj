@@ -71,6 +71,7 @@
     <Compile Include="MainClasses\Key.cs" />
     <Compile Include="MainClasses\RecentFiles.cs" />
     <Compile Include="MainClasses\RelayCommand.cs" />
+    <Compile Include="MainClasses\ShowAndAddKeysInteractor.cs" />
     <Compile Include="Models\AddKeysModel.cs" />
     <Compile Include="ViewModels\AddKeysViewModel.cs" />
     <Compile Include="ViewModels\AddUsersKeysViewModel.cs" />
@@ -89,6 +90,7 @@
     <Compile Include="TodayKeysWindow.xaml.cs">
       <DependentUpon>TodayKeysWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\ShowKeysViewModel.cs" />
     <Page Include="AddKeys.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

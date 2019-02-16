@@ -14,9 +14,9 @@ namespace M138ADemo.ViewModels
 {
     public class AddUsersKeysViewModel : INotifyPropertyChanged
     {
-        private IDialogService dialogService = new DefaultDialogService();
+        protected IDialogService dialogService = new DefaultDialogService();
 
-        private ObservableCollection<KeyForPersistance> _userKeys;
+        protected ObservableCollection<KeyForPersistance> _userKeys;
 
         public ObservableCollection<KeyForPersistance> UserKeys
         {
@@ -30,7 +30,7 @@ namespace M138ADemo.ViewModels
             }
         }
 
-        private RelayCommand _deleteRowCommand;
+        protected RelayCommand _deleteRowCommand;
 
         public RelayCommand DeleteRowCommand
         {
@@ -45,7 +45,7 @@ namespace M138ADemo.ViewModels
             }
         }
 
-        private RelayCommand _addKeyCommand;
+        protected RelayCommand _addKeyCommand;
 
         public RelayCommand AddkeyCommand
         {
@@ -58,9 +58,9 @@ namespace M138ADemo.ViewModels
             }
         }
 
-        private RelayCommand _endCommand;
+        protected RelayCommand _endCommand;
 
-        public RelayCommand EndCommand
+        public virtual RelayCommand EndCommand
         {
             get
             {
@@ -87,7 +87,7 @@ namespace M138ADemo.ViewModels
             }
         }
 
-        public RelayCommand _keyPreviewInputCommand;
+        protected RelayCommand _keyPreviewInputCommand;
 
         public RelayCommand KeyPreviewInputCommand
         {
@@ -115,7 +115,7 @@ namespace M138ADemo.ViewModels
             }
         }
 
-        private RelayCommand _checkKeysIdsCommand;
+        protected RelayCommand _checkKeysIdsCommand;
 
         public RelayCommand CheckKeysIdsCommand
         {
@@ -163,12 +163,17 @@ namespace M138ADemo.ViewModels
         public AddUsersKeysViewModel()
         {
             UserKeys = new ObservableCollection<KeyForPersistance>();
-            UserKeys.Add(new KeyForPersistance(11, "abcdefghijklmnopqrstuvwxyz"));
+            //UserKeys.Add(new KeyForPersistance(11, "abcdefghijklmnopqrstuvwxyz"));
         }
 
         public void OnPropertyChanged([CallerMemberName]string propertyName="")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        protected void OnNotifyOnClose()
+        {
+            this.NotifyOnClose?.Invoke();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

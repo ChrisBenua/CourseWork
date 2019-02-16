@@ -6,10 +6,21 @@
         xmlns:local="clr-namespace:M138ADemo"
         mc:Ignorable="d"
         Title="ShowKeys" Height="450" Width="800">
-    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-        <Grid x:Name="Grid">
+    <Grid x:Name="Grid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150"></ColumnDefinition>
+            <ColumnDefinition Width="150"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
 
-        </Grid>
-    </ScrollViewer>
+        <DataGrid x:Name="dataGrid" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"></DataGrid>
+
+        <Button x:Name="mAddKeyButton" Template="{StaticResource RoundButton}" Background="LightGreen" Margin="10, 5, 10, 5" Content="Добавить ключ" FontSize="15"></Button>
+        <Button Grid.Column="1" x:Name="mEndButton" Template="{StaticResource RoundButton}" Background="Red" Margin="10, 5" Content="Закончить" FontSize="15"></Button>
+    </Grid>
     
 </Window>
