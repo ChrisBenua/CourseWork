@@ -385,22 +385,49 @@ namespace M138ADemo
         [XmlElement("Key")]
         public string Key { get; set; }
 
+        private string[] keyArr;
+
+        private void makeKeyArr()
+        {
+            KeyArr = new string[Key.Length];
+            for (int i = 0; i < Key.Length; ++i)
+            {
+                KeyArr[i] = new string(Key[i], 1);
+            }
+        }
+        [XmlIgnore]
+        public string[] KeyArr
+        {
+            get
+            {
+                return keyArr;
+            }
+
+            set
+            {
+                keyArr = value;
+            }
+        }
+
         public KeyForPersistance()
         {
             Id = 0;
             Key = "";
+            makeKeyArr();
         }
 
         public KeyForPersistance(int id, string key)
         {
             Id = id;
             Key = key;
+            makeKeyArr();
         }
 
         public KeyForPersistance(Pair<int, String> p)
         {
             Id = p.first;
             Key = p.second;
+            makeKeyArr();
         }
     }
 

@@ -279,17 +279,15 @@ namespace M138ADemo
         public object Convert(object value, Type targetType,
             object parameter, CultureInfo culture)
         {
-            // Do the conversion from bool to visibility
-            return beginning + " " + ((int) value).ToString();
+            return beginning + ((int) value).ToString();
         }
 
         public object ConvertBack(object value, Type targetType,
             object parameter, CultureInfo culture)
         {
-            // Do the conversion from visibility to bool
-            if (((String) value).Length == 0)
+            if (((string) value).Length == 0)
             {
-                return Helper.MaxKeys;
+                return null;
             }
             return int.Parse((string)value);
         }

@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using M138ADemo.ViewModels;
 
 namespace M138ADemo
 {
@@ -20,7 +21,7 @@ namespace M138ADemo
     public partial class AddUsersKey : Window
     {
 
-        private Dictionary<Button, int> AddBtnToInd = new Dictionary<Button, int>();
+        /*private Dictionary<Button, int> AddBtnToInd = new Dictionary<Button, int>();
         Dictionary<int, List<UIElement>> elemsInRow = new Dictionary<int, List<UIElement>>();
         private Dictionary<Button, int> DeleteBtnToInd = new Dictionary<Button, int>();
         private Dictionary<int, string> keysInRow = new Dictionary<int, string>();
@@ -32,423 +33,204 @@ namespace M138ADemo
         private const int MaxLines = 30;
         private List<int> widths = new List<int>();
         private TextBox[,] textBoxs;
-        private Image backgroundImage;
+        private Image backgroundImage;*/
+
+        private static ImageBrush DefaultRowBrush = new ImageBrush(Helper.PapSource);
+        private AddUsersKeysViewModel viewModel;
+
         public AddUsersKey()
         {
             InitializeComponent();
+            viewModel = new AddUsersKeysViewModel();
+            viewModel.NotifyOnClose += () => this.Close();
+            mAddKeyButton.Command = viewModel.AddkeyCommand;
 
-            setBackground();
-            UpdateBackGround();
+            dataGrid.CellStyle = new Style()
+            {
+                Setters = { new Setter(MarginProperty, new Thickness(0, 5 / 1.5, 0, 11 / 1.5)),
+                new Setter()
+                {
+                    Property = BackgroundProperty,
+                    Value = DefaultRowBrush
+                },
+                new Setter()
+                {
+                    Property = BorderBrushProperty,
+                    Value = DefaultRowBrush
+                },
+               
+                },
+            };
+            
+            dataGrid.RowStyle = new Style()
+            {
+                Setters =
+                {
+                    new Setter()
+                    {
+                        Property = BackgroundProperty,
+                        Value = Brushes.Transparent
+                    },
+                }
+            };
+            
+            dataGrid.CanUserResizeRows = false;
+            dataGrid.CanUserResizeColumns = false;
+            dataGrid.GridLinesVisibility = DataGridGridLinesVisibility.None;
+            dataGrid.AutoGenerateColumns = false;
+            dataGrid.SelectionMode = DataGridSelectionMode.Extended;
+            dataGrid.Background = new ImageBrush(Helper.AluminumSource);
+            dataGrid.ItemsSource = viewModel.UserKeys;
+            dataGrid.IsReadOnly = true;
+            mEndButton.Command = viewModel.EndCommand;
 
-            textBoxs = new TextBox[MaxLines, numberOfCols];
-            for (int i = 0; i < numberOfCols; ++i)
+            for (int i = 0; i < 26 + 2; ++i)
             {
                 if (i < 1)
-                    widths.Add(60);
-                else if (i == 1)
-                    widths.Add(45);
+                {
+                    DataGridTemplateColumn col = new DataGridTemplateColumn()
+                    {
+                        CellTemplate = getDataTemplate(i),
+                    };
+                    col.Width = new DataGridLength(100);
+                    dataGrid.Columns.Add(col);
+                }
                 else
                 {
-                    widths.Add(30);
+                    var column = new DataGridTemplateColumn()
+                    {
+                        CellTemplate = getTextColumnTemplate(i),
+                        CellEditingTemplate = getTextColumnTemplate(i),
+                        Width = 30,
+                    };
+                    
+                    column.Header = $"{i - 1}";
+                    dataGrid.Columns.Add(column);
                 }
             }
-
-            setUpRowAndCols();
-            AddMenu();
-
         }
 
-        void UpdateNextButton()
+        private DataTemplate getDataTemplate(int cnt)
         {
+            DataTemplate template = new DataTemplate();
+            FrameworkElementFactory factory = new FrameworkElementFactory(typeof(Button));
+            factory.SetValue(Button.TemplateProperty, Application.Current.Resources["RoundButton"]);
+            factory.SetValue(Button.BackgroundProperty, Brushes.Red);
 
-        }
+            factory.SetValue(Button.ContentProperty, "Удалить");
+            factory.SetValue(Button.FontSizeProperty, 15.0);
+            factory.AddHandler(Button.ClickEvent, new RoutedEventHandler(DeleteButtonOnClick));
+            //factory.SetValue(Button.CommandProperty, viewModel.DeleteRowCommand);
+            //factory.SetValue(Button.CommandParameterProperty, dataGrid.Items.Count - 1);
+            template.VisualTree = factory;
 
-        #region SetUpGrid
-
-        void UpdateBackGround()
-        {
-            if (Grid.RowDefinitions.Count > 1)
-            {
-                backgroundImage.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                backgroundImage.Visibility = Visibility.Hidden;
-            }
-        }
-
-        void AddDeleteButtons()
-        {
-            Button deleteButton = new Button();
-            deleteButton.Template = (ControlTemplate)Application.Current.Resources["RoundButtonNoTriggers"];
-            deleteButton.Background = Brushes.Red;
-            deleteButton.Margin = new Thickness(2);
-            deleteButton.Content = "Удалить";
-            deleteButton.BorderBrush = new SolidColorBrush(Colors.Black);
-            deleteButton.BorderThickness=new Thickness(0.5);
-            deleteButton.Click += DeleteButtonOnClick;
-            Grid.SetRow(deleteButton, numberOfLines - 1);
-            Grid.SetColumn(deleteButton, 0);
-            Grid.Children.Add(deleteButton);
-            elemsInRow[numberOfLines-1].Add(deleteButton);
-            DeleteBtnToInd[deleteButton] = numberOfLines - 1;
+            return template;
         }
 
         private void DeleteButtonOnClick(object sender, RoutedEventArgs e)
         {
-            Button btn = (Button) sender;
-            int ind = DeleteBtnToInd[btn];
-            DeleteBtnToInd.Remove(btn);
-            ReIndex(ind);
-            Grid.Children.Remove(btn);
-            
-
-            numberOfLines--;
-            UpdateBackGround();
+            KeyForPersistance obj = ((FrameworkElement)sender).DataContext as KeyForPersistance;
+            int index = viewModel.UserKeys.IndexOf(obj);
+            viewModel.DeleteRowCommand.Execute(index);
         }
 
-        void ReIndex(int ind)
+        private DataTemplate getTextColumnTemplate(int index)
         {
-            List<Button> btns = new List<Button>();
-            foreach (var el in DeleteBtnToInd.Keys)
+            DataTemplate template = new DataTemplate();
+            FrameworkElementFactory factory = new FrameworkElementFactory(typeof(TextBox));
+            factory.SetValue(TextBox.FontSizeProperty, 15.0);
+            factory.SetValue(TextBox.BackgroundProperty, Brushes.Transparent);
+            factory.SetValue(TextBox.IsEnabledProperty, true);
+            factory.SetValue(TextBox.BorderBrushProperty, Brushes.Transparent);
+            factory.SetValue(TextBox.BorderThicknessProperty, new Thickness(0));
+            if (index == 1)
             {
-                if (DeleteBtnToInd[el] > ind)
+                factory.AddHandler(TextBox.PreviewTextInputEvent, new TextCompositionEventHandler(KeyNumberOnPreviewTextInput));
+
+                factory.SetBinding(TextBox.TextProperty, new Binding()
                 {
-                    btns.Add(el);
-                }
-            }
+                    Path = new PropertyPath("Id"),
+                    Mode = BindingMode.OneWayToSource,
+                    Converter = new IntToStringConverter(),
+                    NotifyOnTargetUpdated = true,
+                    UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                });
 
-            for (int i = 0; i < btns.Count; ++i)
-            {
-                DeleteBtnToInd[btns[i]]--;
-            }
-
-            foreach (var el in elemsInRow[ind])
-            {
-                Grid.Children.Remove(el);
-            }
-            Grid.RowDefinitions.RemoveAt(ind);
-
-            for (int i = ind; i < numberOfLines - 1; ++i)
-            {
-
-                for (int j = 0; j < elemsInRow[i].Count; ++j)
+                factory.AddHandler(TextBox.LostFocusEvent, new RoutedEventHandler((s, e) =>
                 {
-                    if (elemsInRow[i][j] is TextBox && @where.ContainsKey((TextBox)elemsInRow[i][j]))
-                    {
-                        //@where.Remove((TextBox)elemsInRow[i][j]);
-                    }
-                }
-                elemsInRow[i] = elemsInRow[i + 1];
-
-                
-
-                for (int j = 0; j < elemsInRow[i].Count; ++j)
-                {
-                    Grid.SetRow(elemsInRow[i][j], i);
-                    if (elemsInRow[i][j] is TextBox && @where.ContainsKey((TextBox) elemsInRow[i][j]))
-                    {
-                        TextBox box = (TextBox) elemsInRow[i][j];
-                        @where[box].first--;
-                        textBoxs[@where[box].first, @where[box].second] = (TextBox) elemsInRow[i][j];
-                    }
-                }
-            }
-            Console.WriteLine("");
-            elemsInRow.Remove(elemsInRow.Count);
-
-        }
-
-
-        void setBackground()
-        {
-            //Grid.Children.Remove(backgroundImage);
-
-            backgroundImage = new Image();
-            backgroundImage.Source = Helper.AluminumSource;
-            backgroundImage.Stretch = Stretch.UniformToFill;
-            Grid.SetRow(backgroundImage, 1);
-            Grid.SetRowSpan(backgroundImage, 30);
-            Grid.SetColumn(backgroundImage, 1);
-            Grid.SetColumnSpan(backgroundImage, 27);
-            Grid.Children.Add(backgroundImage);
-        }
-
-        void setUpRowAndCols()
-        {
-            for (int i = 0; i < numberOfCols; ++i)
-            {
-                ColumnDefinition def = new ColumnDefinition();
-                def.Width = new GridLength(widths[i]);
-                Grid.ColumnDefinitions.Add(def);
-            }
-            RowDefinition row = new RowDefinition();
-            row.Height = new GridLength(40);
-            Grid.RowDefinitions.Add(row);
-            rowDefinitions.Add(row);
-        }
-
-        public void AddMenu()
-        {
-            Button addButton = new Button();
-            addButton.Template = (ControlTemplate) Application.Current.Resources["RoundButtonAdd"];
-            addButton.Background = Brushes.LightGreen;
-
-            addButton.BorderThickness = new Thickness(0.5);
-            addButton.Content = "Добавить ключ";
-            addButton.Margin = new Thickness(20, 5, 20, 5);
-            addButton.Click += ItemOnClick;
-            
-            Grid.SetRow(addButton, 0);
-            Grid.SetColumn(addButton, 0);
-            Grid.SetColumnSpan(addButton, 3);
-            Grid.Children.Add(addButton);
-
-            Button endButton = new Button();
-            endButton.Template = (ControlTemplate) Application.Current.Resources["RoundButtonNoTriggers"];
-            endButton.Background = Brushes.Red;
-            endButton.BorderThickness = new Thickness(0.5);
-            endButton.Content = "Закончить";
-            endButton.Margin = new Thickness(20, 5, 20, 5);
-            endButton.Click += EndButtonOnClick;
-            Grid.SetRow(endButton, 0);
-            Grid.SetColumn(endButton, 6);
-            Grid.SetColumnSpan(endButton, 5);
-            Grid.Children.Add(endButton);
-        }
-
-        private void EndButtonOnClick(object sender, RoutedEventArgs e)
-        {
-            if (!CheckAllKeysAreFilled())
-            {
-                MessageBox.Show("Ошибка", "Все ключи должны быть заполнены полностью", MessageBoxButton.OK);
-            }
-            else if (!CheckKeyNumbers())
-            {
-                MessageBox.Show("Ошибка", "Все ключи должны быть разными");
+                    viewModel.CheckKeysIdsCommand.Execute(null);
+                }));
             }
             else
             {
-                for (int row = 1; row < numberOfLines; ++row)
+                factory.AddHandler(TextBox.TextChangedEvent, new TextChangedEventHandler(TextBoxOnTextChanged));
+                factory.AddHandler(TextBox.PreviewTextInputEvent, new TextCompositionEventHandler(TextBoxOnPreviewTextInput));
+
+                factory.SetBinding(TextBox.TextProperty, new Binding()
                 {
-                    Configuration.lst.Add(ConstructKey(row));
-                }
-                Close();
-            }
-        }
-
-       
-
-        bool CheckAllKeysAreFilled()
-        {
-            bool ans = true;
-            for (int row = 1; row < numberOfLines; ++row)
-                ans &= KeyForRow(row).Length == 26;
-            return ans;
-        }
-
-        string KeyForRow(int row)
-        {
-            string ans = "";
-            for (int i = 2; i < numberOfCols; ++i)
-            {
-                ans += textBoxs[row, i].Text;
+                    Path = new PropertyPath($"KeyArr[{index - 2}]"),
+                    Mode = BindingMode.OneWayToSource,
+                    NotifyOnSourceUpdated = true,
+                    NotifyOnTargetUpdated = true,
+                    UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                });
             }
 
-            return ans;
-        }
-
-        Pair<int, string> ConstructKey(int row)
-        {
-            Pair<int, string> pair = new Pair<int, string>(0, "");
-            pair.first = int.Parse(textBoxs[row, 1].Text);
-            pair.second = KeyForRow(row);
-            return pair;
-        }
-
-        #endregion
-
-        #region Buttons
-
-        private void ItemOnClick(object sender, RoutedEventArgs e)
-        {
-            if (numberOfLines > Helper.MaxKeys)
-            {
-                MessageBox.Show("Ошибка", "Слишком много строк", MessageBoxButton.OK);
-            }
-            else
-            {
-                AddNewKey();
-            }
-        }
-
-        public void AddNewKey()
-        {
-
-            RowDefinition row = new RowDefinition();
-            row.Height = new GridLength(30);
             
-            Grid.RowDefinitions.Add(row);
-            rowDefinitions.Add(row);
-
-            Image image = new Image();
-            image.Source = Helper.PapSource;
-            image.Margin = new Thickness(0, 4, 0, 2);
-            image.Stretch = Stretch.UniformToFill;
-            Grid.SetRow(image, numberOfLines);
-            Grid.SetColumn(image, 1);
-            Grid.SetColumnSpan(image, Grid.ColumnDefinitions.Count);
-            Grid.Children.Add(image);
-
-            if (!elemsInRow.ContainsKey(numberOfLines))
-            {
-                elemsInRow.Add(numberOfLines, new List<UIElement>());
-                //elemsInRow[numberOfLines] = new List<UIElement>();
-                //elemsInRow[numberOfLines].Add(image);
-            }
-            elemsInRow[numberOfLines].Add(image);
-
-            //add TExtBox for id
-            TextBox txBox = new TextBox();
-            txBox.TextChanged += TextBoxOnTextChanged;
-            txBox.Background = null;
-            txBox.BorderThickness = new Thickness(0);
-            txBox.Margin = new Thickness(4, 8, 0, 4);
-            txBox.LostFocus += KeyIdOnLostFocus;
-            @where[txBox] = Pair<int, int>.MakePair(numberOfLines, 1);
-            textBoxs[numberOfLines, 1] = txBox;
-            Grid.SetRow(txBox, numberOfLines);
-            Grid.SetColumn(txBox, 1);
-            Grid.Children.Add(txBox);
-            txBox.PreviewTextInput += KeyNumberOnPreviewTextInput;
-            elemsInRow[numberOfLines].Add(txBox);
-
-            for (int i = 2; i < numberOfCols; ++i)
-            {
-                Rectangle rectangle = new Rectangle();
-                rectangle.HorizontalAlignment = HorizontalAlignment.Right;
-                rectangle.Width = 1;
-                rectangle.Margin = new Thickness(5, 6, 0, 3);
-                rectangle.Stroke = new SolidColorBrush(Colors.Black);
-
-                TextBox textBox = new TextBox();
-                textBox.FontSize = 20;
-                textBox.BorderThickness = new Thickness(0);
-                textBox.Background = null;
-                textBox.Margin = new Thickness(2, 4, 0, 4);
-                textBox.TextAlignment = TextAlignment.Center;
-                textBox.PreviewTextInput += TextBoxOnPreviewTextInput;
-                textBox.TextChanged += TextBoxOnTextChanged;
-                textBoxs[numberOfLines, i] = textBox;
-                @where[textBox] = Pair<int, int>.MakePair(numberOfLines, i);
-                
-
-                Grid.SetRow(rectangle, numberOfLines);
-                Grid.SetColumn(rectangle, i-1);
-                Grid.SetRow(textBox, numberOfLines);
-                Grid.SetColumn(textBox, i);
-                Grid.Children.Add(textBox);
-                Grid.Children.Add(rectangle);
-                elemsInRow[numberOfLines].Add(textBox);
-                elemsInRow[numberOfLines].Add(rectangle);
-            }
-            numberOfLines++;
-            AddDeleteButtons();
-            UpdateBackGround();
-
-        }
-
-        private void KeyIdOnLostFocus(object sender, RoutedEventArgs e)
-        {
-            if (!CheckKeyNumbers())
-            {
-                MessageBox.Show("Ошибка", "Номера ключей повторяются", MessageBoxButton.OK);
-            }
-        }
-
-        bool CheckKeyNumbers()
-        {
-            SortedSet<int> set = new SortedSet<int>(Configuration.forbiddenKeys);
-            for (int i = 0; i < numberOfLines; ++i)
-            {
-                if (textBoxs[i, 1] != null && textBoxs[i, 1].Text.Length > 0)
-                {
-                    if (set.Contains(int.Parse(textBoxs[i, 1].Text)))
-                    {
-                        return false;
-                    }
-
-                    set.Add(int.Parse(textBoxs[i, 1].Text));
-                }
-            }
-
-            return true;
+            template.VisualTree = factory;
+            return template;
         }
 
         private void KeyNumberOnPreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            TextBox txt = (TextBox) sender;
+            TextBox txt = (TextBox)sender;
             //bool check = CheckKeyNumbers();
-            if (Helper.reg.IsMatch(txt.Text + e.Text) && int.Parse(txt.Text+ e.Text) <= Helper.MaxKeys)
-            {
-                e.Handled = false;
-            }
-            else
-            {
-                e.Handled = true;
-
-                MessageBox.Show("Тут не число или оно слишком большое", "Ошибка", MessageBoxButton.OK);
-            }
+            viewModel.KeyPreviewInputCommand.Execute((txt.Text + e.Text, e));
         }
 
-        private bool IsSequence(int row, int col, string txt)
-        {
-            txt = txt.ToUpper();
-            SortedSet<string> set = new SortedSet<string>();
-            for (int i = 2; i < numberOfCols; ++i)
-            {
-                string currTxt = textBoxs[row, i].Text;
-                if (i == col)
-                {
-                    currTxt = txt;
-                }
-                if (currTxt == String.Empty)
-                {
-                    continue;
-                }
-                //Console.WriteLine("{0}  {1}", currTxt, set.Contains(currTxt));
-                if (set.Contains(currTxt))
-                {
-                    MessageBox.Show("Ошибка", "Повторяющиеся символы в строке " + row, MessageBoxButton.OK);
-                    return false;
-                }
-
-                set.Add(currTxt);
-            }
-
-            return true;
-        }
-
-        #endregion
         private void TextBoxOnTextChanged(object sender, TextChangedEventArgs e)
         {
             TextBox textBox = (TextBox)sender;
-            textBox.Text = Helper.Strip(textBox.Text).ToUpper();
+            textBox.Text = Helper.Strip(textBox.Text).ToUpper().Substring(0, Math.Min(1, textBox.Text.Length));
         }
 
         private void TextBoxOnPreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            TextBox textBox = (TextBox) sender;
-            
-            if (Helper.isAlphaString(e.Text) && textBox.Text.Length + e.Text.Length == 1 && IsSequence(@where[textBox].first, @where[textBox].second, e.Text))
+            DependencyObject dep = (DependencyObject)e.OriginalSource;
+
+            while ((dep != null) && !(dep is DataGridRow))
             {
-                e.Handled = false;
-            }
-            else
-            {
-                e.Handled = true;
+                dep = VisualTreeHelper.GetParent(dep);
             }
 
+            if (dep is DataGridRow)
+            {
+                DataGridRow row = dep as DataGridRow;
+                int ind = FindRowIndex(row);
+                // do something
+                TextBox textBox = (TextBox)sender;
+
+                if (Helper.isAlphaString(e.Text) && textBox.Text.Length + e.Text.Length == 1 && viewModel.isSequence(ind, e.Text))
+                {
+                    e.Handled = false;
+                }
+                else
+                {
+                    e.Handled = true;
+                }
+            }
+        }
+
+        private int FindRowIndex(DataGridRow row)
+        {
+            DataGrid dataGrid1 =
+                ItemsControl.ItemsControlFromItemContainer(row)
+                as DataGrid;
+
+            int index = dataGrid1.ItemContainerGenerator.
+                IndexFromContainer(row);
+
+            return index;
         }
     }
 }

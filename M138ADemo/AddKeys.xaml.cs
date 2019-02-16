@@ -106,68 +106,11 @@ namespace M138ADemo
             mOpenRecentKeysMenuItem.SetBinding(MenuItem.ItemsSourceProperty, openRecentFilesMenuItemsBinding);
 
             viewModel.NotifyToCloseEvent += ViewModel_NotifyToCloseEvent;
-
-            /*AddUserKeyButton.Click += AddUserKeyButtonOnClick;
-            ShowKeysButton.Click += ShowKeysButtonOnClick;
-            PairKeysButton.Click += PairKeysButtonOnClick;
-            RandomKeyButton.Click += RandomKeyButton_Click;
-            TodayKeyButton.Click += TodayKeyButton_Click;
-            mNextButton.Click += MNextButton_Click;
-            //mNumberOfKeysSelected.DataContext = Configuration.lst;
-            Binding binding = new Binding()
-            {
-                Source = Configuration.lst,
-                Path = new PropertyPath("Count"),
-                //Mode = BindingMode.OneWay,
-                Converter = new IntToStringConverter("Кол-во ключей:"),
-                BindsDirectlyToSource = true,
-                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-            };
-
-            mNumberOfKeysSelected.SetBinding(TextBlock.TextProperty,binding);
-
-            Binding warningBinding = new Binding
-            {
-                Source = Configuration.lst,
-                Path = new PropertyPath("Count"),
-                Converter = new WarningIntToStringConverter(),
-                BindsDirectlyToSource = true,
-                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-            };
-            mWarninTextBlock.SetBinding(TextBlock.TextProperty, warningBinding);
-
-            Binding buttonDisableBinding = new Binding
-            {
-                Source = Configuration.lst,
-                Path = new PropertyPath("Count"),
-                Converter = new WarningIntToBoolConverter(),
-                BindsDirectlyToSource = true,
-                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-            };
-            mNextButton.SetBinding(Button.IsEnabledProperty, buttonDisableBinding);
-            
-            Binding buttonColorBinding = new Binding
-            {
-                Source = Configuration.lst,
-                Path = new PropertyPath("Count"),
-                Converter = new IsEnabledToColorConverter(Brushes.Aqua, Brushes.LightGray),
-                BindsDirectlyToSource = true,
-                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-            };
-            mNextButton.SetBinding(Button.BackgroundProperty, buttonColorBinding);
-
-            mOpenKeysMenuItem.Click += MOpenKeysMenuItem_Click;
-            mSaveKeysMenuItem.Click += MSaveKeysMenuItem_Click;
-
-            RecentFiles.KeysCollectionShared.PropertyChanged += UpdateRecentKeysMenuItems;
-            SetMenuItems();*/
         }
 
         private void ViewModel_NotifyToCloseEvent()
         {
             this.Close();
-        }
-
-        
+        }  
     }
 }
