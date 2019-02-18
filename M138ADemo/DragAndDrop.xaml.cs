@@ -32,6 +32,7 @@ using System.IO;
 using System.Xml.Serialization;
 using System.Xml.Linq;
 using M138ADemo.MainClasses;
+using M138ADemo.ViewModels;
 
 namespace M138ADemo
 {
@@ -51,6 +52,7 @@ namespace M138ADemo
         private static ImageBrush darkRowBrush = new ImageBrush(Helper.DarkPapSource);
         private static ImageBrush DefaultRowBrush = new ImageBrush(Helper.PapSource);
         private string currentFilePath = "Untitled";
+        private DragAndDropViewModel viewModel;
 
         public string CurrentFilePath
         {
@@ -67,31 +69,23 @@ namespace M138ADemo
 
         public DragAndDrop()
         {
-            if (Configuration.deviceState != null)
-            {
-                keys.Clear();
-                lastState.SafeInit(Configuration.deviceState.keys);
-                foreach (var el in Configuration.deviceState.keys)
-                {
-                    el.CopyToArr();
-                    keys.Add(el);
-                }
 
-            }
-            else
-            {
-                for (int i = 0; i < Configuration.lst.Count; ++i)
-                {
-                    keys.Add(new KeyModel(Configuration.lst[i].second, Configuration.lst[i].first));
-                }
-                lastState.SafeInit(keys);
-            }
+            viewModel = new DragAndDropViewModel();
+            viewModel.AfterFileOpened += () => { UpdateHighlightedCells(); SetBackGround(); };
+            viewModel.UpdateAndRehighlight += (ind) => { UpdateHighlightedCells(ind); SetBackGround(ind); };
 
-
-
-            AdjustShifts();
             InitializeComponent();
-            this.Title = CurrentFilePath;
+
+            this.SetBinding(TitleProperty, new Binding()
+            {
+                Source = viewModel,
+                Path = new PropertyPath("Title"),
+                Mode = BindingMode.OneWay,
+                NotifyOnSourceUpdated = true,
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+            });
+
+            //this.Title = CurrentFilePath;
             myGrid.Loaded += StaticGridOnLoaded;
             darkRowBrush.Transform = new ScaleTransform(1, 0.85);
             
@@ -155,7 +149,8 @@ namespace M138ADemo
             myGrid.AutoGenerateColumns = false;
             myGrid.SelectionMode = DataGridSelectionMode.Extended;
             myGrid.IsReadOnly = true;
-            myGrid.ItemsSource = keys;
+            myGrid.ItemsSource = viewModel.Keys;
+            myGrid.CanUserSortColumns = false;
             for (int i = 0; i < 29 + 26; ++i)
             {
                 var column = new DataGridTextColumn();
@@ -218,41 +213,20 @@ namespace M138ADemo
             };
 
             mSaveAsMenuItem.Click += MSaveAsMenuItem_Click;
-            mOpenMenuItem.Click += MOpenMenuItem_Click;
+            mOpenMenuItem.Command = viewModel.OpenMenuItemCommand;
             this.Closing += DragAndDrop_Closing;
-        }
-
-        private bool DidUserMadeChanges()
-        {
-            if (lastState.keys.Count == keys.Count)
-            {
-                foreach (var el in lastState.keys)
-                {
-                    if ((keys.Where((arg) => arg.IdNumber == el.IdNumber && arg.Key == el.Key && arg.Shift == el.Shift)).Count() != (lastState.keys.Where((arg) => arg.IdNumber == el.IdNumber && arg.Key == el.Key && arg.Shift == el.Shift)).Count())
-                    {
-                        return true;
-                    } 
-                }
-            }
-            return false;
-
         }
 
         private void DragAndDrop_Closing(object sender, CancelEventArgs e)
         {
-            if (this.Title == "Untitled" || DidUserMadeChanges())
-            {
-                var res = MessageBox.Show("Вы не сохранили файл, все данные будут утерены, если вы решите выйти", "Предупреждение", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
-
-                e.Cancel = res != System.Windows.Forms.DialogResult.OK;
-            }
+            viewModel.OnClosingCommand.Execute(e);
         }
 
         private void MyGrid_SelectedCellsChanged(object sender, SelectedCellsChangedEventArgs e)
         {
             if (e.AddedCells.Count > 0)
             {
-                for (int row = 0; row < keys.Count; ++row)
+                for (int row = 0; row < viewModel.Keys.Count; ++row)
                 {
                     for (int col = 0; col < 2; ++col)
                     {
@@ -269,128 +243,16 @@ namespace M138ADemo
 
         }
 
-        private void MOpenMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            Microsoft.Win32.OpenFileDialog dialog = new Microsoft.Win32.OpenFileDialog();
-            dialog.DefaultExt = ".xml";
-            dialog.Filter = "XML-File | *.xml";
-            dialog.InitialDirectory = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
-            Nullable<bool> result = dialog.ShowDialog();
-            if (result == true)
-            {
-              
-                string fileName = dialog.FileName;
-                /*
-                RecentFiles.MachineStatesShared.AddFileToRecents(fileName);
-
-                CurrentFilePath = fileName;
-
-                DeviceState state = new DeviceState();
-
-                XmlSerializer serializer = new XmlSerializer(state.GetType());
-
-                StreamReader reader = new StreamReader(fileName);
-                try
-                {
-                    state = (DeviceState)serializer.Deserialize(reader);
-                }
-                catch (InvalidCastException)
-                {
-                    reader.Close();
-                    MessageBox.Show("Вы уверены, что открываете файл с состоянием машины?", "Ошибка", MessageBoxButtons.OK);
-                    return;
-                }
-                catch (InvalidOperationException)
-                {
-                    reader.Close();
-                    System.Windows.Forms.MessageBox.Show("Вы уверены, что открываете файл с состоянием машины?", "Ошибка", System.Windows.Forms.MessageBoxButtons.OK);
-                    return;
-                }
-                */
-                DeviceState state = null;
-                string newWindowTitle = null;
-
-                (state, newWindowTitle) = IOHelper.LoadDeviceState(fileName);
-
-                CurrentFilePath = newWindowTitle;
-
-                if (state != null)
-                {
-                    keys.Clear();
-
-                    foreach (var el in state.keys)
-                    {
-                        el.CopyToArr();
-                        keys.Add(el);
-                    }
-                    lastState.SafeInit(state.keys);
-                    Configuration.deviceState = state;
-                    AsyncUtils.DelayCall(1000, UpdateHighlightedCells);
-                    AsyncUtils.DelayCall(1000, SetBackGround);
-                }
-            }
-        }
-
         private void MSaveAsMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            Microsoft.Win32.SaveFileDialog dialog = new Microsoft.Win32.SaveFileDialog();
-            dialog.DefaultExt = ".xml";
-            dialog.Filter = "XML-File | *.xml";
-            dialog.InitialDirectory = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
-            Nullable<bool> result = dialog.ShowDialog();
-
-            if (result == true)
-            {
-                string fileName = dialog.FileName;
-                CurrentFilePath = fileName;
-
-                var savedState = IOHelper.SaveDeviceState(fileName, new List<KeyModel>(keys));
-                if (savedState != null)
-                {
-                    lastState.SafeInit(savedState.keys);
-                }
-                //SoapFormatter formatter = new SoapFormatter();
-            }
-
-        }
-
-        private void AdjustShifts()
-        {
-            if (Configuration.Automatic && Configuration.Encrypt)
-            {
-                string mes = Configuration.Message;
-                for (int i = 0; i < mes.Length; ++i)
-                {
-                    keys[i].AdjustShiftEncrypt(Char.ToLower(mes[i]));
-                }
-            }
-            if (Configuration.Automatic && Configuration.Decrypt)
-            {
-                string mes = Configuration.Message;
-                for (int i = 0; i < mes.Length; ++i)
-                {
-                    keys[i].AdjustShiftDecrypt(Char.ToLower(mes[i]));
-                }
-            }
+            viewModel.SaveAsCommand.Execute(null);
         }
 
         private void SetBackGround()
         {
-            for (int row = 0; row < keys.Count; ++row)
+            for (int row = 0; row < viewModel.Keys.Count; ++row)
             {
-                for (int col = 2; col < 29 + 26; ++col)
-                {
-                    var cell = GetCell(row, col);
-                    if (keys[row].KeyArr[col - 2] != " ")
-                    {
-                        cell.Background = DefaultRowBrush;
-                    }
-                    else
-                    {
-                        cell.Background = null;
-                        cell.BorderBrush = null;
-                    }
-                }
+                SetBackGround(row);
             }
         }
 
@@ -399,7 +261,7 @@ namespace M138ADemo
             for (int col = 2; col < 29 + 26; ++col)
             {
                 var cell = GetCell(row, col);
-                if (keys[row].KeyArr[col - 2] != " ")
+                if (viewModel.Keys[row].KeyArr[col - 2] != " ")
                 {
                     cell.Background = DefaultRowBrush;
                 }
@@ -446,7 +308,7 @@ namespace M138ADemo
 
         private void HighlightSelectedRow(int col)
         {
-            for (int i = 0; i < keys.Count; ++i)
+            for (int i = 0; i < viewModel.Keys.Count; ++i)
             {
                 var cell = GetCell(i, col);
                 //cell.BorderThickness = new Thickness(2, 2, 2, 2);
@@ -496,21 +358,7 @@ namespace M138ADemo
                 return;
             }
             int ind = row.GetIndex();
-            if (keys[ind].Shift > -26)
-            {
-                keys[ind].Shift = keys[ind].Shift - 1;
-                UpdateHighlightedCells(ind);
-                SetBackGround(ind);
-            }
-            else
-            {
-                //TODO
-            }
-
-            //keys[ind].IdNumber -= 1; //DELETE IT;
-            /*var curr = keys[ind];
-            keys.RemoveAt(ind);
-            keys.Insert(ind, curr);*/
+            viewModel.ShiftCommand.Execute((ind, DragAndDropViewModel.KeyShiftEnum.Left));
         }
 
         private void BtnOnClickRight(object sender, RoutedEventArgs e)
@@ -521,70 +369,30 @@ namespace M138ADemo
                 return;
             }
             int ind = row.GetIndex();
-            if (keys[ind].Shift < 0)
-            {
-                keys[ind].Shift = keys[ind].Shift + 1;
-                UpdateHighlightedCells(ind);
-                SetBackGround(ind);
-            }
-            else
-            {
-                //TODO
-            }
-
-            //keys[ind].IdNumber += 1;//DELETE IT
-            /*var curr = keys[ind];
-            keys.RemoveAt(ind);
-            keys.Insert(ind, curr);*/
+            viewModel.ShiftCommand.Execute((ind, DragAndDropViewModel.KeyShiftEnum.Right));
         }
 
         private void UpdateHighlightedCells()
         {
-            for (int i = 0; i < keys.Count; ++i)
+            for (int i = 0; i < viewModel.Keys.Count; ++i)
             {
-                for (int j = 0; j < keys[0].Key.Length * 2 + 3; ++j)
-                {
-                    var c = GetCell(i, j);
-                    c.BorderThickness = DefaultThickness;
-                    //c.BorderThickness = DefaultThickness;
-                    if (j > 1 )
-                    {
-                        if (keys[i].Shift >= 0 && j > 2 && keys[i].KeyArr[(j - 3)] != " ")
-                        {
-                            c.BorderBrush = DefaultRowBrush;
-                        } else if (keys[i].KeyArr[(j - 2)] != " ")
-                        {
-                            c.BorderBrush = DefaultRowBrush;
-                        }
-                        else
-                        {
-                            c.BorderBrush = null;
-                        }
-                    }
-                    else c.BorderBrush = null;
-                }
-
-                //var cell = GetCell(i, keys[i].LastIndex);
-                //cell.BorderThickness = new Thickness(0.5, 0, 0, 2);
-                var cell = GetCell(i, keys[i].LastIndex + 3);//2 - lftbtn right btn and
-                //cell.BorderThickness = new Thickness(1, 0.6, 1, 0.6);
-                cell.BorderBrush = Brushes.Red;
+                UpdateHighlightedCells(i);
             }
         }
 
         private void UpdateHighlightedCells(int row)
         {
-            for (int j = 0; j < keys[0].Key.Length * 2 + 3; ++j)
+            for (int j = 0; j < viewModel.Keys[0].Key.Length * 2 + 3; ++j)
             {
                 var c = GetCell(row, j);
                 c.BorderThickness = DefaultThickness;
                 if (j > 1)
                 {
-                    if (keys[row].Shift >= 0 && j > 2 && keys[row].KeyArr[(j - 3)] != " ")
+                    if (viewModel.Keys[row].Shift >= 0 && j > 2 && viewModel.Keys[row].KeyArr[(j - 3)] != " ")
                     {
                         c.BorderBrush = DefaultRowBrush;
                     }
-                    else if (keys[row].KeyArr[(j - 2)] != " ")
+                    else if (viewModel.Keys[row].KeyArr[(j - 2)] != " ")
                     {
                         c.BorderBrush = DefaultRowBrush;
                     }
@@ -598,7 +406,7 @@ namespace M138ADemo
 
                 //c.Background = Brushes.Red;
             }
-            var cell = GetCell(row, keys[row].LastIndex + 3);//2 - lftbtn right btn and
+            var cell = GetCell(row, viewModel.Keys[row].LastIndex + 3);//2 - lftbtn right btn and
             //cell.BorderThickness = new Thickness(1, 0.6, 1, 0.6);
             cell.BorderBrush = Brushes.Red;
         }
@@ -627,11 +435,10 @@ namespace M138ADemo
                 return;
             }
             
-            KeyModel changedProduct = keys[currRowIndex];
+            KeyModel changedProduct = viewModel.Keys[currRowIndex];
 
-            //change behaviour if you want
-            keys.RemoveAt(currRowIndex);
-            keys.Insert(index, changedProduct);
+            viewModel.Keys.RemoveAt(currRowIndex);
+            viewModel.Keys.Insert(index, changedProduct);
             SetBackGround();
         }
 
@@ -713,8 +520,6 @@ namespace M138ADemo
             return curIndex;
         }
 
-
-        //Helpers for cellStyling
         public static T GetVisualChild<T>(Visual parent) where T : Visual
         {
             T child = default(T);

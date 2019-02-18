@@ -187,8 +187,6 @@ namespace M138ADemo
 
         private void ConstructGrid(int numberOfRows, int numberOfCol)
         {
-            
-
             ImageSource imageSource = new BitmapImage(new Uri("pack://application:,,,/Images/aluminum_texture1.jpg"));
             Grid.Background = new ImageBrush(imageSource);
             for (int i = 0; i < numberOfRows + 2; ++i)

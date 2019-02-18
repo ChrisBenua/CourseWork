@@ -76,6 +76,7 @@
     <Compile Include="ViewModels\AddKeysViewModel.cs" />
     <Compile Include="ViewModels\AddUsersKeysViewModel.cs" />
     <Compile Include="ViewModels\DocsWIndowViewModel.cs" />
+    <Compile Include="ViewModels\DragAndDropViewModel.cs" />
     <Compile Include="ViewModels\MainSettingsViewModel.cs" />
     <Compile Include="Models\DocsWindowModel.cs" />
     <Compile Include="Models\MainSettingsModel.cs" />
