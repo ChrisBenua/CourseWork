@@ -23,10 +23,11 @@
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition Width="30"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <TextBlock Grid.Row="1" Grid.Column="2" Style="{StaticResource PlaceHolder}" Text="Ключ: "></TextBlock>
+        <TextBlock Grid.Row="1" Grid.Column="2" Style="{StaticResource PlaceHolder}" Text="Приватный Ключ Пары: "></TextBlock>
         <Border Style="{StaticResource BorderStyle}" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" MaxHeight="60" MaxWidth="450"
                 Margin="150, 0, 150, 40">
-            <TextBox x:Name="KeyBox" FontSize="20" BorderBrush="AliceBlue" BorderThickness="0" PreviewTextInput="KeyBox_OnPreviewTextInput" Margin="10, 10, 10, 10" Background="Transparent">
+            <TextBox x:Name="KeyBox" FontSize="20" BorderBrush="AliceBlue" BorderThickness="0" PreviewTextInput="KeyBox_OnPreviewTextInput" Margin="10, 10, 10, 10" Background="Transparent"
+                     TextAlignment="Center">
 
             </TextBox>
         </Border>

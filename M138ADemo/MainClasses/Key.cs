@@ -389,10 +389,21 @@ namespace M138ADemo
 
         private void makeKeyArr()
         {
-            KeyArr = new string[Key.Length];
-            for (int i = 0; i < Key.Length; ++i)
+            if (Key.Length == 0)
             {
-                KeyArr[i] = new string(Key[i], 1);
+                KeyArr = new string[26];
+                for (int i = 0; i < KeyArr  .Length; ++i)
+                {
+                    KeyArr[i] = "";
+                }
+            }
+            else
+            {
+                KeyArr = new string[Key.Length];
+                for (int i = 0; i < Key.Length; ++i)
+                {
+                    KeyArr[i] = new string(Key[i], 1);
+                }
             }
         }
         [XmlIgnore]

@@ -28,6 +28,19 @@ namespace M138ADemo.ViewModels
 
         DeviceState _lastState;
 
+        int _selectedColumn;
+
+        public int SelectedColumn
+        {
+            get => _selectedColumn;
+
+            set
+            {
+                _selectedColumn = value;
+                OnPropertyChanged();
+            }
+        }
+
         public string Title
         {
             get => _title;
@@ -93,7 +106,26 @@ namespace M138ADemo.ViewModels
             }
         }
 
-        
+        private RelayCommand _onShowSelectedText;
+
+        public RelayCommand OnShowSelectedText
+        {
+            get
+            {
+                
+                return _onShowSelectedText ?? (_onShowSelectedText = new RelayCommand(obj => {
+                    string columnText = "";
+
+                    for (int i = 0; i < Keys.Count; ++i)
+                    {
+                        columnText += Keys[i].KeyArr[SelectedColumn];
+                    }
+                    Clipboard.SetText(columnText);
+
+                    dialogService.ShowMessage(columnText, "Ваше сообщение, скопировано в буфер обмена");
+                }));
+            }
+        }
 
         private RelayCommand _onClosingCommand;
 
@@ -198,7 +230,7 @@ namespace M138ADemo.ViewModels
         {
             Keys = new ObservableCollection<KeyModel>();
             LastState = new DeviceState();
-
+            dialogService = new DefaultDialogService();
             if (Configuration.deviceState != null)
             {
                 Configuration.deviceState.keys.ToList().ForEach((arg) => Keys.Add(new KeyModel(arg._key, arg.IdNumber, arg.Shift)));

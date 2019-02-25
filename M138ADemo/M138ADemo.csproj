@@ -68,6 +68,7 @@
     <Compile Include="DragAndDrop.xaml.cs">
       <DependentUpon>DragAndDrop.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MainClasses\Extensions.cs" />
     <Compile Include="MainClasses\Key.cs" />
     <Compile Include="MainClasses\RecentFiles.cs" />
     <Compile Include="MainClasses\RelayCommand.cs" />

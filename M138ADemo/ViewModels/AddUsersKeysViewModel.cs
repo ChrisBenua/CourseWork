@@ -53,7 +53,7 @@ namespace M138ADemo.ViewModels
             {
                 return _addKeyCommand ?? (_addKeyCommand = new RelayCommand(obj =>
                 {
-                    UserKeys.Add(new KeyForPersistance(11, "abcdefghijklmnopqrstuvwxyz"));
+                    UserKeys.Add(new KeyForPersistance(0, ""));
                 }));
             }
         }
@@ -142,12 +142,12 @@ namespace M138ADemo.ViewModels
         public bool isSequence(int row, string newText)
         {
             HashSet<char> set = new HashSet<char>();
-            set.Add(newText[0]);
+            set.Add(Char.ToLower(newText[0]));
             for (int i = 0; i < UserKeys[row].KeyArr.Length; ++i)
             {
                 if (UserKeys[row].KeyArr[i].Length > 0)
                 {
-                    char str = UserKeys[row].KeyArr[i][0];
+                    char str = Char.ToLower(UserKeys[row].KeyArr[i][0]);
                     if (str != ' ')
                     {
                         if (set.Contains(str))

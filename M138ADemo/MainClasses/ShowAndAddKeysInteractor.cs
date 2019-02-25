@@ -23,6 +23,8 @@ namespace M138ADemo.MainClasses
         public ShowAndAddKeysInteractor(DataGrid grid, AddUsersKeysViewModel model)
         {
             this.dataGrid = grid;
+            dataGrid.EnableColumnVirtualization = false;
+            dataGrid.EnableRowVirtualization = false;
             this.viewModel = model;
 
             dataGrid.CellStyle = new Style()
@@ -201,6 +203,18 @@ namespace M138ADemo.MainClasses
         {
             TextBox textBox = (TextBox)sender;
             textBox.Text = Helper.Strip(textBox.Text).ToUpper().Substring(0, Math.Min(1, textBox.Text.Length));
+
+            var sourceCell = DataGridExtensions.FindVisualParent<DataGridCell>(textBox);
+            var gridRow = DataGridExtensions.FindVisualParent<DataGridRow>(sourceCell);
+            int row = dataGrid.ItemContainerGenerator.IndexFromContainer(gridRow);
+            int col = sourceCell.Column.DisplayIndex + 1;
+            if (col != dataGrid.Columns.Count) {
+                var cell = dataGrid.GetCell(row, col);
+                (DataGridExtensions.GetVisualChild<TextBox>(cell) as TextBox).Focus();
+                
+                
+            }
+
         }
 
         public void TextBoxOnPreviewTextInput(object sender, TextCompositionEventArgs e)

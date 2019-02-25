@@ -69,10 +69,12 @@ namespace M138ADemo
 
         public DragAndDrop()
         {
-
+            
             viewModel = new DragAndDropViewModel();
             viewModel.AfterFileOpened += () => { UpdateHighlightedCells(); SetBackGround(); };
             viewModel.UpdateAndRehighlight += (ind) => { UpdateHighlightedCells(ind); SetBackGround(ind); };
+            this.InputBindings.Add(new InputBinding(viewModel.OnShowSelectedText, new KeyGesture(Key.C, ModifierKeys.Control)));
+
 
             InitializeComponent();
 
@@ -230,7 +232,7 @@ namespace M138ADemo
                 {
                     for (int col = 0; col < 2; ++col)
                     {
-                        var cell = GetCell(row, col);
+                        var cell = myGrid.GetCell(row, col);
                         cell.Background = null;
                         cell.BorderBrush = null;
                     }
@@ -260,7 +262,7 @@ namespace M138ADemo
         {
             for (int col = 2; col < 29 + 26; ++col)
             {
-                var cell = GetCell(row, col);
+                var cell = myGrid.GetCell(row, col);
                 if (viewModel.Keys[row].KeyArr[col - 2] != " ")
                 {
                     cell.Background = DefaultRowBrush;
@@ -282,8 +284,9 @@ namespace M138ADemo
                 if (header != null)
                 {
                     int headerIndex = int.Parse((string)header.Content);
-                    if (headerIndex <= 26)
+                    if (headerIndex <= 26 && headerIndex > 0)
                     {
+                        viewModel.SelectedColumn = headerIndex;
                         HighlightSelectedRow(int.Parse((string)header.Content) + 2);
                     }
                 }
@@ -310,7 +313,7 @@ namespace M138ADemo
         {
             for (int i = 0; i < viewModel.Keys.Count; ++i)
             {
-                var cell = GetCell(i, col);
+                var cell = myGrid.GetCell(i, col);
                 //cell.BorderThickness = new Thickness(2, 2, 2, 2);
                 cell.BorderBrush = Brushes.Aqua;
             }
@@ -384,7 +387,7 @@ namespace M138ADemo
         {
             for (int j = 0; j < viewModel.Keys[0].Key.Length * 2 + 3; ++j)
             {
-                var c = GetCell(row, j);
+                var c = myGrid.GetCell(row, j);
                 c.BorderThickness = DefaultThickness;
                 if (j > 1)
                 {
@@ -406,7 +409,7 @@ namespace M138ADemo
 
                 //c.Background = Brushes.Red;
             }
-            var cell = GetCell(row, viewModel.Keys[row].LastIndex + 3);//2 - lftbtn right btn and
+            var cell = myGrid.GetCell(row, viewModel.Keys[row].LastIndex + 3);//2 - lftbtn right btn and
             //cell.BorderThickness = new Thickness(1, 0.6, 1, 0.6);
             cell.BorderBrush = Brushes.Red;
         }
@@ -546,29 +549,6 @@ namespace M138ADemo
                 row = (DataGridRow)host.ItemContainerGenerator.ContainerFromIndex(index);
             }
             return row;
-        }
-
-        private DataGridCell GetCell(int row, int column)
-        {
-            var rowContainer = GetRow(myGrid, row);
-
-            if (rowContainer != null)
-            {
-                var presenter = GetVisualChild<DataGridCellsPresenter>(rowContainer);
-                if (presenter == null)
-                    return null;
-
-                // try to get the cell but it may possibly be virtualized
-                var cell = (DataGridCell)presenter.ItemContainerGenerator.ContainerFromIndex(column);
-                if (cell == null)
-                {
-                    // now try to bring into view and retreive the cell
-                    staticGrid.ScrollIntoView(rowContainer, staticGrid.Columns[column]);
-                    cell = (DataGridCell)presenter.ItemContainerGenerator.ContainerFromIndex(column);
-                }
-                return cell;
-            }
-            return null;
         }
 
     }
