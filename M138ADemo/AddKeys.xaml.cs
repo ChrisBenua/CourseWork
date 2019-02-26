@@ -33,6 +33,10 @@ namespace M138ADemo
         {
             InitializeComponent();
             viewModel = new AddKeysViewModel(new DefaultDialogService());
+
+            mBackButton.Command = viewModel.OpenAnotherWindowCommand;
+            mBackButton.CommandParameter = AddKeysViewModel.WindowsToBeOpened.MainSettings;
+
             AddUserKeyButton.Command = viewModel.OpenAnotherWindowCommand;
             AddUserKeyButton.CommandParameter = AddKeysViewModel.WindowsToBeOpened.AddUsersKeysButton;
 
@@ -56,7 +60,7 @@ namespace M138ADemo
                 Source = viewModel.Keys,
                 Path = new PropertyPath("Count"),
                 //Mode = BindingMode.OneWay,
-                Converter = new IntToStringConverter("Кол-во ключей:"),
+                Converter = new IntToStringConverter("Кол-во ключей: "),
                 BindsDirectlyToSource = true,
                 UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
             };

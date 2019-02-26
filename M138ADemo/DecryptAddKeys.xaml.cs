@@ -28,6 +28,7 @@ namespace M138ADemo
 
             mOpenFromFileMenuItem.Command = viewModel.OpenKeysFromFile;
             mSaveFileMenuItem.Command = viewModel.SaveKeysCommand;
+            mBackButton.Click += MBackButton_Click;
 
             //mColumnNumberTextBox.TextChanged += MColumnNumberTextBox_TextChanged;
             mAddKeysForPair.Click += MAddKeysForPair_Click;
@@ -84,6 +85,14 @@ namespace M138ADemo
             };
             mNumberOfKeysTextBlock.SetBinding(TextBlock.TextProperty, numberOfKeysBinding);
 
+        }
+
+        private void MBackButton_Click(object sender, RoutedEventArgs e)
+        {
+            Configuration.lst.Clear();
+            MainSettings w = new MainSettings();
+            w.Show();
+            this.Close();
         }
 
         private void MNextButton_Click(object sender, RoutedEventArgs e)

@@ -75,8 +75,23 @@ namespace M138ADemo
             viewModel.UpdateAndRehighlight += (ind) => { UpdateHighlightedCells(ind); SetBackGround(ind); };
             this.InputBindings.Add(new InputBinding(viewModel.OnShowSelectedText, new KeyGesture(Key.C, ModifierKeys.Control)));
 
-
             InitializeComponent();
+
+            viewModel.NotifyToClose += () => this.Close();
+
+            mBackToKeysMenuItem.Command = viewModel.BackCommand;
+            mBackToKeysMenuItem.CommandParameter = DragAndDropViewModel.WindowsToBeOpened.AddKeys;
+
+            mBackToSettingsMenuItem.Command = viewModel.BackCommand;
+            mBackToSettingsMenuItem.CommandParameter = DragAndDropViewModel.WindowsToBeOpened.MainSettings;
+
+            mBackToKeysMenuItem.SetBinding(System.Windows.Controls.MenuItem.IsEnabledProperty, new Binding()
+            {
+                Source = viewModel,
+                Path = new PropertyPath("IsBackToKeysMenuItemsEnabled"),
+                NotifyOnSourceUpdated = true,
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+            });
 
             this.SetBinding(TitleProperty, new Binding()
             {

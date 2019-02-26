@@ -60,7 +60,7 @@ namespace M138ADemo.Models
 
         public MainSettingsModel()
         {
-            Message = "";
+            Message = Configuration.Message ?? "";
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -61,6 +61,7 @@ namespace M138ADemo
                 DragAndDrop w = new DragAndDrop();
                 w.CurrentFilePath = filePath;
                 w.Show();
+                this.Close();
             };
 
             //mMessagetextBox.TextChanged += MMessagetextBox_TextChanged;

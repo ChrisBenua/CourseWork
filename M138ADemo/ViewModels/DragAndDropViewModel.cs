@@ -22,6 +22,11 @@ namespace M138ADemo.ViewModels
             Left, Right
         }
 
+        public enum WindowsToBeOpened
+        {
+            MainSettings, AddKeys
+        }
+
         string _title;
 
         ObservableCollection<KeyModel> _keys;
@@ -208,6 +213,59 @@ namespace M138ADemo.ViewModels
             }
         }
 
+        bool _isBackToKeysMenuItemEnabled;
+
+        public bool IsBackToKeysMenuItemsEnabled
+        {
+            get
+            {
+                return _isBackToKeysMenuItemEnabled;
+            }
+
+            private set
+            {
+                _isBackToKeysMenuItemEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private RelayCommand _backCommand;
+
+        public RelayCommand BackCommand
+        {
+            get
+            {
+                return _backCommand ?? (_backCommand = new RelayCommand(obj =>
+                {
+                    var choice = (WindowsToBeOpened)obj;
+
+                    switch (choice)
+                    {
+                        case WindowsToBeOpened.AddKeys:
+                            if (Configuration.Encrypt)
+                            {
+                                AddKeys w = new AddKeys();
+                                w.Show();
+                            }
+                            else
+                            {
+                                DecryptAddKeys w1 = new DecryptAddKeys();
+                                w1.Show();
+                            }
+                            NotifyToClose?.Invoke();
+                            break;
+                        case WindowsToBeOpened.MainSettings:
+                            MainSettings w2 = new MainSettings();
+                            w2.Show();
+                            NotifyToClose?.Invoke();
+                            break;
+
+                    }
+
+                }));
+            }
+        }
+
         public bool DidUserMadeChanges
         {
             get
@@ -242,6 +300,8 @@ namespace M138ADemo.ViewModels
                 LastState.SafeInit(Keys);
             }
             AdjustShifts();
+
+            IsBackToKeysMenuItemsEnabled = Configuration.Message == null ? false : true;
         }
 
         public void OnPropertyChanged([CallerMemberName]string propertyName="")
@@ -254,7 +314,7 @@ namespace M138ADemo.ViewModels
         {
             if (Configuration.Automatic && Configuration.Encrypt)
             {
-                string mes = Configuration.Message;
+                string mes = Configuration.Message ?? "";
                 for (int i = 0; i < mes.Length; ++i)
                 {
                     Keys[i].AdjustShiftEncrypt(Char.ToLower(mes[i]));
@@ -262,7 +322,7 @@ namespace M138ADemo.ViewModels
             }
             if (Configuration.Automatic && Configuration.Decrypt)
             {
-                string mes = Configuration.Message;
+                string mes = Configuration.Message ?? "";
                 for (int i = 0; i < mes.Length; ++i)
                 {
                     Keys[i].AdjustShiftDecrypt(Char.ToLower(mes[i]));
@@ -276,5 +336,7 @@ namespace M138ADemo.ViewModels
         public event Action<int> UpdateAndRehighlight;
 
         public event Action AfterFileOpened;
+
+        public event Action NotifyToClose;
     }
 }

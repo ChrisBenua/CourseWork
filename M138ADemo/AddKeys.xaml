@@ -54,6 +54,9 @@
         <Button Grid.Row="3" Grid.Column="6" Grid.ColumnSpan="2" Template="{StaticResource RoundButton}" Margin="20, 40"
                 Background="Aqua" MaxHeight="35" Content="Далее" x:Name="mNextButton" FontSize="15"></Button>
 
+        <Button Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Template="{StaticResource RoundButton}"
+                Background="Aqua" MaxHeight="35" Margin="20, 40" Content="Назад" FontSize="15" x:Name="mBackButton"></Button>
+
         <TextBlock x:Name="mWarninTextBlock" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Foreground="Red" MaxHeight="60" Height="60" 
                    VerticalAlignment="Center" Margin="20, 5, 20, 5"></TextBlock>
 

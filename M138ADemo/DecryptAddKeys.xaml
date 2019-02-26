@@ -53,6 +53,9 @@
 
         <TextBlock x:Name="mWarningTextBlock" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Foreground="Red" Margin="20, 20, 0, 20"></TextBlock>
 
+        <Button x:Name="mBackButton" Grid.Column="2" Grid.Row="4" Grid.ColumnSpan="2" Template="{StaticResource RoundButton}"
+                Background="Aqua" Margin="10" MaxHeight="40" Content="Назад" FontSize="15"></Button>
+        
         <Border Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="5" Style="{StaticResource BorderStyle}" Margin="40, 20">
             <TextBlock x:Name="mNumberOfKeysTextBlock" FontSize="15" TextAlignment="Center" Margin="15"></TextBlock>
         </Border>

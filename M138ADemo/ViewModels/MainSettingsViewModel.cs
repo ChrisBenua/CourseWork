@@ -86,6 +86,8 @@ namespace M138ADemo
                     }
                 }
             };
+
+
            
         }
 
@@ -142,6 +144,7 @@ namespace M138ADemo
                     if (state != null)
                     {
                         Configuration.deviceState = state;
+                        Configuration.Message = null;
                         OnOpenRecentFileHappend?.Invoke(openedWindowTitle);
                     }
 

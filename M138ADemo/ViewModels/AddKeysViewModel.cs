@@ -20,7 +20,7 @@ namespace M138ADemo.ViewModels
 
         public enum WindowsToBeOpened
         {
-            NextButton, TodayKeysButton, RandomKeysButton, PairKeysButton, ShowKeysButton, AddUsersKeysButton
+            NextButton, TodayKeysButton, RandomKeysButton, PairKeysButton, ShowKeysButton, AddUsersKeysButton, MainSettings
         }
 
         private IDialogService dialogService;
@@ -165,6 +165,11 @@ namespace M138ADemo.ViewModels
                         case WindowsToBeOpened.AddUsersKeysButton:
                             AddUsersKey w5 = new AddUsersKey();
                             w5.Show();
+                            break;
+                        case WindowsToBeOpened.MainSettings:
+                            MainSettings w6 = new MainSettings();
+                            w6.Show();
+                            NotifyToCloseEvent?.Invoke();
                             break;
                     }
                 }));
