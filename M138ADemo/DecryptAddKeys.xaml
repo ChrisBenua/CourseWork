@@ -29,10 +29,9 @@
 
         <Menu Grid.ColumnSpan="9">
             <MenuItem Header ="Выбрать..." Margin="15">
-                <MenuItem Header="Выбрать все"></MenuItem>
-                <Separator></Separator>
-                <MenuItem Header="Удалить все"></MenuItem>
-                <MenuItem Header="Расшифровать с ключами из файла"></MenuItem>
+                <MenuItem x:Name="mOpenFromFileMenuItem" Header="Открыть ключи из файла"></MenuItem>
+                <MenuItem x:Name="mSaveFileMenuItem" Header="Сохранить ключи"></MenuItem>
+
             </MenuItem>
         </Menu>
 
@@ -49,7 +48,7 @@
 
         <Button x:Name="mAddKeysForPair" Grid.Row="3" Grid.Column="5" Grid.ColumnSpan="2" Template="{StaticResource RoundButton}" Background="Aqua" Margin="10"
                 Content="Ключи для пары" FontSize="15" MaxHeight="40" MaxWidth="180"></Button>
-        <Button x:Name="mNextButton" Grid.Row="4" Grid.Column="5" Grid.ColumnSpan="2" Template="{StaticResource RoundButton}" Background="Aqua"
+        <Button x:Name="mNextButton" Grid.Row="4" Grid.Column="5" Grid.ColumnSpan="2" Template="{StaticResource RoundButton}"
                 Content="Далее" FontSize="15" Margin="10" MaxHeight="40" MaxWidth="180"></Button>
 
         <TextBlock x:Name="mWarningTextBlock" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Foreground="Red" Margin="20, 20, 0, 20"></TextBlock>

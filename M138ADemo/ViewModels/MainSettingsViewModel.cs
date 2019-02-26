@@ -74,9 +74,9 @@ namespace M138ADemo
             _model = new MainSettingsModel();
             _model.PropertyChanged += (s, e) =>
             {
-                if (e.PropertyName == "Message")
+                if (e.PropertyName == "Message" || e.PropertyName == "Automatic")
                 {
-                    if (_model.Message.Length > 0)
+                    if (_model.Message.Length > 0 || !this.Model.Automatic)
                     {
                         isNextButtonEnabled = true;
                     }
@@ -86,6 +86,7 @@ namespace M138ADemo
                     }
                 }
             };
+           
         }
 
         private RelayCommand _saveToSettingsCommand;
