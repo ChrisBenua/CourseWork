@@ -34,6 +34,32 @@ namespace M138ADemo
             }
         }
 
+        private bool _isCheckedExtendedWorkspace;
+
+        public bool IsCheckedExtendedWorkspace
+        {
+            get => _isCheckedExtendedWorkspace;
+
+            set
+            {
+                _isCheckedExtendedWorkspace = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private RelayCommand _onExtendedWorkspaceButtonCommand;
+
+        public RelayCommand OnExtendedWorkspaceButtonCommand
+        {
+            get
+            {
+                return _onExtendedWorkspaceButtonCommand ?? (_onExtendedWorkspaceButtonCommand = new RelayCommand(obj =>
+                {
+                    IsCheckedExtendedWorkspace = !IsCheckedExtendedWorkspace;
+                }));
+            }
+        }
+
         public bool isNextButtonEnabled
         {
             get
@@ -116,6 +142,7 @@ namespace M138ADemo
                     {
                         Configuration.Manual = true;
                     }
+                    Configuration.IsCompactWorkSpace = !this.IsCheckedExtendedWorkspace;
                     Configuration.Message = Model.Message;
                     OnSaveHappend?.Invoke(true);
                 }));
@@ -136,7 +163,7 @@ namespace M138ADemo
                         dialogService.ShowMessage("Странная ошибка, очень, такого не должно случаться", "Странная Ошибка");
                         return;
                     }
-
+                    Configuration.IsCompactWorkSpace = !this.IsCheckedExtendedWorkspace;
                     string openedWindowTitle = null;
                     DeviceState state = null;
 
@@ -165,6 +192,8 @@ namespace M138ADemo
                       {
                           if (dialogService.OpenFileDialog() == true)
                           {
+                              Configuration.IsCompactWorkSpace = !this.IsCheckedExtendedWorkspace;
+
                               var deviceState = IOHelper.LoadDeviceState(dialogService.FilePath);
                               if (deviceState.Item1 != null)
                               {

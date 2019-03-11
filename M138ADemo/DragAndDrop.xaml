@@ -19,12 +19,13 @@
                 <MenuItem x:Name="mSaveAsMenuItem" Header="Сохранить как"></MenuItem>
                 <MenuItem x:Name="mOpenMenuItem" Header="Открыть..."></MenuItem>
             </MenuItem>
-            <MenuItem Header="Назад..." FontSize="16" Margin="0,8, 0, 0">
+            
+            <MenuItem Header="Back..." FontSize="16" Margin="0,8, 0, 0">
                 <MenuItem x:Name="mBackToSettingsMenuItem" Header="На начальную страницу"></MenuItem>
                 <MenuItem x:Name="mBackToKeysMenuItem" Header="К выбору ключей"></MenuItem>
             </MenuItem>
         </Menu>
 
-        <DataGrid Grid.Row="1" x:Name="myGrid" Margin="5"></DataGrid>
+        <DataGrid Grid.Row="1" x:Name="myGrid" Margin="5" Focusable="True"></DataGrid>
     </Grid>
 </Window>

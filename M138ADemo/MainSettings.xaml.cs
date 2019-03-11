@@ -30,6 +30,17 @@ namespace M138ADemo
         {
             InitializeComponent();
             viewModel = new MainSettingsViewModel();
+
+            mExtendedWorkspaceRadioButton.SetBinding(RadioButton.IsCheckedProperty, new Binding()
+            {
+                Source = viewModel,
+                Path = new PropertyPath("IsCheckedExtendedWorkspace"),
+                Mode = BindingMode.OneWay,
+                NotifyOnSourceUpdated = true,
+                
+            });
+            mExtendedWorkspaceRadioButton.Command = viewModel.OnExtendedWorkspaceButtonCommand;
+
             viewModel.OnSaveHappend += (flag) =>
             {
                 if (Configuration.Encrypt)

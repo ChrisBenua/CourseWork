@@ -53,6 +53,9 @@ namespace M138ADemo
         private static ImageBrush DefaultRowBrush = new ImageBrush(Helper.PapSource);
         private string currentFilePath = "Untitled";
         private DragAndDropViewModel viewModel;
+        private int IsExtendedWorkSpace = Configuration.IsCompactWorkSpace ? 0 : 26;
+        private Style DefaultCellStyle;
+        private Style BorderCellStyle;
 
         public string CurrentFilePath
         {
@@ -73,9 +76,11 @@ namespace M138ADemo
             viewModel = new DragAndDropViewModel();
             viewModel.AfterFileOpened += () => { UpdateHighlightedCells(); SetBackGround(); };
             viewModel.UpdateAndRehighlight += (ind) => { UpdateHighlightedCells(ind); SetBackGround(ind); };
-            this.InputBindings.Add(new InputBinding(viewModel.OnShowSelectedText, new KeyGesture(Key.C, ModifierKeys.Control)));
 
             InitializeComponent();
+            this.myGrid.InputBindings.Add(new InputBinding(viewModel.OnShowSelectedText, new KeyGesture(Key.C, ModifierKeys.Control)));
+            //mCopyColumnTextMenuItem.Command = viewModel.OnShowSelectedText;
+            //viewModel.OnShowSelectedText.inp
 
             viewModel.NotifyToClose += () => this.Close();
 
@@ -105,7 +110,7 @@ namespace M138ADemo
             //this.Title = CurrentFilePath;
             myGrid.Loaded += StaticGridOnLoaded;
             darkRowBrush.Transform = new ScaleTransform(1, 0.85);
-            
+
             myGrid.RowStyle = new Style()
             {
                 Setters =
@@ -119,7 +124,12 @@ namespace M138ADemo
                     {
                         Property = BackgroundProperty,
                         Value = null
-                    }
+                    },
+                    /*new Setter()
+                    {
+                        Property = FocusableProperty,
+                        Value = false
+                    }*/
                 },
                 Triggers = {new Trigger()
                 {
@@ -129,6 +139,7 @@ namespace M138ADemo
                 }}
 
             };
+            
             myGrid.CellStyle = new Style()
             {
                 Setters = {new Setter(MarginProperty, new Thickness(0, 5/1.5, 0, 11/1.5))},
@@ -157,6 +168,12 @@ namespace M138ADemo
                     }
                 } }
             };
+            this.DefaultCellStyle = myGrid.CellStyle;
+            this.BorderCellStyle = new Style(typeof(DataGridCell))
+            {
+                Setters = { new Setter(MarginProperty, new Thickness(0)) , new Setter(BackgroundProperty, new SolidColorBrush(Color.FromRgb(4 * 16 + 6, 4 * 16 + 7, 3 * 16 + 14))) },
+
+            };
 
             myGrid.SelectedCellsChanged += MyGrid_SelectedCellsChanged;
             
@@ -168,7 +185,7 @@ namespace M138ADemo
             myGrid.IsReadOnly = true;
             myGrid.ItemsSource = viewModel.Keys;
             myGrid.CanUserSortColumns = false;
-            for (int i = 0; i < 29 + 26; ++i)
+            for (int i = 0; i < 29 + 26 + IsExtendedWorkSpace; ++i)
             {
                 var column = new DataGridTextColumn();
                 column.Width = new DataGridLength(30);
@@ -206,11 +223,31 @@ namespace M138ADemo
                         UpdateSourceTrigger =  UpdateSourceTrigger.PropertyChanged,
                         BindsDirectlyToSource = true,
                     };
-                    column.Header = (i - 2).ToString();
+                    if (Configuration.IsCompactWorkSpace)
+                    {
+                        column.Header = (i - 2).ToString();
+                        
+                    }
+                    else
+                    {
+                        if (i - 2 - 26 >= 0)
+                        {
+                            column.Header = (i - 2 - 26).ToString();
+                        }
+                    }
                     myGrid.Columns.Add(column);
 
                 }
             }
+
+            if (!Configuration.IsCompactWorkSpace)
+            {
+                var column = new DataGridTextColumn();
+                column.Width = new DataGridLength(30);
+                myGrid.Columns.Add(column);
+            }
+
+
             myGrid.Background = new ImageBrush(Helper.AluminumSource); // Helper.AluminumSource;
             //DragAndDrop Setup
             myGrid.AllowDrop = true;
@@ -275,18 +312,40 @@ namespace M138ADemo
 
         private void SetBackGround(int row)
         {
-            for (int col = 2; col < 29 + 26; ++col)
+            int borderColumn = Configuration.IsCompactWorkSpace ? 0 : 1;
+            for (int col = 2; col < 29 + 26 + IsExtendedWorkSpace + borderColumn; ++col)
             {
-                var cell = myGrid.GetCell(row, col);
-                if (viewModel.Keys[row].KeyArr[col - 2] != " ")
+
+                if (!Configuration.IsCompactWorkSpace && (col == 26+2 || col == 26 + 26 + 26 + 3))//колонка рамки
                 {
-                    cell.Background = DefaultRowBrush;
+                    var cell = myGrid.GetCell(row, col);
+                    //cell.Background = new ImageBrush(Helper.AluminumSource);
+                    //cell.BorderBrush = new ImageBrush(Helper.AluminumSource);
+                    cell.Content = null;
+                    cell.Background = new SolidColorBrush(Color.FromRgb(166,166, 166));
+                    cell.BorderBrush = new SolidColorBrush(Color.FromRgb(166, 166, 166));
+                    cell.Margin = new Thickness(0);
+                    //cell.OverridesDefaultStyle = true;
+                    //cell.Style = this.BorderCellStyle;
                 }
                 else
                 {
-                    cell.Background = null;
-                    cell.BorderBrush = null;
+                    var cell = myGrid.GetCell(row, col);
+                    //cell.OverridesDefaultStyle = true;
+
+                    cell.Style = this.DefaultCellStyle;
+                    if (viewModel.Keys[row].KeyArr[col - 2] != " ")
+                    {
+                        cell.Background = DefaultRowBrush;
+                    }
+                    else
+                    {
+                        cell.Background = null;
+                        cell.BorderBrush = null;
+                    }
                 }
+                
+                
             }
         }
 
@@ -301,8 +360,9 @@ namespace M138ADemo
                     int headerIndex = int.Parse((string)header.Content);
                     if (headerIndex <= 26 && headerIndex > 0)
                     {
-                        viewModel.SelectedColumn = headerIndex;
-                        HighlightSelectedRow(int.Parse((string)header.Content) + 2);
+                        viewModel.SelectedColumn = headerIndex + IsExtendedWorkSpace;
+                        HighlightSelectedRow(int.Parse((string)header.Content) + 2 + IsExtendedWorkSpace);
+                        this.myGrid.Focus();
                     }
                 }
             }
@@ -315,12 +375,12 @@ namespace M138ADemo
             SetBackGround();
             if (Configuration.Automatic && Configuration.Encrypt)
             {
-                HighlightSelectedRow(3);
+                HighlightSelectedRow(3 + IsExtendedWorkSpace);
             }
             if (Configuration.Automatic && Configuration.Decrypt)
             {
-                HighlightSelectedRow(2 + Configuration.DecryptIndex);
-                HighlightSelectedRow(3);
+                HighlightSelectedRow(2 + Configuration.DecryptIndex + IsExtendedWorkSpace);
+                HighlightSelectedRow(3 + IsExtendedWorkSpace);
             }
         }
 
@@ -345,6 +405,7 @@ namespace M138ADemo
             FrameworkElementFactory factory = new FrameworkElementFactory(typeof(Button));
             factory.SetValue(Button.TemplateProperty, Application.Current.Resources["RoundButtonLeftRight"]);
             factory.SetValue(Button.BackgroundProperty, Brushes.AliceBlue);
+           // factory.SetValue(Button.FocusableProperty, false);
             string[] arr = {"<", ">"};
             
             factory.SetValue(Button.ContentProperty, arr[cnt]);
@@ -377,6 +438,8 @@ namespace M138ADemo
             }
             int ind = row.GetIndex();
             viewModel.ShiftCommand.Execute((ind, DragAndDropViewModel.KeyShiftEnum.Left));
+            UpdateHighlightedCells();
+            //this.Focus();
         }
 
         private void BtnOnClickRight(object sender, RoutedEventArgs e)
@@ -388,6 +451,8 @@ namespace M138ADemo
             }
             int ind = row.GetIndex();
             viewModel.ShiftCommand.Execute((ind, DragAndDropViewModel.KeyShiftEnum.Right));
+            UpdateHighlightedCells();
+            //this.Focus();
         }
 
         private void UpdateHighlightedCells()
@@ -400,13 +465,19 @@ namespace M138ADemo
 
         private void UpdateHighlightedCells(int row)
         {
-            for (int j = 0; j < viewModel.Keys[0].Key.Length * 2 + 3; ++j)
+            int topBorder = Configuration.IsCompactWorkSpace ? viewModel.Keys[0].Key.Length * 2 + 3 : 26 + 26 + 26 + 3;
+
+            for (int j = 0; j < topBorder; ++j)
             {
                 var c = myGrid.GetCell(row, j);
                 c.BorderThickness = DefaultThickness;
                 if (j > 1)
                 {
-                    if (viewModel.Keys[row].Shift >= 0 && j > 2 && viewModel.Keys[row].KeyArr[(j - 3)] != " ")
+                    if ((j == 26 + 2 || j == 26 + 26 + 26 + 3) && !Configuration.IsCompactWorkSpace)
+                    {
+                        c.BorderBrush = new SolidColorBrush(Color.FromRgb(4 * 16 + 6, 4 * 16 + 7, 3 * 16 + 14));
+                    }
+                    else if (viewModel.Keys[row].Shift >= 0 && j > 2 && viewModel.Keys[row].KeyArr[(j - 3)] != " ")
                     {
                         c.BorderBrush = DefaultRowBrush;
                     }
@@ -424,7 +495,7 @@ namespace M138ADemo
 
                 //c.Background = Brushes.Red;
             }
-            var cell = myGrid.GetCell(row, viewModel.Keys[row].LastIndex + 3);//2 - lftbtn right btn and
+            var cell = myGrid.GetCell(row, viewModel.Keys[row].LastIndex + 3 + IsExtendedWorkSpace);
             //cell.BorderThickness = new Thickness(1, 0.6, 1, 0.6);
             cell.BorderBrush = Brushes.Red;
         }

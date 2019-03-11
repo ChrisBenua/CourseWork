@@ -83,7 +83,7 @@ namespace M138ADemo
         {
             get
             {
-                if (_shift >= 0)
+                /*if (_shift >= 0)
                 {
 
                     var fSlice = Helper.Slice(_keyarr, 0, _keyarr.Length - _shift);
@@ -98,19 +98,39 @@ namespace M138ADemo
                     
                     return mainPart.ToArray();
                 }
-                else
+                else*/
                 {
-                    List<string> Idnum = new List<string>();
-                    Idnum.Add(StrIdNumber);
-                    var keyarr = Helper.Slice(_keyarr, 0, _keyarr.Length);
+                    if (Configuration.IsCompactWorkSpace)
+                    {
+                        List<string> Idnum = new List<string>();
+                        Idnum.Add(StrIdNumber);
+                        var keyarr = Helper.Slice(_keyarr, 0, _keyarr.Length);
 
-                    var temp = Helper.Concat(Idnum, keyarr);
-                    var fSlice = Helper.Slice(temp.ToArray(), -_shift, _keyarr.Length + _shift + 1);
-                    fSlice = Helper.Concat(fSlice, keyarr);
-                    
-                    List<string> right = Helper.CreateList<string>(-_shift, " ");
-                    fSlice = Helper.Concat(fSlice, right);
-                    return fSlice.ToArray();
+                        var temp = Helper.Concat(Idnum, keyarr);
+                        var fSlice = Helper.Slice(temp.ToArray(), -_shift, _keyarr.Length + _shift + 1);
+                        fSlice = Helper.Concat(fSlice, keyarr);
+
+                        List<string> right = Helper.CreateList<string>(-_shift, " ");
+                        fSlice = Helper.Concat(fSlice, right);
+                        return fSlice.ToArray();
+                    }
+                    else
+                    {
+                        List<string> Idnum = new List<string>();
+                        Idnum.Add(StrIdNumber);
+                        var keyarr = Helper.Slice(_keyarr, 0, _keyarr.Length);
+
+                        var temp = Helper.Concat(Idnum, keyarr);
+                        temp = Helper.Concat(temp, keyarr);
+                        temp = Helper.Concat(temp, Helper.CreateList<string>(-_shift, " "));
+                        var prefixArr = new List<string>();
+                        for (int i = 0; i < 26 + Shift; ++i)
+                        {
+                            prefixArr.Add(" ");
+                        }
+                        var res = Helper.Concat(prefixArr, temp);
+                        return res.ToArray();
+                    }
                 }
             }
             set

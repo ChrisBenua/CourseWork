@@ -84,6 +84,8 @@ namespace M138ADemo.ViewModels
             }
         }
 
+  
+
         private RelayCommand _shiftCommand;
 
         public RelayCommand ShiftCommand
@@ -242,6 +244,7 @@ namespace M138ADemo.ViewModels
                     switch (choice)
                     {
                         case WindowsToBeOpened.AddKeys:
+                            NotifyToClose?.Invoke();
                             if (Configuration.Encrypt)
                             {
                                 AddKeys w = new AddKeys();
@@ -252,12 +255,12 @@ namespace M138ADemo.ViewModels
                                 DecryptAddKeys w1 = new DecryptAddKeys();
                                 w1.Show();
                             }
-                            NotifyToClose?.Invoke();
                             break;
                         case WindowsToBeOpened.MainSettings:
                             MainSettings w2 = new MainSettings();
                             w2.Show();
                             NotifyToClose?.Invoke();
+
                             break;
 
                     }
@@ -298,6 +301,7 @@ namespace M138ADemo.ViewModels
             {
                 Configuration.lst.ToList().ForEach((arg) => Keys.Add(new KeyModel(arg.second, arg.first)));
                 LastState.SafeInit(Keys);
+                Title = "Untitled";
             }
             AdjustShifts();
 

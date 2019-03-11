@@ -42,15 +42,20 @@
             </StackPanel>
         </Border>
        
-        <Border Style="{StaticResource BorderStyle}" Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" MinHeight="60" MaxHeight="80">
+        <Border Style="{StaticResource BorderStyle}" Grid.Row="4" Grid.RowSpan="2" Grid.Column="1" Grid.ColumnSpan="2" Height="100" MaxHeight="100" VerticalAlignment="Top">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Vertical" Margin="0, 0, 0,0">
                     <RadioButton x:Name="mManualRadioButtom" IsChecked="True" Margin="10, 15, 0, 0"></RadioButton>
                     <RadioButton x:Name="mAutomaticRadioButton" Margin="10,15,0,0"></RadioButton>
+                    <StackPanel Orientation="Vertical" Height="40" VerticalAlignment="Bottom">
+                        <RadioButton x:Name="mExtendedWorkspaceRadioButton" Margin="10, 15, 0, 0" ></RadioButton>
+                    </StackPanel>
                 </StackPanel>
+                
                 <StackPanel Orientation="Vertical">
                     <TextBlock Text="Самостоятельно" FontSize="16" Margin="10, 10,0,0"></TextBlock>
                     <TextBlock Text="Автоматически" FontSize="16" Margin="10, 8,0,0"></TextBlock>
+                    <TextBlock Text="Широкая рабочая область" FontSize="16" Margin="10, 8, 0, 0"></TextBlock>
                 </StackPanel>
             </StackPanel>
         </Border>
@@ -59,7 +64,7 @@
                 x:Name="mNextButton"></Button>
 
         <TextBlock Grid.Row ="1" Grid.Column="0" Grid.ColumnSpan="1" Margin="5, 20, 5, 10" TextAlignment="Center"> Введите текст для <LineBreak/> шифровки/дешифровки:</TextBlock>
-        <Border Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource BorderStyle}" Margin="0, 0, 0, 15" MinHeight="50" MaxHeight="80">
+        <Border Grid.Column="1" Grid.Row="1"  Grid.ColumnSpan="2" Style="{StaticResource BorderStyle}" Margin="0, 0, 0, 15" MinHeight="50" MaxHeight="80">
             <TextBox x:Name="mMessagetextBox" Background="Transparent" Margin="10, 15, 10, 10" TextAlignment="Center" FontSize="12"></TextBox>
         </Border>
     </Grid>

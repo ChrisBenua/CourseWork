@@ -42,6 +42,7 @@ namespace M138ADemo
 
         public static int Count => lst.Count;
 
+        public static bool IsCompactWorkSpace { get; set; } = true;
 
         public static bool Encrypt
         {
