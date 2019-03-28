@@ -322,8 +322,17 @@ namespace M138ADemo
                     //cell.Background = new ImageBrush(Helper.AluminumSource);
                     //cell.BorderBrush = new ImageBrush(Helper.AluminumSource);
                     cell.Content = null;
-                    cell.Background = new SolidColorBrush(Color.FromRgb(166,166, 166));
-                    cell.BorderBrush = new SolidColorBrush(Color.FromRgb(166, 166, 166));
+
+                    ImageBrush silver = new ImageBrush(Helper.BorderSource);
+                    //int sz = viewModel.Keys.Count;
+                    //silver.Stretch = Stretch.Uniform;
+                    //silver.Viewbox = new Rect(0, row * (double)1 / sz, 1, 1 * (double)1 / sz);
+                    //Console.WriteLine($"Row: {row} with viewBox: {silver.Viewbox}");
+
+                    cell.Background = silver;
+
+                    //cell.Background = new SolidColorBrush(Color.FromRgb(166,166, 166));
+                    cell.BorderBrush = silver;
                     cell.Margin = new Thickness(0);
                     //cell.OverridesDefaultStyle = true;
                     //cell.Style = this.BorderCellStyle;
@@ -475,7 +484,14 @@ namespace M138ADemo
                 {
                     if ((j == 26 + 2 || j == 26 + 26 + 26 + 3) && !Configuration.IsCompactWorkSpace)
                     {
-                        c.BorderBrush = new SolidColorBrush(Color.FromRgb(4 * 16 + 6, 4 * 16 + 7, 3 * 16 + 14));
+                        ImageBrush silver = new ImageBrush(Helper.BorderSource);
+                        int sz = viewModel.Keys.Count;
+                        //silver.Stretch = Stretch.Uniform;
+
+                        //silver.Viewbox = new Rect(0, row * (double)1 / sz, 1, (double)1 / sz);
+                        
+                        c.BorderBrush = silver;
+                        //c.BorderBrush = new SolidColorBrush(Color.FromRgb(4 * 16 + 6, 4 * 16 + 7, 3 * 16 + 14));
                     }
                     else if (viewModel.Keys[row].Shift >= 0 && j > 2 && viewModel.Keys[row].KeyArr[(j - 3)] != " ")
                     {

@@ -159,6 +159,7 @@ namespace M138ADemo
         public static ImageSource DarkPapSource = new BitmapImage(new Uri("pack://application:,,,/Images/image.jpg"));
         public static ImageSource PapSource = new BitmapImage(new Uri("pack://application:,,,/Images/texture_paper2.jpg"));
         public static ImageSource AluminumSource = new BitmapImage(new Uri("pack://application:,,,/Images/aluminum_texture1.jpg"));
+        public static ImageSource BorderSource = new BitmapImage(new Uri("pack://application:,,,/Images/borderimage.jpg"));
         public static Regex reg = new Regex("[0-9]+");
         public static int MaxKeys = 200;
 
