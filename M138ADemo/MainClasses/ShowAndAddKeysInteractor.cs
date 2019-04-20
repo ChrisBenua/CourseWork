@@ -230,7 +230,6 @@ namespace M138ADemo.MainClasses
             {
                 DataGridRow row = dep as DataGridRow;
                 int ind = FindRowIndex(row);
-                // do something
                 TextBox textBox = (TextBox)sender;
 
                 if (Helper.isAlphaString(e.Text) && textBox.Text.Length + e.Text.Length == 1 && viewModel.isSequence(ind, e.Text))

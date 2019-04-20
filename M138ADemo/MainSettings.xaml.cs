@@ -35,11 +35,11 @@ namespace M138ADemo
             {
                 Source = viewModel,
                 Path = new PropertyPath("IsCheckedExtendedWorkspace"),
-                Mode = BindingMode.OneWay,
+                Mode = BindingMode.TwoWay,
                 NotifyOnSourceUpdated = true,
                 
             });
-            mExtendedWorkspaceRadioButton.Command = viewModel.OnExtendedWorkspaceButtonCommand;
+           // mExtendedWorkspaceRadioButton.Command = viewModel.OnExtendedWorkspaceButtonCommand;
 
             viewModel.OnSaveHappend += (flag) =>
             {
@@ -88,7 +88,7 @@ namespace M138ADemo
             mNextButton.DataContext = viewModel;
             Binding enableBinding = new Binding()
             {
-                Mode = BindingMode.OneWay,
+                Mode = BindingMode.TwoWay,
                 Path = new PropertyPath("isNextButtonEnabled"),
                 NotifyOnSourceUpdated = true,
                 NotifyOnTargetUpdated = true,
@@ -104,9 +104,19 @@ namespace M138ADemo
                 UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
             };
 
+            Binding decryptBinding = new Binding()
+            {
+                Mode = BindingMode.TwoWay,
+                Source = viewModel.Model,
+                Path = new PropertyPath("Encrypt"),
+                NotifyOnTargetUpdated = true,
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
+                Converter = new InverseBoolConverter()
+            };
+
             Binding encryptBinding = new Binding()
             {
-                Mode = BindingMode.OneWayToSource,
+                Mode = BindingMode.TwoWay,
                 Source = viewModel.Model,
                 Path = new PropertyPath("Encrypt"),
                 NotifyOnTargetUpdated = true,
@@ -115,17 +125,59 @@ namespace M138ADemo
 
             Binding automaticBinding = new Binding()
             {
-                Mode = BindingMode.OneWayToSource,
+                Mode = BindingMode.TwoWay,
                 Source = viewModel.Model,
                 Path = new PropertyPath("Automatic"),
                 NotifyOnTargetUpdated = true,
                 UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
             };
 
+            Binding manualBinding = new Binding()
+            {
+                Mode = BindingMode.TwoWay,
+                Source = viewModel.Model,
+                Path = new PropertyPath("Automatic"),
+                NotifyOnTargetUpdated = true,
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
+                Converter = new InverseBoolConverter()
+            };
+
+            {
+                var mouseBinding = new MouseBinding(this.viewModel.OnLabelClickCommand, new MouseGesture(MouseAction.LeftClick));
+                mouseBinding.CommandParameter = MainSettingsViewModel.LabelClicks.Encrypt;
+                mEncryptLabel.InputBindings.Add(mouseBinding);
+            }
+
+            {
+                var mouseBinding = new MouseBinding(this.viewModel.OnLabelClickCommand, new MouseGesture(MouseAction.LeftClick));
+                mouseBinding.CommandParameter = MainSettingsViewModel.LabelClicks.Decrypt;
+                mDecrypttLabel.InputBindings.Add(mouseBinding);
+            }
+
+            {
+                var mouseBinding = new MouseBinding(this.viewModel.OnLabelClickCommand, new MouseGesture(MouseAction.LeftClick));
+                mouseBinding.CommandParameter = MainSettingsViewModel.LabelClicks.Automatic;
+                mAutomaticLabel.InputBindings.Add(mouseBinding);
+            }
+
+            {
+                var mouseBinding = new MouseBinding(this.viewModel.OnLabelClickCommand, new MouseGesture(MouseAction.LeftClick));
+                mouseBinding.CommandParameter = MainSettingsViewModel.LabelClicks.Manual;
+                mManualLabel.InputBindings.Add(mouseBinding);
+            }
+
+            {
+                var mouseBinding = new MouseBinding(this.viewModel.OnLabelClickCommand, new MouseGesture(MouseAction.LeftClick));
+                mouseBinding.CommandParameter = MainSettingsViewModel.LabelClicks.ExtendedWorkspace;
+                mExtendedWorkspaceLabel.InputBindings.Add(mouseBinding);
+            }
+
+            mDecrypt.SetBinding(RadioButton.IsCheckedProperty, decryptBinding);
             mEncrypt.SetBinding(RadioButton.IsCheckedProperty, encryptBinding);
             mNextButton.SetBinding(Button.BackgroundProperty, colorBinding);
             mNextButton.SetBinding(Button.IsEnabledProperty, enableBinding);
             mMessagetextBox.SetBinding(TextBox.TextProperty, binding);
+            mManualRadioButtom.SetBinding(RadioButton.IsCheckedProperty, manualBinding);
             mAutomaticRadioButton.SetBinding(RadioButton.IsCheckedProperty, automaticBinding);
             mNextButton.Command = viewModel.SaveToSettingsCommand;
 

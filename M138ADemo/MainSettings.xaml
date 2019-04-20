@@ -36,8 +36,8 @@
                     <RadioButton x:Name="mDecrypt" Margin="10, 14, 0, 0"></RadioButton>
                 </StackPanel>
                 <StackPanel Orientation="Vertical">
-                    <TextBlock Text="Зашифровать" FontSize="15" Margin="5, 7"></TextBlock>
-                    <TextBlock Text="Расшифровать" FontSize="15" Margin="5, 0,0,0"></TextBlock>
+                    <TextBlock x:Name="mEncryptLabel" Text="Зашифровать" FontSize="15" Margin="5, 7"></TextBlock>
+                    <TextBlock x:Name="mDecrypttLabel" Text="Расшифровать" FontSize="15" Margin="5, 0,0,0"></TextBlock>
                 </StackPanel>
             </StackPanel>
         </Border>
@@ -53,9 +53,9 @@
                 </StackPanel>
                 
                 <StackPanel Orientation="Vertical">
-                    <TextBlock Text="Самостоятельно" FontSize="16" Margin="10, 10,0,0"></TextBlock>
-                    <TextBlock Text="Автоматически" FontSize="16" Margin="10, 8,0,0"></TextBlock>
-                    <TextBlock Text="Широкая рабочая область" FontSize="16" Margin="10, 8, 0, 0"></TextBlock>
+                    <TextBlock x:Name="mManualLabel" Text="Самостоятельно" FontSize="16" Margin="10, 10,0,0" ></TextBlock>
+                    <TextBlock x:Name="mAutomaticLabel" Text="Автоматически" FontSize="16" Margin="10, 8,0,0"></TextBlock>
+                    <TextBlock x:Name="mExtendedWorkspaceLabel" Text="Широкая рабочая область" FontSize="16" Margin="10, 8, 0, 0"></TextBlock>
                 </StackPanel>
             </StackPanel>
         </Border>

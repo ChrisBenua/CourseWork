@@ -29,6 +29,8 @@ namespace M138ADemo.ViewModels
 
         string _title;
 
+        private bool _shouldForceClose = false;
+
         ObservableCollection<KeyModel> _keys;
 
         DeviceState _lastState;
@@ -143,7 +145,7 @@ namespace M138ADemo.ViewModels
                 return _onClosingCommand ?? (_onClosingCommand = new RelayCommand(obj =>
                 {
                     var e = (CancelEventArgs)obj;
-                    if (this.Title == "Untitled" || DidUserMadeChanges)
+                    if ((this.Title == "Untitled" || DidUserMadeChanges) && !_shouldForceClose)
                     {
                         var res = MessageBox.Show("Вы не сохранили файл, все данные будут утерены, если вы решите выйти", "Предупреждение", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
 
@@ -244,7 +246,7 @@ namespace M138ADemo.ViewModels
                     switch (choice)
                     {
                         case WindowsToBeOpened.AddKeys:
-                            NotifyToClose?.Invoke();
+                            _shouldForceClose = true;
                             if (Configuration.Encrypt)
                             {
                                 AddKeys w = new AddKeys();
@@ -255,8 +257,10 @@ namespace M138ADemo.ViewModels
                                 DecryptAddKeys w1 = new DecryptAddKeys();
                                 w1.Show();
                             }
+                            NotifyToClose?.Invoke();
                             break;
                         case WindowsToBeOpened.MainSettings:
+                            _shouldForceClose = true;
                             MainSettings w2 = new MainSettings();
                             w2.Show();
                             NotifyToClose?.Invoke();

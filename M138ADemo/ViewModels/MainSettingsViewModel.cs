@@ -16,6 +16,11 @@ namespace M138ADemo
     public class MainSettingsViewModel : INotifyPropertyChanged
     {
 
+        public enum LabelClicks
+        {
+            Encrypt, Decrypt, Manual, Automatic, ExtendedWorkspace
+        }
+            
         private IDialogService dialogService;
 
         private MainSettingsModel _model;
@@ -220,6 +225,37 @@ namespace M138ADemo
                 {
                     DocsWindow w = new DocsWindow();
                     w.Show();
+                }));
+            }
+        }
+
+        private RelayCommand _onLabelClickCommand;
+
+        public RelayCommand OnLabelClickCommand
+        {
+            get
+            {
+                return _onLabelClickCommand ?? (_onLabelClickCommand = new RelayCommand(obj =>
+                {
+                    LabelClicks click = (LabelClicks)obj;
+                    switch(click)
+                    {
+                        case LabelClicks.Automatic:
+                            this.Model.Automatic = true;
+                            break;
+                        case LabelClicks.Decrypt:
+                            this.Model.Encrypt = false;
+                            break;
+                        case LabelClicks.ExtendedWorkspace:
+                            this.IsCheckedExtendedWorkspace = !this.IsCheckedExtendedWorkspace;
+                            break;
+                        case LabelClicks.Manual:
+                            this.Model.Automatic = false;
+                            break;
+                        case LabelClicks.Encrypt:
+                            this.Model.Encrypt = true;
+                            break;
+                    }
                 }));
             }
         }

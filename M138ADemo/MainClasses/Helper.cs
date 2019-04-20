@@ -28,29 +28,24 @@ namespace M138ADemo
 
             System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(state.GetType());
 
-            System.IO.StreamReader reader = null;
-            try
-            {
-                reader = new System.IO.StreamReader(fileName);
-                state = (KeysContainer)serializer.Deserialize(reader);
-                RecentFiles.KeysCollectionShared.AddFileToRecents(fileName);
-
-            }
-            catch (InvalidCastException)
-            {
-                MessageBox.Show("Вы уверены, что открываете файл с состоянием машины?", "Ошибка", System.Windows.Forms.MessageBoxButtons.OK);
-                RecentFiles.KeysCollectionShared.DeleteFileFromRecents(fileName);
-                return null;
-            }
-            catch (InvalidOperationException)
-            {
-                System.Windows.Forms.MessageBox.Show("Вы уверены, что открываете файл с состоянием машины?", "Ошибка", System.Windows.Forms.MessageBoxButtons.OK);
-                RecentFiles.KeysCollectionShared.DeleteFileFromRecents(fileName);
-                return null;
-            }
-            finally
-            {
-                reader.Close();
+            using (System.IO.StreamReader reader = new System.IO.StreamReader(fileName)) {
+                try
+                {
+                    state = (KeysContainer)serializer.Deserialize(reader);
+                    RecentFiles.KeysCollectionShared.AddFileToRecents(fileName);
+                }
+                catch (InvalidCastException)
+                {
+                    MessageBox.Show("Вы уверены, что открываете файл с ключами?", "Ошибка", System.Windows.Forms.MessageBoxButtons.OK);
+                    RecentFiles.KeysCollectionShared.DeleteFileFromRecents(fileName);
+                    return null;
+                }
+                catch (InvalidOperationException)
+                {
+                    System.Windows.Forms.MessageBox.Show("Вы уверены, что открываете файл с ключами?", "Ошибка", System.Windows.Forms.MessageBoxButtons.OK);
+                    RecentFiles.KeysCollectionShared.DeleteFileFromRecents(fileName);
+                    return null;
+                }
             }
             return state;
         }
@@ -67,10 +62,21 @@ namespace M138ADemo
 
             using (System.IO.MemoryStream stream = new System.IO.MemoryStream())
             {
-                serializer.Serialize(stream, state);
-                stream.Position = 0;
-                doc.Load(stream);
-                doc.Save(toFileName);
+                try
+                {
+                    serializer.Serialize(stream, state);
+                    stream.Position = 0;
+                    doc.Load(stream);
+                    doc.Save(toFileName);
+                }
+                catch (System.Xml.XmlException ex)
+                {
+                    MessageBox.Show("Произошла ошибка при сохранении в файл");
+                }
+                catch (InvalidOperationException ex)
+                {
+                    MessageBox.Show("Нет доступа к файлу");
+                }
             }
             return state;
         }
@@ -83,24 +89,28 @@ namespace M138ADemo
             DeviceState state = new DeviceState();
 
             System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(state.GetType());
-            System.IO.StreamReader reader = null;
             try
             {
-                reader = new System.IO.StreamReader(fileName);
-                state = (DeviceState)serializer.Deserialize(reader);
-                RecentFiles.MachineStatesShared.AddFileToRecents(fileName);
-            }
-            catch (InvalidCastException)
-            {
-                MessageBox.Show("Вы уверены, что открываете файл с состоянием машины?", "Ошибка", System.Windows.Forms.MessageBoxButtons.OK);
-                RecentFiles.MachineStatesShared.DeleteFileFromRecents(fileName);
-                return (null, null);
-            }
-            catch (InvalidOperationException)
-            {
-                System.Windows.Forms.MessageBox.Show("Вы уверены, что открываете файл с состоянием машины?", "Ошибка", System.Windows.Forms.MessageBoxButtons.OK);
-                RecentFiles.MachineStatesShared.DeleteFileFromRecents(fileName);
-                return (null, null);
+                using (System.IO.StreamReader reader = new System.IO.StreamReader(fileName))
+                {
+                    try
+                    {
+                        state = (DeviceState)serializer.Deserialize(reader);
+                        RecentFiles.MachineStatesShared.AddFileToRecents(fileName);
+                    }
+                    catch (InvalidCastException)
+                    {
+                        MessageBox.Show("Вы уверены, что открываете файл с состоянием машины?", "Ошибка", System.Windows.Forms.MessageBoxButtons.OK);
+                        RecentFiles.MachineStatesShared.DeleteFileFromRecents(fileName);
+                        return (null, null);
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        System.Windows.Forms.MessageBox.Show("Вы уверены, что открываете файл с состоянием машины?", "Ошибка", System.Windows.Forms.MessageBoxButtons.OK);
+                        RecentFiles.MachineStatesShared.DeleteFileFromRecents(fileName);
+                        return (null, null);
+                    }
+                }
             }
             catch (System.IO.IOException ex)
             {
@@ -108,9 +118,11 @@ namespace M138ADemo
                 RecentFiles.MachineStatesShared.DeleteFileFromRecents(fileName);
                 return (null, null);
             }
-            finally
+            catch (ArgumentException ex)
             {
-                reader?.Close();
+                MessageBox.Show("Неправильное имя файла", "Ошибка", System.Windows.Forms.MessageBoxButtons.OK);
+                RecentFiles.MachineStatesShared.DeleteFileFromRecents(fileName);
+                return (null, null);
             }
             return (state, fileName);
         }
@@ -261,6 +273,23 @@ namespace M138ADemo
         {
             return Helper.isUpperAlpha(ch) || ch >= 'a' && ch <= 'z';
         }
+    }
+
+    public class InverseBoolConverter: IValueConverter
+    {
+        public object Convert(object value, Type targetType,
+            object parameter, CultureInfo culture)
+        {
+            return !(bool)value;
+        }
+
+
+        public object ConvertBack(object value, Type targetType,
+           object parameter, CultureInfo culture)
+        {
+            return !(bool)value;
+        }
+
     }
 
     public class IntToStringConverter : IValueConverter

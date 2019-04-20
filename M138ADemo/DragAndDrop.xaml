@@ -26,6 +26,6 @@
             </MenuItem>
         </Menu>
 
-        <DataGrid Grid.Row="1" x:Name="myGrid" Margin="5" Focusable="True"></DataGrid>
+        <DataGrid Grid.Row="1" x:Name="myGrid" Margin="5" Focusable="True" EnableRowVirtualization="False" EnableColumnVirtualization="False"> </DataGrid>
     </Grid>
 </Window>

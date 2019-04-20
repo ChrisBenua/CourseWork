@@ -176,6 +176,13 @@ namespace M138ADemo.ViewModels
             }
         }
 
+        public AddKeysViewModel()
+        {
+            if (!(Configuration.lst is null))
+            {
+                this.Keys = Configuration.lst;
+            }
+        }
 
         public void SaveToConfiguration()
         {
@@ -191,7 +198,7 @@ namespace M138ADemo.ViewModels
             }
         }
 
-        public AddKeysViewModel(IDialogService dialogService)
+        public AddKeysViewModel(IDialogService dialogService): this()
         {
             this.dialogService = dialogService;
             RecentFiles.KeysCollectionShared.PropertyChanged += KeysCollectionShared_PropertyChanged;

@@ -176,7 +176,7 @@ namespace M138ADemo
             };
 
             myGrid.SelectedCellsChanged += MyGrid_SelectedCellsChanged;
-            
+           
             myGrid.CanUserResizeRows = false;
             myGrid.CanUserResizeColumns = false;
             myGrid.GridLinesVisibility = DataGridGridLinesVisibility.None;
