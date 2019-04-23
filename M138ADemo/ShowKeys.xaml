@@ -17,7 +17,25 @@
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
-        <DataGrid x:Name="dataGrid" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"></DataGrid>
+        <DataGrid x:Name="dataGrid" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3">
+            <DataGrid.Resources>
+                <Style TargetType="{x:Type DataGridCell}">
+
+                    <Style.Triggers>
+                        <EventTrigger RoutedEvent="Unloaded">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <ColorAnimation Storyboard.TargetProperty=
+						  "(DataGridCell.Background).(SolidColorBrush.Color)" 
+										 Duration="00:00:03" 
+										 To="Transparent"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.Resources>
+        </DataGrid>
 
         <Button x:Name="mAddKeyButton" Template="{StaticResource RoundButton}" Background="LightGreen" Margin="10, 5, 10, 5" Content="Добавить ключ" FontSize="15"></Button>
         <Button Grid.Column="1" x:Name="mEndButton" Template="{StaticResource RoundButton}" Background="Red" Margin="10, 5" Content="Закончить" FontSize="15"></Button>

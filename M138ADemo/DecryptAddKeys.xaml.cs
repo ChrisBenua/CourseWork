@@ -34,6 +34,9 @@ namespace M138ADemo
             mAddKeysForPair.Click += MAddKeysForPair_Click;
             mAddUserKeysButton.Click += MAddUserKeysButton_Click;
             mNextButton.Click += MNextButton_Click;
+            mShowKeysButton.Click += MShowKeysButton_Click;
+            mAddTodayKeysButton.Click += MAddTodayKeysButton_Click;
+            mAddRandomKeysButton.Click += MAddRandomKeysButton_Click;
 
             mColumnNumberTextBox.SetBinding(TextBox.TextProperty, new Binding()
             {
@@ -87,9 +90,27 @@ namespace M138ADemo
 
         }
 
+        private void MAddRandomKeysButton_Click(object sender, RoutedEventArgs e)
+        {
+            var window = new RandomKeysWindow();
+            window.Show();
+        }
+
+        private void MAddTodayKeysButton_Click(object sender, RoutedEventArgs e)
+        {
+            var window = new TodayKeysWindow();
+            window.Show();
+        }
+
+        private void MShowKeysButton_Click(object sender, RoutedEventArgs e)
+        {
+            var window = new ShowKeys();
+            window.Show();
+        }
+
         private void MBackButton_Click(object sender, RoutedEventArgs e)
         {
-            Configuration.lst.Clear();
+            //Configuration.lst.Clear();
             MainSettings w = new MainSettings();
             w.Show();
             this.Close();

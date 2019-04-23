@@ -16,7 +16,7 @@
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Margin="6">
-                        <TextBlock FontSize="18" Text="{Binding Path=ShortName}"></TextBlock>
+                        <TextBlock FontSize="15" Text="{Binding Path=ShortName}"></TextBlock>
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>

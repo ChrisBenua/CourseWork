@@ -9,6 +9,8 @@ using System.Windows.Controls;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Input;
+using System.Windows.Media.Animation;
+
 using System.Windows.Data;
 
 namespace M138ADemo.MainClasses
@@ -43,18 +45,20 @@ namespace M138ADemo.MainClasses
 
                 },
             };
-
-            dataGrid.RowStyle = new Style()
             {
-                Setters =
+                dataGrid.RowStyle = new Style()
+                {
+                    Setters =
                 {
                     new Setter()
                     {
                         Property = DataGridCell.BackgroundProperty,
                         Value = Brushes.Transparent
                     },
-                }
-            };
+                },
+
+                };
+            }
 
             dataGrid.CanUserResizeRows = false;
             dataGrid.CanUserResizeColumns = false;

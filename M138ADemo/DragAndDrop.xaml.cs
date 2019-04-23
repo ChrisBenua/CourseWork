@@ -150,7 +150,7 @@ namespace M138ADemo
                     Setters = { new Setter()
                         {
                             Property = BorderBrushProperty,
-                            Value = Brushes.Black,
+                            Value = DefaultRowBrush,
                         },
                         new Setter()
                         {

@@ -24,10 +24,11 @@
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition Width="50"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
-        <Menu Grid.ColumnSpan="9">
+        <Menu Grid.ColumnSpan="10">
             <MenuItem Header ="Выбрать..." Margin="15">
                 <MenuItem x:Name="mOpenFromFileMenuItem" Header="Открыть ключи из файла"></MenuItem>
                 <MenuItem x:Name="mSaveFileMenuItem" Header="Сохранить ключи"></MenuItem>
@@ -35,30 +36,38 @@
             </MenuItem>
         </Menu>
 
-        <Border Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="5" Style="{StaticResource BorderStyle}"
+        <Border Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="6" Style="{StaticResource BorderStyle}"
                 Margin="40, 10" MaxWidth="420">
-            <TextBox x:Name="mColumnNumberTextBox" Background="Transparent" Margin="20, 10" MaxLines="1" TextAlignment="Center" FontSize="20"></TextBox>
+            <TextBox x:Name="mColumnNumberTextBox" Background="Transparent" Margin="20,10" MaxLines="1" TextAlignment="Center" FontSize="20"/>
         </Border>
 
-        <TextBlock Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="5" VerticalAlignment="Top" HorizontalAlignment="Center" Text="Столбец, в котором слово было зашифровано:" Margin="40, 8, 40, 40"></TextBlock>
+        <TextBlock Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="6" VerticalAlignment="Top" HorizontalAlignment="Center" Text="Столбец, в котором слово было зашифровано:" Margin="40, 8, 40, 40"></TextBlock>
 
+        <Button x:Name="mAddTodayKeysButton" Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="2" Template="{StaticResource RoundButton}"
+                Background="Aqua" Margin="10, 10" MaxHeight="40" MaxWidth="180" Content="Сегодняшние ключи" FontSize="15"></Button>
 
-        <Button x:Name="mAddUserKeysButton" Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" Template="{StaticResource RoundButton}" Background="Aqua" Margin="10, 10"
+        <Button x:Name="mAddRandomKeysButton" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Template="{StaticResource RoundButton}"
+                Background="Aqua" Margin="10, 10" MaxHeight="40" MaxWidth="180" Content="Случайные ключи" FontSize="15"></Button>
+
+        <Button x:Name="mAddUserKeysButton" Grid.Row="3" Grid.Column="7" Grid.ColumnSpan="2" Template="{StaticResource RoundButton}" Background="Aqua" Margin="10, 10"
                 Content="Свои ключи" FontSize="15" MaxHeight="40" MaxWidth="180"></Button>
 
         <Button x:Name="mAddKeysForPair" Grid.Row="3" Grid.Column="5" Grid.ColumnSpan="2" Template="{StaticResource RoundButton}" Background="Aqua" Margin="10"
                 Content="Ключи для пары" FontSize="15" MaxHeight="40" MaxWidth="180"></Button>
-        <Button x:Name="mNextButton" Grid.Row="4" Grid.Column="5" Grid.ColumnSpan="2" Template="{StaticResource RoundButton}"
+        <Button x:Name="mNextButton" Grid.Row="4" Grid.Column="7" Grid.ColumnSpan="2" Template="{StaticResource RoundButton}"
                 Content="Далее" FontSize="15" Margin="10" MaxHeight="40" MaxWidth="180"></Button>
 
         <TextBlock x:Name="mWarningTextBlock" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Foreground="Red" Margin="20, 20, 0, 20"></TextBlock>
 
-        <Button x:Name="mBackButton" Grid.Column="2" Grid.Row="4" Grid.ColumnSpan="2" Template="{StaticResource RoundButton}"
+        <Button x:Name="mShowKeysButton" Grid.Row="4" Grid.Column="4" Grid.ColumnSpan="2" Template="{StaticResource RoundButton}"
+                Background="Aqua" Margin="10" MaxHeight="40" MaxWidth="180" Content="Просмотреть ключи"  FontSize="15"></Button>
+
+        <Button x:Name="mBackButton" Grid.Column="1" Grid.Row="4" Grid.ColumnSpan="2" Template="{StaticResource RoundButton}"
                 Background="Aqua" Margin="10" MaxHeight="40" Content="Назад" FontSize="15"></Button>
-        
-        <Border Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="5" Style="{StaticResource BorderStyle}" Margin="40, 20">
+
+        <Border Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="6" Style="{StaticResource BorderStyle}" Margin="50, 20">
             <TextBlock x:Name="mNumberOfKeysTextBlock" FontSize="15" TextAlignment="Center" Margin="15"></TextBlock>
         </Border>
-        
+
     </Grid>
 </Window>

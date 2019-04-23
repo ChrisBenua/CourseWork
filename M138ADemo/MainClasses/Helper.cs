@@ -173,7 +173,7 @@ namespace M138ADemo
         public static ImageSource AluminumSource = new BitmapImage(new Uri("pack://application:,,,/Images/aluminum_texture1.jpg"));
         public static ImageSource BorderSource = new BitmapImage(new Uri("pack://application:,,,/Images/borderimage.jpg"));
         public static Regex reg = new Regex("[0-9]+");
-        public static int MaxKeys = 200;
+        public static int MaxKeys = 100;
 
         public static List<T> Slice<T>(T[] source, int from, int len)
         {

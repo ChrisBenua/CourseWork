@@ -102,14 +102,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Automatically.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="ChooseKeys.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="DecryptAddKeys.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -130,10 +122,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Compile Include="AddKeys.xaml.cs">
       <DependentUpon>AddKeys.xaml</DependentUpon>
     </Compile>
@@ -144,12 +132,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Automatically.xaml.cs">
-      <DependentUpon>Automatically.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ChooseKeys.xaml.cs">
-      <DependentUpon>ChooseKeys.xaml</DependentUpon>
-    </Compile>
     <Compile Include="MainClasses\Configuration.cs" />
     <Compile Include="MainClasses\Generator.cs" />
     <Compile Include="MainClasses\Helper.cs" />
@@ -158,10 +140,6 @@
     </Compile>
     <Compile Include="MainSettings.xaml.cs">
       <DependentUpon>MainSettings.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
     </Compile>
     <Page Include="RandomKeysWindow.xaml">
       <SubType>Designer</SubType>

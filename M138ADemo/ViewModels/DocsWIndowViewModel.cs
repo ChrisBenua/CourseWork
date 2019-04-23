@@ -33,7 +33,8 @@ namespace M138ADemo.ViewModels
         public DocsWIndowViewModel()
         {
             _docFiles = new ObservableCollection<DocsWindowModel>();
-            _docFiles.Add(new DocsWindowModel(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + "\\HomeworkDiscrete3module.pdf", "Variants"));
+            _docFiles.Add(new DocsWindowModel(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + "\\CryptoHistory.pdf", "История Криптографии"));
+            _docFiles.Add(new DocsWindowModel(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + "\\M138AExample.pdf", "О M-138-A"));
             //_docFiles.Add(new DocsWindowModel("https://cefsharp.github.io", "Git"));
         }
 
