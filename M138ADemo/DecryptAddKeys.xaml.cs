@@ -93,18 +93,22 @@ namespace M138ADemo
         private void MAddRandomKeysButton_Click(object sender, RoutedEventArgs e)
         {
             var window = new RandomKeysWindow();
+            window.Closed += (o, ev) => this.viewModel.PerformValidation();
             window.Show();
         }
 
         private void MAddTodayKeysButton_Click(object sender, RoutedEventArgs e)
         {
             var window = new TodayKeysWindow();
+            window.Closed += (o, ev) => this.viewModel.PerformValidation();
+
             window.Show();
         }
 
         private void MShowKeysButton_Click(object sender, RoutedEventArgs e)
         {
             var window = new ShowKeys();
+            window.Closed += (o, ev) => this.viewModel.PerformValidation();
             window.Show();
         }
 
