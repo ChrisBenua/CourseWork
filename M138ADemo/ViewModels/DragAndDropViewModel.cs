@@ -12,31 +12,61 @@ using M138ADemo.Services;
 
 namespace M138ADemo.ViewModels
 {
+    /// <summary>
+    /// Drag and drop view model.
+    /// </summary>
     public class DragAndDropViewModel : INotifyPropertyChanged
     {
-
+        /// <summary>
+        /// The dialog service.
+        /// </summary>
         private IDialogService dialogService;
 
+        /// <summary>
+        /// Key shift enum.
+        /// </summary>
         public enum KeyShiftEnum
         {
             Left, Right
         }
 
+        /// <summary>
+        /// Windows to be opened.
+        /// </summary>
         public enum WindowsToBeOpened
         {
             MainSettings, AddKeys
         }
 
+        /// <summary>
+        /// The title.
+        /// </summary>
         string _title;
 
+        /// <summary>
+        /// The should force close.
+        /// </summary>
         private bool _shouldForceClose = false;
 
+        /// <summary>
+        /// The keys.
+        /// </summary>
         ObservableCollection<KeyModel> _keys;
 
+        /// <summary>
+        /// The last state.
+        /// </summary>
         DeviceState _lastState;
 
+        /// <summary>
+        /// The selected column.
+        /// </summary>
         int _selectedColumn;
 
+        /// <summary>
+        /// Gets or sets the selected column.
+        /// </summary>
+        /// <value>The selected column.</value>
         public int SelectedColumn
         {
             get => _selectedColumn;
@@ -48,6 +78,10 @@ namespace M138ADemo.ViewModels
             }
         }
 
+        /// <summary>
+        /// Gets or sets the title.
+        /// </summary>
+        /// <value>The title.</value>
         public string Title
         {
             get => _title;
@@ -59,6 +93,10 @@ namespace M138ADemo.ViewModels
             }
         }
 
+        /// <summary>
+        /// Gets the last state.
+        /// </summary>
+        /// <value>The last state.</value>
         public DeviceState LastState
         {
             get
@@ -72,7 +110,10 @@ namespace M138ADemo.ViewModels
             }
         }
 
-
+        /// <summary>
+        /// Gets or sets the keys.
+        /// </summary>
+        /// <value>The keys.</value>
         public ObservableCollection<KeyModel> Keys
         {
             get
@@ -86,10 +127,15 @@ namespace M138ADemo.ViewModels
             }
         }
 
-  
-
+        /// <summary>
+        /// The shift command.
+        /// </summary>
         private RelayCommand _shiftCommand;
 
+        /// <summary>
+        /// Gets the shift command.
+        /// </summary>
+        /// <value>The shift command.</value>
         public RelayCommand ShiftCommand
         {
             get
@@ -115,8 +161,15 @@ namespace M138ADemo.ViewModels
             }
         }
 
+        /// <summary>
+        /// The on show selected text.
+        /// </summary>
         private RelayCommand _onShowSelectedText;
 
+        /// <summary>
+        /// Gets the on show selected text.
+        /// </summary>
+        /// <value>The on show selected text.</value>
         public RelayCommand OnShowSelectedText
         {
             get
@@ -136,8 +189,15 @@ namespace M138ADemo.ViewModels
             }
         }
 
+        /// <summary>
+        /// The on closing command.
+        /// </summary>
         private RelayCommand _onClosingCommand;
 
+        /// <summary>
+        /// Gets the on closing command.
+        /// </summary>
+        /// <value>The on closing command.</value>
         public RelayCommand OnClosingCommand
         {
             get
@@ -155,8 +215,15 @@ namespace M138ADemo.ViewModels
             }
         }
 
+        /// <summary>
+        /// The save as command.
+        /// </summary>
         private RelayCommand _saveAsCommand;
 
+        /// <summary>
+        /// Gets the save as command.
+        /// </summary>
+        /// <value>The save as command.</value>
         public RelayCommand SaveAsCommand
         {
             get
@@ -179,8 +246,15 @@ namespace M138ADemo.ViewModels
             }
         }
 
+        /// <summary>
+        /// The open menu item command.
+        /// </summary>
         private RelayCommand _openMenuItemCommand;
 
+        /// <summary>
+        /// Gets the open menu item command.
+        /// </summary>
+        /// <value>The open menu item command.</value>
         public RelayCommand OpenMenuItemCommand
         {
             get
@@ -208,7 +282,7 @@ namespace M138ADemo.ViewModels
                                 Keys.Add(el);
                             }
                             LastState.SafeInit(state.keys);
-                            Configuration.deviceState = state;
+                            Configuration.DeviceState = state;
 
                             AsyncUtils.DelayCall(1000, AfterFileOpened);
                         }
@@ -216,9 +290,16 @@ namespace M138ADemo.ViewModels
                 }));
             }
         }
-
+        /// <summary>
+        /// The is back to keys menu item enabled.
+        /// </summary>
         bool _isBackToKeysMenuItemEnabled;
 
+        /// <summary>
+        /// Gets a value indicating whether this <see cref="T:M138ADemo.ViewModels.DragAndDropViewModel"/> is back to
+        /// keys menu items enabled.
+        /// </summary>
+        /// <value><c>true</c> if is back to keys menu items enabled; otherwise, <c>false</c>.</value>
         public bool IsBackToKeysMenuItemsEnabled
         {
             get
@@ -233,8 +314,15 @@ namespace M138ADemo.ViewModels
             }
         }
 
+        /// <summary>
+        /// The back command.
+        /// </summary>
         private RelayCommand _backCommand;
 
+        /// <summary>
+        /// Gets the back command.
+        /// </summary>
+        /// <value>The back command.</value>
         public RelayCommand BackCommand
         {
             get
@@ -273,6 +361,10 @@ namespace M138ADemo.ViewModels
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether this <see cref="T:M138ADemo.ViewModels.DragAndDropViewModel"/> did user made changes.
+        /// </summary>
+        /// <value><c>true</c> if did user made changes; otherwise, <c>false</c>.</value>
         public bool DidUserMadeChanges
         {
             get
@@ -291,19 +383,22 @@ namespace M138ADemo.ViewModels
             }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:M138ADemo.ViewModels.DragAndDropViewModel"/> class.
+        /// </summary>
         public DragAndDropViewModel()
         {
             Keys = new ObservableCollection<KeyModel>();
             LastState = new DeviceState();
             dialogService = new DefaultDialogService();
-            if (Configuration.deviceState != null)
+            if (Configuration.DeviceState != null)
             {
-                Configuration.deviceState.keys.ToList().ForEach((arg) => Keys.Add(new KeyModel(arg._key, arg.IdNumber, arg.Shift)));
-                LastState.SafeInit(Configuration.deviceState.keys);
+                Configuration.DeviceState.keys.ToList().ForEach((arg) => Keys.Add(new KeyModel(arg._key, arg.IdNumber, arg.Shift)));
+                LastState.SafeInit(Configuration.DeviceState.keys);
             }
             else
             {
-                Configuration.lst.ToList().ForEach((arg) => Keys.Add(new KeyModel(arg.second, arg.first)));
+                Configuration.KeyList.ToList().ForEach((arg) => Keys.Add(new KeyModel(arg.Item2, arg.Item1)));
                 LastState.SafeInit(Keys);
                 Title = "Untitled";
             }
@@ -312,18 +407,24 @@ namespace M138ADemo.ViewModels
             IsBackToKeysMenuItemsEnabled = Configuration.Message == null ? false : true;
         }
 
+        /// <summary>
+        /// Ons the property changed.
+        /// </summary>
+        /// <param name="propertyName">Property name.</param>
         public void OnPropertyChanged([CallerMemberName]string propertyName="")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName: propertyName));
         }
 
-
+        /// <summary>
+        /// Adjusts the shifts.
+        /// </summary>
         public void AdjustShifts()
         {
             if (Configuration.Automatic && Configuration.Encrypt)
             {
                 string mes = Configuration.Message ?? "";
-                for (int i = 0; i < mes.Length; ++i)
+                for (int i = 0; i < Math.Min(mes.Length, this.Keys.Count); ++i)
                 {
                     Keys[i].AdjustShiftEncrypt(Char.ToLower(mes[i]));
                 }
@@ -331,20 +432,31 @@ namespace M138ADemo.ViewModels
             if (Configuration.Automatic && Configuration.Decrypt)
             {
                 string mes = Configuration.Message ?? "";
-                for (int i = 0; i < mes.Length; ++i)
+                for (int i = 0; i < Math.Min(mes.Length, this.Keys.Count); ++i)
                 {
                     Keys[i].AdjustShiftDecrypt(Char.ToLower(mes[i]));
                 }
             }
         }
 
-
+        /// <summary>
+        /// Occurs when property changed.
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
+        /// <summary>
+        /// Occurs when update and rehighlight.
+        /// </summary>
         public event Action<int> UpdateAndRehighlight;
 
+        /// <summary>
+        /// Occurs when after file opened.
+        /// </summary>
         public event Action AfterFileOpened;
 
+        /// <summary>
+        /// Occurs when notify to close.
+        /// </summary>
         public event Action NotifyToClose;
     }
 }

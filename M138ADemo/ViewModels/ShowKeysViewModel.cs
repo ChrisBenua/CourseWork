@@ -7,16 +7,52 @@ using M138ADemo.MainClasses;
 
 namespace M138ADemo.ViewModels
 {
+    /// <summary>
+    /// Show keys view model.
+    /// </summary>
     public class ShowKeysViewModel : AddUsersKeysViewModel
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:M138ADemo.ViewModels.ShowKeysViewModel"/> class.
+        /// </summary>
         public ShowKeysViewModel()
         {
-            foreach (var el in Configuration.lst)
+            foreach (var el in Configuration.KeyList)
             {
-                this.UserKeys.Add(new KeyForPersistance(el.first, el.second));
+                this.UserKeys.Add(new KeyForPersistance(el.Item1, el.Item2));
             }
         }
 
+        /// <summary>
+        /// Gets the check keys identifiers command.
+        /// </summary>
+        /// <value>The check keys identifiers command.</value>
+        public override RelayCommand CheckKeysIdsCommand
+        {
+            get
+            {
+                return _checkKeysIdsCommand ?? (_checkKeysIdsCommand = new RelayCommand(obj =>
+                {
+                    HashSet<int> set = new HashSet<int>();
+                    bool flagOk = true;
+                    for (int i = 0; i < UserKeys.Count; ++i)
+                    {
+                        if (set.Contains(UserKeys[i].Id))
+                        {
+                            dialogService.ShowMessage("Повторяющиеся номера ключей", "Предупреждение");
+                            flagOk = false;
+                            return;
+                        }
+                        set.Add(UserKeys[i].Id);
+                    }
+                }));
+            }
+        }
+
+        /// <summary>
+        /// Gets the end command.
+        /// </summary>
+        /// <value>The end command.</value>
         public override RelayCommand EndCommand
         {
             get
@@ -35,8 +71,8 @@ namespace M138ADemo.ViewModels
                         set.Add(UserKeys[i].Id);
                     }
 
-                    Configuration.lst.Clear();
-                    UserKeys.ToList().ForEach(el => Configuration.lst.Add(Pair<int, string>.MakePair(el.Id,
+                    Configuration.KeyList.Clear();
+                    UserKeys.ToList().ForEach(el => Configuration.KeyList.Add((el.Id,
                         el.KeyArr.Aggregate((a, b) => a + b))));
                     this.OnNotifyOnClose();
                 }));

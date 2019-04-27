@@ -20,7 +20,14 @@ namespace M138ADemo
     /// </summary>
     public partial class DecryptAddKeys : Window
     {
+        /// <summary>
+        /// The view model.
+        /// </summary>
         private DecryptAddKeysViewModel viewModel;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:M138ADemo.DecryptAddKeys"/> class.
+        /// </summary>
         public DecryptAddKeys()
         {
             InitializeComponent();
@@ -142,8 +149,5 @@ namespace M138ADemo
             w.Closed += (s, args) => viewModel.PerformValidation();
             w.Show();
         }
-
-        
-        
     }
 }

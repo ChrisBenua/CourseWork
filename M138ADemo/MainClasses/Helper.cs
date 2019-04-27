@@ -11,14 +11,21 @@ using System.Windows.Forms;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using System.IO;
 using M138ADemo.MainClasses;
 
 namespace M138ADemo
 {
-
+    /// <summary>
+    /// IO Helper.
+    /// </summary>
     public static class IOHelper
     {
-
+        /// <summary>
+        /// Loads the keys container.
+        /// </summary>
+        /// <returns>The keys container.</returns>
+        /// <param name="fileName">File name.</param>
         public static KeysContainer LoadKeysContainer(string fileName)
         {
 
@@ -27,6 +34,12 @@ namespace M138ADemo
             KeysContainer state = new KeysContainer();
 
             System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(state.GetType());
+
+            var fillInfo = new FileInfo(fileName);
+            if (!fillInfo.Exists)
+            {
+                fillInfo.Create();
+            }
 
             using (System.IO.StreamReader reader = new System.IO.StreamReader(fileName)) {
                 try
@@ -50,7 +63,13 @@ namespace M138ADemo
             return state;
         }
 
-        public static KeysContainer SaveKeysContainer(string toFileName, ObservableCollection<Pair<int, String>> lst)
+        /// <summary>
+        /// Saves the keys container.
+        /// </summary>
+        /// <returns>The keys container.</returns>
+        /// <param name="toFileName">To file name.</param>
+        /// <param name="lst">Lst.</param>
+        public static KeysContainer SaveKeysContainer(string toFileName, ObservableCollection<(int, String)> lst)
         {
             RecentFiles.KeysCollectionShared.AddFileToRecents(toFileName);
 
@@ -59,6 +78,7 @@ namespace M138ADemo
 
             System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
             System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(state.GetType());
+
 
             using (System.IO.MemoryStream stream = new System.IO.MemoryStream())
             {
@@ -81,6 +101,11 @@ namespace M138ADemo
             return state;
         }
 
+        /// <summary>
+        /// Loads the state of the device.
+        /// </summary>
+        /// <returns>The device state.</returns>
+        /// <param name="fileName">File name.</param>
         public static (DeviceState, string) LoadDeviceState(string fileName)
         {
 
@@ -89,6 +114,12 @@ namespace M138ADemo
             DeviceState state = new DeviceState();
 
             System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(state.GetType());
+            var fillInfo = new FileInfo(fileName);
+            if (!fillInfo.Exists)
+            {
+                fillInfo.Create();
+            }
+
             try
             {
                 using (System.IO.StreamReader reader = new System.IO.StreamReader(fileName))
@@ -127,6 +158,12 @@ namespace M138ADemo
             return (state, fileName);
         }
 
+        /// <summary>
+        /// Saves the state of the device.
+        /// </summary>
+        /// <returns>The device state.</returns>
+        /// <param name="toFileName">file name where to save.</param>
+        /// <param name="lst">List of models</param>
         public static DeviceState SaveDeviceState(string toFileName, List<KeyModel> lst)
         {
             RecentFiles.MachineStatesShared.AddFileToRecents(toFileName);
@@ -136,6 +173,8 @@ namespace M138ADemo
 
             System.Xml.XmlDocument doc = new System.Xml.XmlDocument();
             System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(state.GetType());
+            
+
             try
             {
                 using (System.IO.MemoryStream stream = new System.IO.MemoryStream())
@@ -166,26 +205,48 @@ namespace M138ADemo
         }
     }
 
+    /// <summary>
+    /// Helper.
+    /// </summary>
     public static class Helper
     {
+        /// <summary>
+        /// The dark paper image source.
+        /// </summary>
         public static ImageSource DarkPapSource = new BitmapImage(new Uri("pack://application:,,,/Images/image.jpg"));
+
+        /// <summary>
+        /// The paper images source.
+        /// </summary>
         public static ImageSource PapSource = new BitmapImage(new Uri("pack://application:,,,/Images/texture_paper2.jpg"));
+
+        /// <summary>
+        /// The aluminum source.
+        /// </summary>
         public static ImageSource AluminumSource = new BitmapImage(new Uri("pack://application:,,,/Images/aluminum_texture1.jpg"));
+
+        /// <summary>
+        /// The border images source.
+        /// </summary>
         public static ImageSource BorderSource = new BitmapImage(new Uri("pack://application:,,,/Images/borderimage.jpg"));
+
+        /// <summary>
+        /// The regex for checking that string containts only digits
+        /// </summary>
         public static Regex reg = new Regex("[0-9]+");
+
+        /// <summary>
+        /// The max number of keys.
+        /// </summary>
         public static int MaxKeys = 100;
 
-        public static List<T> Slice<T>(T[] source, int from, int len)
-        {
-            List<T> ans = new List<T>();
-            for (int i = 0; i < len; ++i)
-            {
-                ans.Add(source[i + from]);
-            }
-
-            return ans;
-        }
-
+        /// <summary>
+        /// Creates the list.
+        /// </summary>
+        /// <returns>The list.</returns>
+        /// <param name="n">N.</param>
+        /// <param name="def">Def.</param>
+        /// <typeparam name="T">The 1st type parameter.</typeparam>
         public static List<T> CreateList<T>(int n, T def)
         {
             List<T> lst = new List<T>();
@@ -197,22 +258,11 @@ namespace M138ADemo
             return lst;
         }
 
-        public static List<T> Concat<T>(List<T> f, List<T> s)
-        {
-            List<T> ans = new List<T>();
-            for (int i = 0; i < f.Count; ++i)
-            {
-                ans.Add(f[i]);
-            }
-
-            for (int i = 0; i < s.Count; ++i)
-            {
-                ans.Add(s[i]);
-            }
-
-            return ans;
-        }
-
+        /// <summary>
+        /// Makes char in upperCase.
+        /// </summary>
+        /// <returns>The upperCase char.</returns>
+        /// <param name="ch">Ch.</param>
         public static char ToUpper(char ch)
         {
             if (!(ch >= 'a' && ch <= 'z'))
@@ -224,11 +274,21 @@ namespace M138ADemo
             return ch;
         }
 
+        /// <summary>
+        /// Is the alpha in uppercase.
+        /// </summary>
+        /// <returns><c>true</c>, if alpha was upperCase, <c>false</c> otherwise.</returns>
+        /// <param name="ch">Ch.</param>
         public static bool isUpperAlpha(char ch)
         {
             return ch >= 'A' && ch <= 'Z';
         }
 
+        /// <summary>
+        /// Checks that the string containts only alphabetic symblos.
+        /// </summary>
+        /// <returns><c>true</c>, if string was constructed from alphabetic symbols, <c>false</c> otherwise.</returns>
+        /// <param name="s">S.</param>
         public static bool isAlphaString(string s)
         {
             for (int i = 0; i < s.Length; ++i)
@@ -242,48 +302,44 @@ namespace M138ADemo
             return true;
         }
 
-        public static string Strip(string s)
-        {
-            if (s.Length == 0)
-            {
-                return s;
-            }
-            int st = 0, end = s.Length - 1;
-            while (s[st] == ' ')
-            {
-                st++;
-            }
-
-            while (s[end] == ' ')
-            {
-                end--;
-            }
-
-            if (st > end)
-            {
-                return "";
-            }
-            else
-            {
-                return s.Substring(st, end - st + 1);
-            }
-        }
-
+        /// <summary>
+        /// Is the alphabetic symbol.
+        /// </summary>
+        /// <returns><c>true</c>, if char was alphabetic, <c>false</c> otherwise.</returns>
+        /// <param name="ch">Ch.</param>
         public static bool isAlpha(char ch)
         {
-            return Helper.isUpperAlpha(ch) || ch >= 'a' && ch <= 'z';
+            return (ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z');
         }
     }
 
+    /// <summary>
+    /// Inverse bool converter.
+    /// </summary>
     public class InverseBoolConverter: IValueConverter
     {
+        /// <summary>
+        /// Convert the specified value, targetType, parameter and culture.
+        /// </summary>
+        /// <returns>The convert.</returns>
+        /// <param name="value">Value.</param>
+        /// <param name="targetType">Target type.</param>
+        /// <param name="parameter">Parameter.</param>
+        /// <param name="culture">Culture.</param>
         public object Convert(object value, Type targetType,
             object parameter, CultureInfo culture)
         {
             return !(bool)value;
         }
 
-
+        /// <summary>
+        /// Converts the back.
+        /// </summary>
+        /// <returns>The back.</returns>
+        /// <param name="value">Value.</param>
+        /// <param name="targetType">Target type.</param>
+        /// <param name="parameter">Parameter.</param>
+        /// <param name="culture">Culture.</param>
         public object ConvertBack(object value, Type targetType,
            object parameter, CultureInfo culture)
         {
@@ -292,26 +348,55 @@ namespace M138ADemo
 
     }
 
+    /// <summary>
+    /// Int to string converter.
+    /// </summary>
     public class IntToStringConverter : IValueConverter
     {
+        /// <summary>
+        /// The prefix.
+        /// </summary>
         string beginning;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:M138ADemo.IntToStringConverter"/> class.
+        /// </summary>
         public IntToStringConverter()
         {
             beginning = "";
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:M138ADemo.IntToStringConverter"/> class.
+        /// </summary>
+        /// <param name="str">Needed prefix.</param>
         public IntToStringConverter(string str)
         {
             beginning = str;
         }
 
+        /// <summary>
+        /// Convert the specified value, targetType, parameter and culture.
+        /// </summary>
+        /// <returns>The convert.</returns>
+        /// <param name="value">Value.</param>
+        /// <param name="targetType">Target type.</param>
+        /// <param name="parameter">Parameter.</param>
+        /// <param name="culture">Culture.</param>
         public object Convert(object value, Type targetType,
             object parameter, CultureInfo culture)
         {
             return beginning + ((int) value).ToString();
         }
 
+        /// <summary>
+        /// Converts the back.
+        /// </summary>
+        /// <returns>The back.</returns>
+        /// <param name="value">Value.</param>
+        /// <param name="targetType">Target type.</param>
+        /// <param name="parameter">Parameter.</param>
+        /// <param name="culture">Culture.</param>
         public object ConvertBack(object value, Type targetType,
             object parameter, CultureInfo culture)
         {
@@ -323,9 +408,19 @@ namespace M138ADemo
         }
     }
 
-
+    /// <summary>
+    /// Warning int to string converter.
+    /// </summary>
     public class WarningIntToStringConverter : IValueConverter
     {
+        /// <summary>
+        /// Convert the specified value, targetType, parameter and culture.
+        /// </summary>
+        /// <returns>The convert.</returns>
+        /// <param name="value">Value.</param>
+        /// <param name="targetType">Target type.</param>
+        /// <param name="parameter">Parameter.</param>
+        /// <param name="culture">Culture.</param>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             int val = (int)value;
@@ -338,6 +433,14 @@ namespace M138ADemo
             }
         }
 
+        /// <summary>
+        /// Converts the back.
+        /// </summary>
+        /// <returns>The back.</returns>
+        /// <param name="value">Value.</param>
+        /// <param name="targetType">Target type.</param>
+        /// <param name="parameter">Parameter.</param>
+        /// <param name="culture">Culture.</param>
         public object ConvertBack(object value, Type targetType,
             object parameter, CultureInfo culture)
         {
@@ -352,24 +455,19 @@ namespace M138ADemo
         }
     }
 
-
-    public class LengthToBoolConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return (int)value > 0;
-        }
-
-        public object ConvertBack(object value, Type targetType,
-            object parameter, CultureInfo culture)
-        {
-            // Do the conversion from visibility to bool
-            return 1;
-        }
-    }
-
+    /// <summary>
+    /// Warning int to bool converter.
+    /// </summary>
     public class WarningIntToBoolConverter : IValueConverter
     {
+        /// <summary>
+        /// Convert the specified value, targetType, parameter and culture.
+        /// </summary>
+        /// <returns>The convert.</returns>
+        /// <param name="value">Value.</param>
+        /// <param name="targetType">Target type.</param>
+        /// <param name="parameter">Parameter.</param>
+        /// <param name="culture">Culture.</param>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             int val = (int)value;
@@ -383,6 +481,14 @@ namespace M138ADemo
             }
         }
 
+        /// <summary>
+        /// Converts the back.
+        /// </summary>
+        /// <returns>The back.</returns>
+        /// <param name="value">Value.</param>
+        /// <param name="targetType">Target type.</param>
+        /// <param name="parameter">Parameter.</param>
+        /// <param name="culture">Culture.</param>
         public object ConvertBack(object value, Type targetType,
             object parameter, CultureInfo culture)
         {
@@ -391,17 +497,40 @@ namespace M138ADemo
         }
     }
 
+    /// <summary>
+    /// Is enabled to color converter.
+    /// </summary>
     public class IsEnabledToColorConverter : IValueConverter
     {
+        /// <summary>
+        /// The default color.
+        /// </summary>
         Brush defaultColor;
+
+        /// <summary>
+        /// The color of the disabled.
+        /// </summary>
         Brush disabledColor;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:M138ADemo.IsEnabledToColorConverter"/> class.
+        /// </summary>
+        /// <param name="defaul">Defaul.</param>
+        /// <param name="disabled">Disabled.</param>
         public IsEnabledToColorConverter(Brush defaul, Brush disabled)
         {
             defaultColor = defaul;
             disabledColor = disabled;
         }
 
-
+        /// <summary>
+        /// Convert the specified value, targetType, parameter and culture.
+        /// </summary>
+        /// <returns>The convert.</returns>
+        /// <param name="value">Value.</param>
+        /// <param name="targetType">Target type.</param>
+        /// <param name="parameter">Parameter.</param>
+        /// <param name="culture">Culture.</param>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             bool val = (int)value >= Configuration.Message.Length;
@@ -415,6 +544,14 @@ namespace M138ADemo
             //return defaultColor;
         }
 
+        /// <summary>
+        /// Converts the back.
+        /// </summary>
+        /// <returns>The back.</returns>
+        /// <param name="value">Value.</param>
+        /// <param name="targetType">Target type.</param>
+        /// <param name="parameter">Parameter.</param>
+        /// <param name="culture">Culture.</param>
         public object ConvertBack(object value, Type targetType,
             object parameter, CultureInfo culture)
         {
@@ -423,8 +560,14 @@ namespace M138ADemo
         }
     }
 
+    /// <summary>
+    /// Length to color converter.
+    /// </summary>
     public class LengthToColorConverter : IValueConverter
     {
+        /// <summary>
+        /// The default color.
+        /// </summary>
         Brush defaultColor;
         Brush disabledColor;
         public LengthToColorConverter(Brush defaul, Brush disabled)
@@ -433,7 +576,14 @@ namespace M138ADemo
             disabledColor = disabled;
         }
 
-
+        /// <summary>
+        /// Convert the specified value, targetType, parameter and culture.
+        /// </summary>
+        /// <returns>The convert.</returns>
+        /// <param name="value">Value.</param>
+        /// <param name="targetType">Target type.</param>
+        /// <param name="parameter">Parameter.</param>
+        /// <param name="culture">Culture.</param>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return (int)value > 0;
@@ -471,9 +621,16 @@ namespace M138ADemo
 }
 
 
-
+/// <summary>
+/// Async utils.
+/// </summary>
 static class AsyncUtils
 {
+    /// <summary>
+    /// Delays the call.
+    /// </summary>
+    /// <param name="msec">Msec.</param>
+    /// <param name="fn">Fn.</param>
     static public void DelayCall(int msec, Action fn)
     {
         // Grab the dispatcher from the current executing thread

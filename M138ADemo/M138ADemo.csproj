@@ -73,7 +73,6 @@
     <Compile Include="MainClasses\RecentFiles.cs" />
     <Compile Include="MainClasses\RelayCommand.cs" />
     <Compile Include="MainClasses\ShowAndAddKeysInteractor.cs" />
-    <Compile Include="Models\AddKeysModel.cs" />
     <Compile Include="ViewModels\AddKeysViewModel.cs" />
     <Compile Include="ViewModels\AddUsersKeysViewModel.cs" />
     <Compile Include="ViewModels\DecryptAddKeysViewModel.cs" />

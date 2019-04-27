@@ -19,12 +19,20 @@ namespace M138ADemo
     /// </summary>
     public partial class RandomKeysWindow : Window
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:M138ADemo.RandomKeysWindow"/> class.
+        /// </summary>
         public RandomKeysWindow()
         {
             InitializeComponent();
             generateButton.Click += GenerateButtonOnClick;
         }
 
+        /// <summary>
+        /// Generates the button on click.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">E.</param>
         private void GenerateButtonOnClick(object sender, RoutedEventArgs e)
         {
             bool success;
@@ -37,16 +45,20 @@ namespace M138ADemo
             {
                 if (messageBoxCaption[0] == 'У')
                 {
-                    Configuration.lst.Clear();
+                    Configuration.KeyList.Clear();
                     foreach (var el in Generator.GenerateRandomKeys(res))
                     {
-                        Configuration.lst.Add(el);
+                        Configuration.KeyList.Add(el);
                     }
                     Close();
                 }
             }
         }
 
+        /// <summary>
+        /// Validates the text field text.
+        /// </summary>
+        /// <returns>The text field text.</returns>
         private (bool, String, String, int) ValidateTextFieldText()
         {
             string text = numberOfKeysTextBlock.Text;

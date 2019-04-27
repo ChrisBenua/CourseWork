@@ -15,13 +15,31 @@ using System.Windows.Data;
 
 namespace M138ADemo.MainClasses
 {
+    /// <summary>
+    /// Show and add keys interactor.
+    /// </summary>
     public class ShowAndAddKeysInteractor
     {
+        /// <summary>
+        /// The default row brush.
+        /// </summary>
         public static ImageBrush DefaultRowBrush = new ImageBrush(Helper.PapSource);
 
+        /// <summary>
+        /// The view model.
+        /// </summary>
         public AddUsersKeysViewModel viewModel;
+
+        /// <summary>
+        /// The data grid.
+        /// </summary>
         public DataGrid dataGrid;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:M138ADemo.MainClasses.ShowAndAddKeysInteractor"/> class.
+        /// </summary>
+        /// <param name="grid">Grid.</param>
+        /// <param name="model">Model.</param>
         public ShowAndAddKeysInteractor(DataGrid grid, AddUsersKeysViewModel model)
         {
             this.dataGrid = grid;
@@ -95,6 +113,11 @@ namespace M138ADemo.MainClasses
             }
         }
 
+        /// <summary>
+        /// Gets the data template.
+        /// </summary>
+        /// <returns>The data template.</returns>
+        /// <param name="cnt">Count.</param>
         public DataTemplate getDataTemplate(int cnt)
         {
             DataTemplate template = new DataTemplate();
@@ -112,6 +135,11 @@ namespace M138ADemo.MainClasses
             return template;
         }
 
+        /// <summary>
+        /// Deletes the button on click.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">E.</param>
         public void DeleteButtonOnClick(object sender, RoutedEventArgs e)
         {
             KeyForPersistance obj = ((FrameworkElement)sender).DataContext as KeyForPersistance;
@@ -119,6 +147,11 @@ namespace M138ADemo.MainClasses
             viewModel.DeleteRowCommand.Execute(index);
         }
 
+        /// <summary>
+        /// Gets the text column template.
+        /// </summary>
+        /// <returns>The text column template.</returns>
+        /// <param name="index">Index.</param>
         public DataTemplate getTextColumnTemplate(int index)
         {
             DataTemplate template = new DataTemplate();
@@ -196,6 +229,11 @@ namespace M138ADemo.MainClasses
             return template;
         }
 
+        /// <summary>
+        /// On Keys the number on preview text input.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">E.</param>
         public void KeyNumberOnPreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             TextBox txt = (TextBox)sender;
@@ -203,10 +241,16 @@ namespace M138ADemo.MainClasses
             viewModel.KeyPreviewInputCommand.Execute((txt.Text + e.Text, e));
         }
 
+        /// <summary>
+        /// On Text box text changed.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">E.</param>
         public void TextBoxOnTextChanged(object sender, TextChangedEventArgs e)
         {
             TextBox textBox = (TextBox)sender;
-            textBox.Text = Helper.Strip(textBox.Text).ToUpper().Substring(0, Math.Min(1, textBox.Text.Length));
+            //textBox.Text = Helper.Strip(textBox.Text).ToUpper().Substring(0, Math.Min(1, textBox.Text.Length));
+            textBox.Text = textBox.Text.Trim().ToUpper().Substring(0, Math.Min(1, textBox.Text.Length));
 
             var sourceCell = DataGridExtensions.FindVisualParent<DataGridCell>(textBox);
             var gridRow = DataGridExtensions.FindVisualParent<DataGridRow>(sourceCell);
@@ -221,6 +265,11 @@ namespace M138ADemo.MainClasses
 
         }
 
+        /// <summary>
+        /// Text box on preview text input.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">E.</param>
         public void TextBoxOnPreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             DependencyObject dep = (DependencyObject)e.OriginalSource;
@@ -247,6 +296,11 @@ namespace M138ADemo.MainClasses
             }
         }
 
+        /// <summary>
+        /// Finds the index of the row.
+        /// </summary>
+        /// <returns>The row index.</returns>
+        /// <param name="row">Row.</param>
         public int FindRowIndex(DataGridRow row)
         {
             DataGrid dataGrid1 =

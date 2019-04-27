@@ -41,22 +41,85 @@ namespace M138ADemo
     /// </summary>
     public partial class DragAndDrop : Window
     {
+        /// <summary>
+        /// The last state.
+        /// </summary>
         private DeviceState lastState = new DeviceState();
+
+        /// <summary>
+        /// The default thickness.
+        /// </summary>
         private static Thickness DefaultThickness = new Thickness(2, 2, 2.2, 2);
+
+        /// <summary>
+        /// The keys.
+        /// </summary>
         public static BindingList<KeyModel> keys = new BindingList<KeyModel>();
+
+        /// <summary>
+        /// The static grid.
+        /// </summary>
         public static DataGrid staticGrid;
+
+        /// <summary>
+        /// The binding source.
+        /// </summary>
         private BindingSource bindingSource = new BindingSource();
+
+        /// <summary>
+        /// The index of the curr row.
+        /// </summary>
         private int currRowIndex = -1;//Helper for drag and drop
+
+        /// <summary>
+        /// The buttons widths.
+        /// </summary>
         private int buttonsWidths = 35;
+
+        /// <summary>
+        /// The simple widths.
+        /// </summary>
         private int simpleWidths = 30;
+
+        /// <summary>
+        /// The dark row brush.
+        /// </summary>
         private static ImageBrush darkRowBrush = new ImageBrush(Helper.DarkPapSource);
+
+        /// <summary>
+        /// The default row brush.
+        /// </summary>
         private static ImageBrush DefaultRowBrush = new ImageBrush(Helper.PapSource);
+
+        /// <summary>
+        /// The current file path.
+        /// </summary>
         private string currentFilePath = "Untitled";
+
+        /// <summary>
+        /// The view model.
+        /// </summary>
         private DragAndDropViewModel viewModel;
+
+        /// <summary>
+        /// The is extended work space.
+        /// </summary>
         private int IsExtendedWorkSpace = Configuration.IsCompactWorkSpace ? 0 : 26;
+
+        /// <summary>
+        /// The default cell style.
+        /// </summary>
         private Style DefaultCellStyle;
+
+        /// <summary>
+        /// The border cell style.
+        /// </summary>
         private Style BorderCellStyle;
 
+        /// <summary>
+        /// Gets or sets the current file path.
+        /// </summary>
+        /// <value>The current file path.</value>
         public string CurrentFilePath
         {
             get => currentFilePath;
@@ -70,6 +133,9 @@ namespace M138ADemo
             }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:M138ADemo.DragAndDrop"/> class.
+        /// </summary>
         public DragAndDrop()
         {
             
@@ -271,11 +337,21 @@ namespace M138ADemo
             this.Closing += DragAndDrop_Closing;
         }
 
+        /// <summary>
+        /// Drags the and drop closing.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">E.</param>
         private void DragAndDrop_Closing(object sender, CancelEventArgs e)
         {
             viewModel.OnClosingCommand.Execute(e);
         }
 
+        /// <summary>
+        /// Mies the grid selected cells changed.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">E.</param>
         private void MyGrid_SelectedCellsChanged(object sender, SelectedCellsChangedEventArgs e)
         {
             if (e.AddedCells.Count > 0)
@@ -294,14 +370,21 @@ namespace M138ADemo
             {
                 SetBackGround();
             }
-
         }
 
+        /// <summary>
+        /// MSs the ave as menu item click.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">E.</param>
         private void MSaveAsMenuItem_Click(object sender, RoutedEventArgs e)
         {
             viewModel.SaveAsCommand.Execute(null);
         }
 
+        /// <summary>
+        /// Sets the back ground.
+        /// </summary>
         private void SetBackGround()
         {
             for (int row = 0; row < viewModel.Keys.Count; ++row)
@@ -310,6 +393,10 @@ namespace M138ADemo
             }
         }
 
+        /// <summary>
+        /// Sets the back ground.
+        /// </summary>
+        /// <param name="row">Row.</param>
         private void SetBackGround(int row)
         {
             int borderColumn = Configuration.IsCompactWorkSpace ? 0 : 1;
@@ -358,6 +445,11 @@ namespace M138ADemo
             }
         }
 
+        /// <summary>
+        /// Headers the click.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">E.</param>
         private void HeaderClick(object sender, MouseButtonEventArgs e)
         {
             DataGridColumnHeader header = (DataGridColumnHeader) sender;
@@ -378,6 +470,11 @@ namespace M138ADemo
 
         }
 
+        /// <summary>
+        /// Statics the grid on loaded.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">E.</param>
         private void StaticGridOnLoaded(object sender, RoutedEventArgs e)
         {
             UpdateHighlightedCells();
@@ -393,6 +490,10 @@ namespace M138ADemo
             }
         }
 
+        /// <summary>
+        /// Highlights the selected row.
+        /// </summary>
+        /// <param name="col">Col.</param>
         private void HighlightSelectedRow(int col)
         {
             for (int i = 0; i < viewModel.Keys.Count; ++i)
@@ -403,11 +504,19 @@ namespace M138ADemo
             }
         }
 
+        /// <summary>
+        /// Unselects the rows.
+        /// </summary>
         private void UnselectRows()
         {
             myGrid.SelectedIndex = -1;
         }
 
+        /// <summary>
+        /// Gets the data template.
+        /// </summary>
+        /// <returns>The data template.</returns>
+        /// <param name="cnt">Count.</param>
         private DataTemplate getDataTemplate(int cnt)
         {
             DataTemplate template = new DataTemplate();
@@ -426,6 +535,11 @@ namespace M138ADemo
             return template;
         }
 
+        /// <summary>
+        /// Gets the data grid row.
+        /// </summary>
+        /// <returns>The data grid row.</returns>
+        /// <param name="sender">Sender.</param>
         private static DataGridRow GetDataGridRow(object sender)
         {
             for (var vis = sender as Visual; vis != null; vis = VisualTreeHelper.GetParent(vis) as Visual)
@@ -437,6 +551,11 @@ namespace M138ADemo
             return null;
         }
 
+        /// <summary>
+        /// Buttons the on click left.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">E.</param>
         private void BtnOnClickLeft(object sender, RoutedEventArgs e)
         {
             
@@ -451,6 +570,11 @@ namespace M138ADemo
             //this.Focus();
         }
 
+        /// <summary>
+        /// Buttons the on click right.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">E.</param>
         private void BtnOnClickRight(object sender, RoutedEventArgs e)
         {
             var row = GetDataGridRow(sender);
@@ -464,6 +588,9 @@ namespace M138ADemo
             //this.Focus();
         }
 
+        /// <summary>
+        /// Updates the highlighted cells.
+        /// </summary>
         private void UpdateHighlightedCells()
         {
             for (int i = 0; i < viewModel.Keys.Count; ++i)
@@ -472,6 +599,10 @@ namespace M138ADemo
             }
         }
 
+        /// <summary>
+        /// Updates the highlighted cells.
+        /// </summary>
+        /// <param name="row">Row.</param>
         private void UpdateHighlightedCells(int row)
         {
             int topBorder = Configuration.IsCompactWorkSpace ? viewModel.Keys[0].Key.Length * 2 + 3 : 26 + 26 + 26 + 3;
@@ -517,9 +648,16 @@ namespace M138ADemo
         }
 
 
-        //DRAG and DROP
+        /// <summary>
+        /// Get positio delegate.
+        /// </summary>
         public delegate Point GetPosition(IInputElement element);
 
+        /// <summary>
+        /// Drops the row.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">E.</param>
         void DropRow(object sender, DragEventArgs e)
         {
             int index;
@@ -545,8 +683,14 @@ namespace M138ADemo
             viewModel.Keys.RemoveAt(currRowIndex);
             viewModel.Keys.Insert(index, changedProduct);
             SetBackGround();
+            UpdateHighlightedCells();
         }
 
+        /// <summary>
+        /// Mies the grid preview mouse left button down.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">E.</param>
         void myGrid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             
@@ -589,15 +733,12 @@ namespace M138ADemo
             }
         }
 
-        private DataGridRow GetRowItem(int index)
-        {
-            if (myGrid.ItemContainerGenerator.Status
-                != GeneratorStatus.ContainersGenerated)
-                return null;
-            return myGrid.ItemContainerGenerator.ContainerFromIndex(index)
-                as DataGridRow;
-        }
-
+        /// <summary>
+        /// Gets the mouse target row.
+        /// </summary>
+        /// <returns><c>true</c>, if mouse target row was gotten, <c>false</c> otherwise.</returns>
+        /// <param name="theTarget">The target.</param>
+        /// <param name="position">Position.</param>
         private bool GetMouseTargetRow(Visual theTarget, GetPosition position)
         {
             if (theTarget == null)
@@ -609,12 +750,17 @@ namespace M138ADemo
             return rect.Contains(point);
         }
 
+        /// <summary>
+        /// Gets the index of the current row.
+        /// </summary>
+        /// <returns>The current row index.</returns>
+        /// <param name="pos">Position.</param>
         int GetCurrentRowIndex(GetPosition pos)
         {
             int curIndex = -1;
             for (int i = 0; i < myGrid.Items.Count; i++)
             {
-                DataGridRow itm = GetRowItem(i);
+                DataGridRow itm = this.myGrid.GetRow(i);
                 if (GetMouseTargetRow(itm, pos))
                 {
                     curIndex = i;
@@ -623,34 +769,6 @@ namespace M138ADemo
             }
             Console.WriteLine("GetCurrentRowIndex : " + curIndex);
             return curIndex;
-        }
-
-        public static T GetVisualChild<T>(Visual parent) where T : Visual
-        {
-            T child = default(T);
-            int numVisuals = VisualTreeHelper.GetChildrenCount(parent);
-            for (int i = 0; i < numVisuals; i++)
-            {
-                var v = (Visual)VisualTreeHelper.GetChild(parent, i);
-                child = v as T ?? GetVisualChild<T>(v);
-                if (child != null)
-                {
-                    break;
-                }
-            }
-            return child;
-        }
-
-        private static DataGridRow GetRow(DataGrid host, int index)
-        {
-            var row = (DataGridRow)host.ItemContainerGenerator.ContainerFromIndex(index);
-            if (row == null)
-            {
-                // may be virtualized, bring into view and try again
-                host.ScrollIntoView(host.Items[index]);
-                row = (DataGridRow)host.ItemContainerGenerator.ContainerFromIndex(index);
-            }
-            return row;
         }
 
     }

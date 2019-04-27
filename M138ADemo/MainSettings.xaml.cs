@@ -23,9 +23,14 @@ namespace M138ADemo
     /// </summary>
     public partial class MainSettings : Window
     {
-
+        /// <summary>
+        /// The view model.
+        /// </summary>
         MainSettingsViewModel viewModel = null;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:M138ADemo.MainSettings"/> class.
+        /// </summary>
         public MainSettings()
         {
             InitializeComponent();
@@ -209,6 +214,9 @@ namespace M138ADemo
             SetMenuItemsCommands();
         }
 
+        /// <summary>
+        /// Sets the menu items commands.
+        /// </summary>
         private void SetMenuItemsCommands()
         {
             for (int i = 0; i < mOpenRecentsMenuItem.Items.Count; ++i)
@@ -222,6 +230,11 @@ namespace M138ADemo
             }
         }
 
+        /// <summary>
+        /// Machines the states shared property changed.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">E.</param>
         private void MachineStatesShared_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             mOpenRecentsMenuItem.ItemsSource = RecentFiles.MachineStatesShared.ShortenedNamesMenuItems;

@@ -22,8 +22,14 @@ namespace M138ADemo
     public partial class AddUsersKey : Window
     {
         
-
+        /// <summary>
+        /// The view model.
+        /// </summary>
         private AddUsersKeysViewModel viewModel;
+
+        /// <summary>
+        /// The interactor.
+        /// </summary>
         private ShowAndAddKeysInteractor interactor;
 
         public AddUsersKey()

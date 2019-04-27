@@ -10,7 +10,7 @@ namespace M138ADemo
     public static class Generator
     {
         private readonly static int maxNumberOfKeys = 100;
-        public static ObservableCollection<Pair<int, string>> GenerateRandomKeys(int numberOfKeys = 20, int seed = -1)
+        public static ObservableCollection<(int, string)> GenerateRandomKeys(int numberOfKeys = 20, int seed = -1)
         {
             Random rnd;
             if (seed != -1)
@@ -22,7 +22,7 @@ namespace M138ADemo
                 rnd = new Random();
             }
             numberOfKeys = Math.Min(maxNumberOfKeys, numberOfKeys);
-            var list = new ObservableCollection<Pair<int, string>>();
+            var list = new ObservableCollection<(int, string)>();
             var set = new SortedSet<int>(Configuration.forbiddenKeys);
             for (int i = 0; i < numberOfKeys; ++i)
             {
@@ -43,7 +43,7 @@ namespace M138ADemo
                 while (set.Contains(num = rnd.Next(0, 200))) { }
 
                 set.Add(num);
-                list.Add(Pair<int, string>.MakePair(num, curr));
+                list.Add((num, curr));
             }
 
             return list;

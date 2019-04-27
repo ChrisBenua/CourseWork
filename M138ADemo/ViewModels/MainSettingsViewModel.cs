@@ -13,20 +13,38 @@ using M138ADemo.Services;
 
 namespace M138ADemo
 {
+    /// <summary>
+    /// Main settings view model.
+    /// </summary>
     public class MainSettingsViewModel : INotifyPropertyChanged
     {
-
+        /// <summary>
+        /// Label clicks.
+        /// </summary>
         public enum LabelClicks
         {
             Encrypt, Decrypt, Manual, Automatic, ExtendedWorkspace
         }
-            
+         
+        /// <summary>
+        /// The dialog service.
+        /// </summary>
         private IDialogService dialogService;
 
+        /// <summary>
+        /// The model.
+        /// </summary>
         private MainSettingsModel _model;
 
+        /// <summary>
+        /// The is next button enabled.
+        /// </summary>
         private bool _isNextButtonEnabled = false;
 
+        /// <summary>
+        /// Gets or sets the model.
+        /// </summary>
+        /// <value>The model.</value>
         public MainSettingsModel Model
         {
             get => _model;
@@ -39,8 +57,16 @@ namespace M138ADemo
             }
         }
 
+        /// <summary>
+        /// The is checked extended workspace.
+        /// </summary>
         private bool _isCheckedExtendedWorkspace;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="T:M138ADemo.MainSettingsViewModel"/> is checked
+        /// extended workspace.
+        /// </summary>
+        /// <value><c>true</c> if is checked extended workspace; otherwise, <c>false</c>.</value>
         public bool IsCheckedExtendedWorkspace
         {
             get => _isCheckedExtendedWorkspace;
@@ -52,8 +78,15 @@ namespace M138ADemo
             }
         }
 
+        /// <summary>
+        /// The on extended workspace button command.
+        /// </summary>
         private RelayCommand _onExtendedWorkspaceButtonCommand;
 
+        /// <summary>
+        /// Gets the on extended workspace button command.
+        /// </summary>
+        /// <value>The on extended workspace button command.</value>
         public RelayCommand OnExtendedWorkspaceButtonCommand
         {
             get
@@ -65,6 +98,10 @@ namespace M138ADemo
             }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="T:M138ADemo.MainSettingsViewModel"/> is next button enabled.
+        /// </summary>
+        /// <value><c>true</c> if is next button enabled; otherwise, <c>false</c>.</value>
         public bool isNextButtonEnabled
         {
             get
@@ -86,8 +123,15 @@ namespace M138ADemo
             }
         }
 
+        /// <summary>
+        /// The color of the next button.
+        /// </summary>
         private Brush _nextButtonColor = Brushes.LightGray;
 
+        /// <summary>
+        /// Gets or sets the color of the next button.
+        /// </summary>
+        /// <value>The color of the next button.</value>
         public Brush NextButtonColor
         {
             get => _nextButtonColor;
@@ -98,6 +142,9 @@ namespace M138ADemo
             }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:M138ADemo.MainSettingsViewModel"/> class.
+        /// </summary>
         public MainSettingsViewModel()
         {
             dialogService = new DefaultDialogService();
@@ -116,14 +163,18 @@ namespace M138ADemo
                         isNextButtonEnabled = false;
                     }
                 }
-            };
-
-
-           
+            }; 
         }
 
+        /// <summary>
+        /// The save to settings command.
+        /// </summary>
         private RelayCommand _saveToSettingsCommand;
 
+        /// <summary>
+        /// Gets the save to settings command.
+        /// </summary>
+        /// <value>The save to settings command.</value>
         public RelayCommand SaveToSettingsCommand
         {
             get
@@ -154,8 +205,15 @@ namespace M138ADemo
             }
         }
 
+        /// <summary>
+        /// The open recent file command.
+        /// </summary>
         private RelayCommand _openRecentFileCommand;
 
+        /// <summary>
+        /// Gets the open recent file command.
+        /// </summary>
+        /// <value>The open recent file command.</value>
         public RelayCommand OpenRecentFileCommand
         {
             get
@@ -175,7 +233,7 @@ namespace M138ADemo
                     (state, openedWindowTitle) = IOHelper.LoadDeviceState(RecentFiles.MachineStatesShared.RecentFileNames[index]);
                     if (state != null)
                     {
-                        Configuration.deviceState = state;
+                        Configuration.DeviceState = state;
                         Configuration.Message = null;
                         OnOpenRecentFileHappend?.Invoke(openedWindowTitle);
                     }
@@ -183,9 +241,15 @@ namespace M138ADemo
                 }));
             }
         }
-
+        /// <summary>
+        /// The open file command.
+        /// </summary>
         private RelayCommand _openFileCommand;
 
+        /// <summary>
+        /// Gets the open file command.
+        /// </summary>
+        /// <value>The open file command.</value>
         public RelayCommand OpenFileCommand
         {
             get
@@ -202,7 +266,7 @@ namespace M138ADemo
                               var deviceState = IOHelper.LoadDeviceState(dialogService.FilePath);
                               if (deviceState.Item1 != null)
                               {
-                                  Configuration.deviceState = deviceState.Item1;
+                                  Configuration.DeviceState = deviceState.Item1;
                                   OnOpenFileHappend?.Invoke(deviceState.Item2);
                               }
                           }
@@ -228,9 +292,15 @@ namespace M138ADemo
                 }));
             }
         }
-
+        /// <summary>
+        /// The on label click command.
+        /// </summary>
         private RelayCommand _onLabelClickCommand;
 
+        /// <summary>
+        /// Gets the on label click command.
+        /// </summary>
+        /// <value>The on label click command.</value>
         public RelayCommand OnLabelClickCommand
         {
             get
@@ -259,12 +329,30 @@ namespace M138ADemo
                 }));
             }
         }
-
+        /// <summary>
+        /// Occurs when on open recent file happend.
+        /// </summary>
         public event Action<String> OnOpenRecentFileHappend;
+
+        /// <summary>
+        /// Occurs when on open file happend.
+        /// </summary>
         public event Action<String> OnOpenFileHappend;
+
+        /// <summary>
+        /// Occurs when on save happend.
+        /// </summary>
         public event Action<bool> OnSaveHappend;
 
+        /// <summary>
+        /// Occurs when property changed.
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// Ons the property changed.
+        /// </summary>
+        /// <param name="prop">Property.</param>
         public void OnPropertyChanged(string prop = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));

@@ -10,40 +10,67 @@ using System.Xml.Serialization;
 
 namespace M138ADemo
 {
-    public class Pair<T, T1>
-    {
-        public T first;
-        public T1 second;
-
-        public Pair(T a, T1 b)
-        {
-            first = a;
-            second = b;
-        }
-
-        public static Pair<T, T1> MakePair(T a, T1 b)
-        {
-            return new Pair<T, T1>(a, b);
-        }
-    }
-
-
+    /// <summary>
+    /// Configuration of current app state
+    /// </summary>
     public static class Configuration
     {
-        private static bool decrypt, encrypt, manual, automatic;
+        /// <summary>
+        /// The decrypt flag.
+        /// </summary>
+        private static bool decrypt;
+        /// <summary>
+        /// The encrypt flag.
+        /// </summary>
+        private static bool encrypt;
+        /// <summary>
+        /// The manual flag.
+        /// </summary>
+        private static bool manual;
+        /// <summary>
+        /// The automatic flag.
+        /// </summary>
+        private static bool automatic;
 
-        public static SortedSet<int> forbiddenKeys = new SortedSet<int>();
+        /// <summary>
+        /// The forbidden keys.
+        /// </summary>
+        public static readonly SortedSet<int> forbiddenKeys = new SortedSet<int>();
 
-        public static ObservableCollection<Pair<int, String>> lst = new ObservableCollection<Pair<int, string>>();
+        /// <summary>
+        /// Gets or sets the current key list.
+        /// </summary>
+        /// <value>The key list.</value>
+        public static ObservableCollection<(int, String)> KeyList { get; set; } = new ObservableCollection<(int, string)>();
 
-        public static DeviceState deviceState = null;
+        /// <summary>
+        /// Gets or sets the state of the device.
+        /// </summary>
+        /// <value>The state of the device.</value>
+        public static DeviceState DeviceState { get; set; } = null;
 
+        /// <summary>
+        /// Gets or sets the decrypt index.
+        /// </summary>
+        /// <value>The index of the decrypt.</value>
         public static int DecryptIndex { get; set; }
 
-        public static int Count => lst.Count;
+        /// <summary>
+        /// Gets the count.
+        /// </summary>
+        /// <value>The count.</value>
+        public static int Count => KeyList.Count;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="T:M138ADemo.Configuration"/> is compact work space.
+        /// </summary>
+        /// <value><c>true</c> if is compact work space; otherwise, <c>false</c>.</value>
         public static bool IsCompactWorkSpace { get; set; } = true;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="T:M138ADemo.Configuration"/> is encrypt.
+        /// </summary>
+        /// <value><c>true</c> if encrypt; otherwise, <c>false</c>.</value>
         public static bool Encrypt
         {
             get { return encrypt; }
@@ -54,6 +81,10 @@ namespace M138ADemo
             }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="T:M138ADemo.Configuration"/> is decrypt.
+        /// </summary>
+        /// <value><c>true</c> if decrypt; otherwise, <c>false</c>.</value>
         public static bool Decrypt
         {
             get { return decrypt;}
@@ -62,6 +93,10 @@ namespace M138ADemo
             }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="T:M138ADemo.Configuration"/> is manual.
+        /// </summary>
+        /// <value><c>true</c> if manual; otherwise, <c>false</c>.</value>
         public static bool Manual
         {
             get { return manual;}
@@ -72,6 +107,10 @@ namespace M138ADemo
             }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="T:M138ADemo.Configuration"/> is automatic.
+        /// </summary>
+        /// <value><c>true</c> if automatic; otherwise, <c>false</c>.</value>
         public static bool Automatic
         {
             get { return automatic;}
@@ -82,33 +121,45 @@ namespace M138ADemo
             }
         }
 
+        /// <summary>
+        /// Gets or sets the message.
+        /// </summary>
+        /// <value>The message.</value>
         public static string Message
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// Initializes the <see cref="T:M138ADemo.Configuration"/> class.
+        /// </summary>
         static Configuration()
         {
-            lst.CollectionChanged += LstOnCollectionChanged;
+            KeyList.CollectionChanged += LstOnCollectionChanged;
         }
 
+        /// <summary>
+        /// Update forbidden Keys the on collection changed.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">E.</param>
         private static void LstOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.NewItems != null)
             {
-                foreach (Pair<int, string> el in e.NewItems)
+                foreach ((int, string) el in e.NewItems)
                 {
-                    forbiddenKeys.Add(el.first);
+                    forbiddenKeys.Add(el.Item1);
                 }
             }
 
             if (e.OldItems != null)
             {
 
-                foreach (Pair<int, string> el in e.OldItems)
+                foreach ((int, string) el in e.OldItems)
                 {
-                    forbiddenKeys.Remove(el.first);
+                    forbiddenKeys.Remove(el.Item1);
                 }
             }
 

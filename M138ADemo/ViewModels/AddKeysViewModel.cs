@@ -13,21 +13,34 @@ using M138ADemo.Services;
 namespace M138ADemo.ViewModels
 {
 
-
+    /// <summary>
+    /// Add keys view model.
+    /// </summary>
     public class AddKeysViewModel : INotifyPropertyChanged
     {
-
-
+        /// <summary>
+        /// Windows to be opened.
+        /// </summary>
         public enum WindowsToBeOpened
         {
             NextButton, TodayKeysButton, RandomKeysButton, PairKeysButton, ShowKeysButton, AddUsersKeysButton, MainSettings
         }
 
+        /// <summary>
+        /// The dialog service.
+        /// </summary>
         private IDialogService dialogService;
 
-        ObservableCollection<Pair<int, string>> _keys = new ObservableCollection<Pair<int, string>>();
+        /// <summary>
+        /// The keys.
+        /// </summary>
+        ObservableCollection<(int, string)> _keys = new ObservableCollection<(int, string)>();
 
-        public ObservableCollection<Pair<int, string>> Keys
+        /// <summary>
+        /// Gets the keys.
+        /// </summary>
+        /// <value>The keys.</value>
+        public ObservableCollection<(int, string)> Keys
         {
             get => _keys;
 
@@ -38,8 +51,15 @@ namespace M138ADemo.ViewModels
             }
         }
 
+        /// <summary>
+        /// The name of the keys file.
+        /// </summary>
         private string _keysFileName;
 
+        /// <summary>
+        /// Gets the name of the keys file.
+        /// </summary>
+        /// <value>The name of the keys file.</value>
         public string KeysFileName
         {
             get => _keysFileName;
@@ -51,8 +71,15 @@ namespace M138ADemo.ViewModels
             }
         }
 
+        /// <summary>
+        /// The menu items.
+        /// </summary>
         private List<MenuItem> _menuItems;
 
+        /// <summary>
+        /// Gets the menu items.
+        /// </summary>
+        /// <value>The menu items.</value>
         public List<MenuItem> MenuItems
         {
             get
@@ -72,8 +99,15 @@ namespace M138ADemo.ViewModels
             }
         }
 
+        /// <summary>
+        /// The open recent file command.
+        /// </summary>
         private RelayCommand _openRecentFileCommand;
 
+        /// <summary>
+        /// Gets the open recent file command.
+        /// </summary>
+        /// <value>The open recent file command.</value>
         public RelayCommand OpenRecentFileCommand
         {
             get
@@ -86,14 +120,21 @@ namespace M138ADemo.ViewModels
                     this.Keys.Clear();
                     foreach (var el in IOHelper.LoadKeysContainer(filePath).keys)
                     {
-                        this.Keys.Add(new Pair<int, string>(el.Id, el.Key));
+                        this.Keys.Add((el.Id, el.Key));
                     }
                 }));
             }
         }
 
+        /// <summary>
+        /// The open file command.
+        /// </summary>
         private RelayCommand _openFileCommand;
 
+        /// <summary>
+        /// Gets the open file command.
+        /// </summary>
+        /// <value>The open file command.</value>
         public RelayCommand OpenFileCommand
         {
             get
@@ -105,15 +146,22 @@ namespace M138ADemo.ViewModels
                         this.Keys.Clear();
                         foreach (var el in IOHelper.LoadKeysContainer(dialogService.FilePath).keys)
                         {
-                            this.Keys.Add(Pair<int, string>.MakePair(el.Id, el.Key));
+                            this.Keys.Add((el.Id, el.Key));
                         }
                     }
                 }));
             }
         }
 
+        /// <summary>
+        /// The save file command.
+        /// </summary>
         private RelayCommand _saveFileCommand;
 
+        /// <summary>
+        /// Gets the save file command.
+        /// </summary>
+        /// <value>The save file command.</value>
         public RelayCommand SaveFileCommand
         {
             get
@@ -129,8 +177,15 @@ namespace M138ADemo.ViewModels
             }
         }
 
+        /// <summary>
+        /// The open another window command.
+        /// </summary>
         private RelayCommand _openAnotherWindowCommand;
 
+        /// <summary>
+        /// Gets the open another window command.
+        /// </summary>
+        /// <value>The open another window command.</value>
         public RelayCommand OpenAnotherWindowCommand
         {
             get
@@ -176,20 +231,31 @@ namespace M138ADemo.ViewModels
             }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:M138ADemo.ViewModels.AddKeysViewModel"/> class.
+        /// </summary>
         public AddKeysViewModel()
         {
-            if (!(Configuration.lst is null))
+            if (!(Configuration.KeyList is null))
             {
-                this.Keys = Configuration.lst;
+                this.Keys = Configuration.KeyList;
             }
         }
 
+        /// <summary>
+        /// Saves to configuration.
+        /// </summary>
         public void SaveToConfiguration()
         {
-            Configuration.lst = this.Keys;
+            Configuration.KeyList = this.Keys;
 
         }
 
+        /// <summary>
+        /// Keyses the collection shared property changed.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">E.</param>
         private void KeysCollectionShared_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == RecentFiles.shortenedNamesMenuItemsPropertyName)
@@ -198,6 +264,10 @@ namespace M138ADemo.ViewModels
             }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:M138ADemo.ViewModels.AddKeysViewModel"/> class.
+        /// </summary>
+        /// <param name="dialogService">Dialog service.</param>
         public AddKeysViewModel(IDialogService dialogService): this()
         {
             this.dialogService = dialogService;
@@ -205,13 +275,23 @@ namespace M138ADemo.ViewModels
             MenuItems = RecentFiles.KeysCollectionShared.ShortenedNamesMenuItems;
         }
 
+        /// <summary>
+        /// Occurs when notify to close event.
+        /// </summary>
         public event Action NotifyToCloseEvent;
 
+        /// <summary>
+        /// Ons the property changed.
+        /// </summary>
+        /// <param name="propertyName">Property name.</param>
         public void OnPropertyChanged([CallerMemberName]string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        /// <summary>
+        /// Occurs when property changed.
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
     }
 }

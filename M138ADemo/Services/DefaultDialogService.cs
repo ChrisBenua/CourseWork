@@ -8,10 +8,21 @@ using System.Windows;
 
 namespace M138ADemo.Services
 {
+    /// <summary>
+    /// Default dialog service.
+    /// </summary>
     public class DefaultDialogService : IDialogService
     {
+        /// <summary>
+        /// Gets or sets the file path.
+        /// </summary>
+        /// <value>The file path.</value>
         public string FilePath { get; set; }
 
+        /// <summary>
+        /// Opens the file dialog.
+        /// </summary>
+        /// <returns><c>true</c>, if file dialog was opened, <c>false</c> otherwise.</returns>
         public bool OpenFileDialog()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -26,6 +37,10 @@ namespace M138ADemo.Services
             return false;
         }
 
+        /// <summary>
+        /// Saves the file dialog.
+        /// </summary>
+        /// <returns><c>true</c>, if file dialog was saved, <c>false</c> otherwise.</returns>
         public bool SaveFileDialog()
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
@@ -40,11 +55,20 @@ namespace M138ADemo.Services
             return false;
         }
 
+        /// <summary>
+        /// Shows the message.
+        /// </summary>
+        /// <param name="message">Message.</param>
+        /// <param name="caption">Caption.</param>
         public void ShowMessage(string message, string caption)
         {
             MessageBox.Show(message, caption);
         }
 
+        /// <summary>
+        /// Shows the message.
+        /// </summary>
+        /// <param name="message">Message.</param>
         public void ShowMessage(string message)
         {
             MessageBox.Show(message);

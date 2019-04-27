@@ -21,8 +21,14 @@ namespace M138ADemo
     /// </summary>
     public partial class DocsWindow : Window
     {
+        /// <summary>
+        /// The view model.
+        /// </summary>
         DocsWIndowViewModel viewModel = new DocsWIndowViewModel();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:M138ADemo.DocsWindow"/> class.
+        /// </summary>
         public DocsWindow()
         {
             InitializeComponent();
@@ -31,6 +37,11 @@ namespace M138ADemo
             viewModel.PropertyChanged += ViewModel_PropertyChanged;
         }
 
+        /// <summary>
+        /// Views the model property changed.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">E.</param>
         private void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "SelectedDocFile")

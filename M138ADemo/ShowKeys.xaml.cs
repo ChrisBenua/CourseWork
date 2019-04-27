@@ -21,8 +21,19 @@ namespace M138ADemo
     /// </summary>
     public partial class ShowKeys : Window
     {
+        /// <summary>
+        /// The view model.
+        /// </summary>
         private ShowKeysViewModel viewModel;
+
+        /// <summary>
+        /// The interactor.
+        /// </summary>
         private ShowAndAddKeysInteractor interactor;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:M138ADemo.ShowKeys"/> class.
+        /// </summary>
         public ShowKeys() 
         {
             InitializeComponent();

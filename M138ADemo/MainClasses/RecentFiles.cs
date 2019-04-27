@@ -8,15 +8,39 @@ using System.ComponentModel;
 
 namespace M138ADemo.MainClasses
 {
+    /// <summary>
+    /// Recent files.
+    /// </summary>
     public class RecentFiles : INotifyPropertyChanged
     {
+        /// <summary>
+        /// The name of the shortened names menu items property.
+        /// </summary>
         public const string shortenedNamesMenuItemsPropertyName = "ShortenedNamesMenuItems";
+
+        /// <summary>
+        /// The machine end point.
+        /// </summary>
         const string machineEndPoint = "\\machineStatesRecents.txt";
+
+        /// <summary>
+        /// The keys collection end point.
+        /// </summary>
         const string keysCollectionEndPoint = "\\keysCollectionsRecents.txt";
+        /// <summary>
+        /// The max capacity of recents files.
+        /// </summary>
         const int maxCapacity = 6;
 
+        /// <summary>
+        /// The recent file names.
+        /// </summary>
         private List<string> _recentFileNames;
 
+        /// <summary>
+        /// Gets the recent file names.
+        /// </summary>
+        /// <value>The recent file names.</value>
         public List<string> RecentFileNames
         {
             get => _recentFileNames;
@@ -30,11 +54,21 @@ namespace M138ADemo.MainClasses
             }
         }
 
+        /// <summary>
+        /// The machine states shared.
+        /// </summary>
         private static RecentFiles machineStatesShared = null;
 
+
+        /// <summary>
+        /// The keys collection shared.
+        /// </summary>
         private static RecentFiles keysCollectionShared = null;
         
-
+        /// <summary>
+        /// Gets the machine states shared.
+        /// </summary>
+        /// <value>The machine states shared.</value>
         public static RecentFiles MachineStatesShared
         {
             get
@@ -47,6 +81,10 @@ namespace M138ADemo.MainClasses
             }
         }
 
+        /// <summary>
+        /// Gets the keys collection shared.
+        /// </summary>
+        /// <value>The keys collection shared.</value>
         public static RecentFiles KeysCollectionShared
         {
             get
@@ -59,39 +97,46 @@ namespace M138ADemo.MainClasses
             }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:M138ADemo.MainClasses.RecentFiles"/> class.
+        /// </summary>
         public RecentFiles()
         {
             RecentFileNames = new List<string>();
         }
 
+        /// <summary>
+        /// Adds the file to recents.
+        /// </summary>
+        /// <param name="fileName">File name.</param>
         public void AddFileToRecents(string fileName)
         {
             RecentFileNames.RemoveAll((s) => s == fileName);
-
             RecentFileNames.Insert(0, fileName);
-
             RenewStoredRecentList();
-
             NotifyPropertyChanged("ShortenedNamesMenuItems");
-
         }
 
+        /// <summary>
+        /// Deletes the file from recents.
+        /// </summary>
+        /// <param name="fileName">File name.</param>
         public void DeleteFileFromRecents(string fileName)
         {
             RecentFileNames.RemoveAll((s) => s == fileName);
-
             RenewStoredRecentList();
-
             NotifyPropertyChanged("ShortenedNamesMenuItems");
         }
 
+        /// <summary>
+        /// Gets the file path.
+        /// </summary>
+        /// <returns>The file path.</returns>
         private string getFilePath()
         {
             string filePath = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
-
             if (this == machineStatesShared)
             {
-
                 filePath += machineEndPoint;
             }
             else
@@ -101,8 +146,16 @@ namespace M138ADemo.MainClasses
             return filePath;
         }
 
+        /// <summary>
+        /// Loads the files from disk.
+        /// </summary>
         public void LoadFilesFromDisk()
         {
+            var fileInfo = new System.IO.FileInfo(getFilePath());
+            if (!fileInfo.Exists)
+            {
+                fileInfo.Create();
+            }
             try
             {
                 using (System.IO.StreamReader reader = new System.IO.StreamReader(getFilePath()))
@@ -120,8 +173,12 @@ namespace M138ADemo.MainClasses
             }
         }
 
+        /// <summary>
+        /// Renews the stored recent list.
+        /// </summary>
         private void RenewStoredRecentList()
         {
+            this.RecentFileNames = this.RecentFileNames.Distinct().ToList();
             using (System.IO.StreamWriter writer = new System.IO.StreamWriter(getFilePath()))
             {
                 foreach (var fileName in RecentFileNames)
@@ -129,27 +186,36 @@ namespace M138ADemo.MainClasses
                     writer.WriteLine(fileName);
                 }
             }
-
-            //LoadFilesFromDisk();
-
         }
 
+        /// <summary>
+        /// Gets the shortened names.
+        /// </summary>
+        /// <value>The shortened names.</value>
         public List<string> ShortenedNames
         {
             get
             {
-               return RecentFileNames.ConvertAll<String>((fileName) => fileName.Split('\\').Last());
+               return RecentFileNames.Distinct().ToList().ConvertAll<String>((fileName) => fileName.Split('\\').Last());
             }
         }
 
+        /// <summary>
+        /// Gets the shortened names prefix.
+        /// </summary>
+        /// <value>The shortened names prefix.</value>
         public List<string> ShortenedNamesPrefix
         {
             get
             {
-                return RecentFileNames.Take(maxCapacity).ToList().ConvertAll<String>((filename) => filename.Split('\\').Last());
+                return RecentFileNames.Distinct().Take(maxCapacity).ToList().ConvertAll<String>((filename) => filename.Split('\\').Last());
             }
         }
 
+        /// <summary>
+        /// Gets the shortened names menu items.
+        /// </summary>
+        /// <value>The shortened names menu items.</value>
         public List<System.Windows.Controls.MenuItem> ShortenedNamesMenuItems
         {
             get
@@ -164,6 +230,10 @@ namespace M138ADemo.MainClasses
             }
         }
 
+        /// <summary>
+        /// Notifies the property changed.
+        /// </summary>
+        /// <param name="propertyName">Property name.</param>
         private void NotifyPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] String propertyName = "")
         {
             if (PropertyChanged != null)
@@ -172,6 +242,9 @@ namespace M138ADemo.MainClasses
             }
         }
 
+        /// <summary>
+        /// Occurs when property changed.
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
     }

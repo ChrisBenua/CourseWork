@@ -19,13 +19,24 @@ namespace M138ADemo
     /// </summary>
     public partial class KeysForPair : Window
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:M138ADemo.KeysForPair"/> class.
+        /// </summary>
         public KeysForPair()
         {
             InitializeComponent();
         }
 
+        /// <summary>
+        /// The current pair key.
+        /// </summary>
         public int CurrentPairKey = 0;
 
+        /// <summary>
+        /// Keies the box on preview text input.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">E.</param>
         private void KeyBox_OnPreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             e.Handled = true;
@@ -47,6 +58,11 @@ namespace M138ADemo
             }
         }
 
+        /// <summary>
+        /// Amounts the of keys on preview text input.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">E.</param>
         private void AmountOfKeys_OnPreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             e.Handled = true;
@@ -77,18 +93,23 @@ namespace M138ADemo
             }
         }
 
+        /// <summary>
+        /// Chooses the button on click.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">E.</param>
         private void ChooseButton_OnClick(object sender, RoutedEventArgs e)
         {
             if (KeyBox.Text.Length > 0 && AmountOfKeys.Text.Length > 0 && Helper.reg.IsMatch(KeyBox.Text) &&
                 Helper.reg.IsMatch(AmountOfKeys.Text))
             {
                 int n = (int.Parse(AmountOfKeys.Text));
-                Configuration.lst.Clear();
+                Configuration.KeyList.Clear();
                 var kek = Generator.GenerateRandomKeys(n, Int32.Parse(KeyBox.Text));
 
                 for (int i = 0; i < n; ++i)
                 {
-                    Configuration.lst.Add(kek[i]);
+                    Configuration.KeyList.Add(kek[i]);
                 }
                 MessageBox.Show("Успешно", "Ключи были сгенерированы успешно", MessageBoxButton.OK);
                 this.Close();

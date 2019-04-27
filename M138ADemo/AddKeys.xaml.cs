@@ -26,9 +26,14 @@ namespace M138ADemo
     /// </summary>
     public partial class AddKeys : Window
     {
-
+        /// <summary>
+        /// The view model.
+        /// </summary>
         private AddKeysViewModel viewModel;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:M138ADemo.AddKeys"/> class.
+        /// </summary>
         public AddKeys()
         {
             InitializeComponent();
@@ -112,6 +117,9 @@ namespace M138ADemo
             viewModel.NotifyToCloseEvent += ViewModel_NotifyToCloseEvent;
         }
 
+        /// <summary>
+        /// Views the model notify to close event.
+        /// </summary>
         private void ViewModel_NotifyToCloseEvent()
         {
             this.Close();

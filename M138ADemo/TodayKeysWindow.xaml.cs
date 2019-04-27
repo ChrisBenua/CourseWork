@@ -19,12 +19,20 @@ namespace M138ADemo
     /// </summary>
     public partial class TodayKeysWindow : Window
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:M138ADemo.TodayKeysWindow"/> class.
+        /// </summary>
         public TodayKeysWindow()
         {
             InitializeComponent();
             generateButton.Click += GenerateButtonOnClick;
         }
 
+        /// <summary>
+        /// Generates the button on click.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">E.</param>
         private void GenerateButtonOnClick(object sender, RoutedEventArgs e)
         {
             bool success;
@@ -37,12 +45,12 @@ namespace M138ADemo
             {
                 if (messageBoxCaption[0] == 'У')
                 {
-                    Configuration.lst.Clear();
+                    Configuration.KeyList.Clear();
                     DateTime time = DateTime.Today;
-                    Configuration.lst.Clear();
+                    Configuration.KeyList.Clear();
                     foreach (var el in Generator.GenerateRandomKeys(res, time.DayOfYear + 366 * time.Year))
                     {
-                        Configuration.lst.Add(el);
+                        Configuration.KeyList.Add(el);
                     }
                     //Configuration.lst = Generator.GenerateRandomKeys(res, time.DayOfYear + 366 * time.Year);
                     Close();
@@ -50,6 +58,10 @@ namespace M138ADemo
             }
         }
 
+        /// <summary>
+        /// Validates the text field text.
+        /// </summary>
+        /// <returns>The text field text.</returns>
         private (bool, String, String, int) ValidateTextFieldText()
         {
             string text = numberOfKeysTextBlock.Text;
@@ -59,7 +71,7 @@ namespace M138ADemo
             bool success = false;
             if (int.TryParse(text, out res) && res > 0 && res <= Helper.MaxKeys)
             {
-                Configuration.lst.Clear();
+                Configuration.KeyList.Clear();
                
                 messageBoxText = "Ключи были сгенерированы успешно";
                 messageBoxCaption = "Успех";

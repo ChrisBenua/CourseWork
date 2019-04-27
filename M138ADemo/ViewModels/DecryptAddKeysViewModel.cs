@@ -12,13 +12,26 @@ using M138ADemo.MainClasses;
 
 namespace M138ADemo.ViewModels
 {
+    /// <summary>
+    /// Decrypt add keys view model.
+    /// </summary>
     public class DecryptAddKeysViewModel: INotifyPropertyChanged
     {
+        /// <summary>
+        /// The dialog service.
+        /// </summary>
         private IDialogService dialogService;
 
-        private ObservableCollection<Pair<int, string>> _keys;
+        /// <summary>
+        /// The keys.
+        /// </summary>
+        private ObservableCollection<(int, string)> _keys;
 
-        public ObservableCollection<Pair<int, string>> Keys
+        /// <summary>
+        /// Gets the keys.
+        /// </summary>
+        /// <value>The keys.</value>
+        public ObservableCollection<(int, string)> Keys
         {
             get
             {
@@ -33,10 +46,19 @@ namespace M138ADemo.ViewModels
             }
         }
 
+        /// <summary>
+        /// The column number.
+        /// </summary>
         public int columnNumber = -1;
 
+        /// <summary>
+        /// The column number text.
+        /// </summary>
         private string _columnNumberText;
 
+        /// <summary>
+        /// Performs the validation.
+        /// </summary>
         public void PerformValidation()
         {
             if (!int.TryParse(_columnNumberText, out columnNumber))
@@ -74,6 +96,10 @@ namespace M138ADemo.ViewModels
             }
         }
 
+        /// <summary>
+        /// Gets or sets the column number text.
+        /// </summary>
+        /// <value>The column number text.</value>
         public string ColumnNumberText
         {
             get
@@ -92,8 +118,15 @@ namespace M138ADemo.ViewModels
             }
         }
 
+        /// <summary>
+        /// The color of the next button.
+        /// </summary>
         private Brush _nextButtonColor;
 
+        /// <summary>
+        /// Gets or sets the color of the next button.
+        /// </summary>
+        /// <value>The color of the next button.</value>
         public Brush NextButtonColor
         {
             get => _nextButtonColor;
@@ -105,8 +138,16 @@ namespace M138ADemo.ViewModels
             }
         }
 
+        /// <summary>
+        /// The is next button enabled.
+        /// </summary>
         private bool _isNextButtonEnabled;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="T:M138ADemo.ViewModels.DecryptAddKeysViewModel"/> is
+        /// next button enabled.
+        /// </summary>
+        /// <value><c>true</c> if is next button enabled; otherwise, <c>false</c>.</value>
         public bool IsNextButtonEnabled
         {
             get
@@ -121,8 +162,15 @@ namespace M138ADemo.ViewModels
             }
         }
 
+        /// <summary>
+        /// The open keys from file.
+        /// </summary>
         private RelayCommand _openKeysFromFile;
 
+        /// <summary>
+        /// Gets the open keys from file.
+        /// </summary>
+        /// <value>The open keys from file.</value>
         public RelayCommand OpenKeysFromFile
         {
             get
@@ -134,7 +182,7 @@ namespace M138ADemo.ViewModels
                         this.Keys.Clear();
                         foreach (var el in IOHelper.LoadKeysContainer(dialogService.FilePath).keys)
                         {
-                            this.Keys.Add(Pair<int, string>.MakePair(el.Id, el.Key));
+                            this.Keys.Add((el.Id, el.Key));
                         }
                         PerformValidation();
                     }
@@ -142,8 +190,15 @@ namespace M138ADemo.ViewModels
             }
         }
 
+        /// <summary>
+        /// The save file command.
+        /// </summary>
         private RelayCommand _saveFileCommand;
 
+        /// <summary>
+        /// Gets the save keys command.
+        /// </summary>
+        /// <value>The save keys command.</value>
         public RelayCommand SaveKeysCommand
         {
             get
@@ -158,19 +213,29 @@ namespace M138ADemo.ViewModels
             }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:M138ADemo.ViewModels.DecryptAddKeysViewModel"/> class.
+        /// </summary>
         public DecryptAddKeysViewModel()
         {
-            this.Keys = Configuration.lst;
+            this.Keys = Configuration.KeyList;
             this.NextButtonColor = Brushes.LightGray;
             dialogService = new DefaultDialogService();
             ColumnNumberText = "";
         }
 
+        /// <summary>
+        /// Ons the property changed.
+        /// </summary>
+        /// <param name="propertyName">Property name.</param>
         public void OnPropertyChanged([CallerMemberName]string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        /// <summary>
+        /// Occurs when property changed.
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
     }
 }
