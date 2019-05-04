@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:M138ADemo"
         mc:Ignorable="d"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
-        Title="DragAndDrop" Height="450" Width="800">
+        Title="Состояние шифровального устройства" Height="450" Width="800">
 
     <Grid>
         <Grid.RowDefinitions>

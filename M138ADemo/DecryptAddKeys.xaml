@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:M138ADemo"
         mc:Ignorable="d"
-        Title="DecryptAddKeys" Height="450" Width="800" MinHeight="450" MinWidth="800">
+        Title="Добавление ключей(дешифровка)" Height="450" Width="800" MinHeight="450" MinWidth="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"></RowDefinition>
@@ -32,7 +32,7 @@
             <MenuItem Header ="Выбрать..." Margin="15">
                 <MenuItem x:Name="mOpenFromFileMenuItem" Header="Открыть ключи из файла"></MenuItem>
                 <MenuItem x:Name="mSaveFileMenuItem" Header="Сохранить ключи"></MenuItem>
-
+                <MenuItem x:Name="mOpenRecentMenutItem" Header="Открыть недавние"></MenuItem>
             </MenuItem>
         </Menu>
 

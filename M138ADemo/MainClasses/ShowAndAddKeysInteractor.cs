@@ -285,7 +285,7 @@ namespace M138ADemo.MainClasses
                 int ind = FindRowIndex(row);
                 TextBox textBox = (TextBox)sender;
 
-                if (Helper.isAlphaString(e.Text) && textBox.Text.Length + e.Text.Length == 1 && viewModel.isSequence(ind, e.Text))
+                if (Helper.isAlphaString(e.Text) && textBox.Text.Length + e.Text.Length == 1 && viewModel.IsSequence(ind, e.Text))
                 {
                     e.Handled = false;
                 }

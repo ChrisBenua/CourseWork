@@ -102,7 +102,7 @@ namespace M138ADemo
         /// Gets or sets a value indicating whether this <see cref="T:M138ADemo.MainSettingsViewModel"/> is next button enabled.
         /// </summary>
         /// <value><c>true</c> if is next button enabled; otherwise, <c>false</c>.</value>
-        public bool isNextButtonEnabled
+        public bool IsNextButtonEnabled
         {
             get
             {
@@ -156,11 +156,11 @@ namespace M138ADemo
                 {
                     if (_model.Message.Length > 0 || !this.Model.Automatic)
                     {
-                        isNextButtonEnabled = true;
+                        IsNextButtonEnabled = true;
                     }
                     else
                     {
-                        isNextButtonEnabled = false;
+                        IsNextButtonEnabled = false;
                     }
                 }
             }; 
@@ -234,7 +234,15 @@ namespace M138ADemo
                     if (state != null)
                     {
                         Configuration.DeviceState = state;
-                        Configuration.Message = null;
+                        Configuration.Message = "";
+                        Configuration.KeyList.Clear();
+                        state.keys.ToList().ForEach((el) =>
+                        {
+                            if (!Configuration.KeyList.Contains((el.IdNumber, el._key)))
+                            {
+                                Configuration.KeyList.Add((el.IdNumber, el._key));
+                            }
+                        });
                         OnOpenRecentFileHappend?.Invoke(openedWindowTitle);
                     }
 
@@ -267,6 +275,15 @@ namespace M138ADemo
                               if (deviceState.Item1 != null)
                               {
                                   Configuration.DeviceState = deviceState.Item1;
+                                  Configuration.Message = "";
+                                  Configuration.KeyList.Clear();
+                                  deviceState.Item1.keys.ToList().ForEach((el) =>
+                                  {
+                                      if (!Configuration.KeyList.Contains((el.IdNumber, el._key)))
+                                      {
+                                          Configuration.KeyList.Add((el.IdNumber, el._key));
+                                      }
+                                  });
                                   OnOpenFileHappend?.Invoke(deviceState.Item2);
                               }
                           }

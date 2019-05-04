@@ -52,8 +52,29 @@ namespace M138ADemo.ViewModels
         public DocsWIndowViewModel()
         {
             _docFiles = new ObservableCollection<DocsWindowModel>();
-            _docFiles.Add(new DocsWindowModel(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + "\\..\\..\\CryptoHistory.pdf", "История Криптографии"));
-            _docFiles.Add(new DocsWindowModel(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + "\\..\\..\\M138AExample.pdf", "О M-138-A"));
+            var path1 = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + "\\..\\..\\CryptoHistory.pdf";
+            var fileInfo1 = new System.IO.FileInfo(path1);
+            if (fileInfo1.Exists)
+            {
+                _docFiles.Add(new DocsWindowModel(path1, "История Криптографии"));
+            }
+            else
+            {
+                _docFiles.Add(new DocsWindowModel(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + "\\CryptoHistory.pdf", "История Криптографии"));
+            }
+
+            var path2 = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + "\\..\\..\\M138AExample.pdf";
+            var fileInfo2 = new System.IO.FileInfo(path2);
+
+            if (fileInfo2.Exists)
+            {
+                _docFiles.Add(new DocsWindowModel(path2, "О M-138-A"));
+
+            }
+            else
+            {
+                _docFiles.Add(new DocsWindowModel(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + "\\M138AExample.pdf", "О M-138-A"));
+            }
             //_docFiles.Add(new DocsWindowModel("https://cefsharp.github.io", "Git"));
         }
 

@@ -94,7 +94,12 @@ namespace M138ADemo
                 UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
             };
             mNumberOfKeysTextBlock.SetBinding(TextBlock.TextProperty, numberOfKeysBinding);
-
+            mOpenRecentMenutItem.SetBinding(MenuItem.ItemsSourceProperty, new Binding
+            {
+                Source = viewModel.MenuItems,
+                NotifyOnSourceUpdated = true,
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+            });
         }
 
         private void MAddRandomKeysButton_Click(object sender, RoutedEventArgs e)

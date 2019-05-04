@@ -7,6 +7,20 @@ using System.Threading.Tasks;
 
 namespace M138ADemo
 {
+
+    public static class RandomShuffler
+    {
+        public static void Shuffle<T>(this IList<T> list, Random rnd)
+        {
+            int n = list.Count;
+            while (n > 1)
+            {
+                n--;
+                int k = rnd.Next(n + 1);
+                (list[k], list[n]) = (list[n], list[k]);
+            }
+        }
+    }
     public static class Generator
     {
         private readonly static int maxNumberOfKeys = 100;
@@ -23,21 +37,17 @@ namespace M138ADemo
             }
             numberOfKeys = Math.Min(maxNumberOfKeys, numberOfKeys);
             var list = new ObservableCollection<(int, string)>();
-            var set = new SortedSet<int>(Configuration.forbiddenKeys);
+            var set = new SortedSet<int>();
             for (int i = 0; i < numberOfKeys; ++i)
             {
-                var charSet = new SortedSet<char>();
-                string curr = "";
-                for (int j = 0; j < 26; ++j)
+                var charSet = new List<char>();
+                for (int ch = 0; ch < 26; ++ch)
                 {
-                    char ch;
-                    while (charSet.Contains(ch = (char)(rnd.Next(0, 26) + 'a')))
-                    {
-                    }
-
-                    curr += ch;
-                    charSet.Add(ch);
+                    charSet.Add((char)(ch + 'a'));
                 }
+                charSet.Shuffle(rnd);
+                string curr = new string(charSet.ToArray());
+                
 
                 int num = 0;
                 while (set.Contains(num = rnd.Next(0, 200))) { }

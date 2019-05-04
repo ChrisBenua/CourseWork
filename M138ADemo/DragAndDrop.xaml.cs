@@ -41,10 +41,6 @@ namespace M138ADemo
     /// </summary>
     public partial class DragAndDrop : Window
     {
-        /// <summary>
-        /// The last state.
-        /// </summary>
-        private DeviceState lastState = new DeviceState();
 
         /// <summary>
         /// The default thickness.
@@ -52,34 +48,9 @@ namespace M138ADemo
         private static Thickness DefaultThickness = new Thickness(2, 2, 2.2, 2);
 
         /// <summary>
-        /// The keys.
-        /// </summary>
-        public static BindingList<KeyModel> keys = new BindingList<KeyModel>();
-
-        /// <summary>
-        /// The static grid.
-        /// </summary>
-        public static DataGrid staticGrid;
-
-        /// <summary>
-        /// The binding source.
-        /// </summary>
-        private BindingSource bindingSource = new BindingSource();
-
-        /// <summary>
         /// The index of the curr row.
         /// </summary>
         private int currRowIndex = -1;//Helper for drag and drop
-
-        /// <summary>
-        /// The buttons widths.
-        /// </summary>
-        private int buttonsWidths = 35;
-
-        /// <summary>
-        /// The simple widths.
-        /// </summary>
-        private int simpleWidths = 30;
 
         /// <summary>
         /// The dark row brush.
@@ -128,6 +99,7 @@ namespace M138ADemo
                 if (value != null)
                 {
                     this.Title = value;
+                    this.viewModel.Title = value;
                     currentFilePath = value;
                 }
             }
@@ -138,12 +110,13 @@ namespace M138ADemo
         /// </summary>
         public DragAndDrop()
         {
-            
             viewModel = new DragAndDropViewModel();
+            CurrentFilePath = "Untitled";
             viewModel.AfterFileOpened += () => { UpdateHighlightedCells(); SetBackGround(); };
             viewModel.UpdateAndRehighlight += (ind) => { UpdateHighlightedCells(ind); SetBackGround(ind); };
 
             InitializeComponent();
+            this.myGrid.InputBindings.Add(new InputBinding(viewModel.SaveCommand, new KeyGesture(Key.S, ModifierKeys.Control)));
             this.myGrid.InputBindings.Add(new InputBinding(viewModel.OnShowSelectedText, new KeyGesture(Key.C, ModifierKeys.Control)));
             //mCopyColumnTextMenuItem.Command = viewModel.OnShowSelectedText;
             //viewModel.OnShowSelectedText.inp
@@ -156,13 +129,7 @@ namespace M138ADemo
             mBackToSettingsMenuItem.Command = viewModel.BackCommand;
             mBackToSettingsMenuItem.CommandParameter = DragAndDropViewModel.WindowsToBeOpened.MainSettings;
 
-            mBackToKeysMenuItem.SetBinding(System.Windows.Controls.MenuItem.IsEnabledProperty, new Binding()
-            {
-                Source = viewModel,
-                Path = new PropertyPath("IsBackToKeysMenuItemsEnabled"),
-                NotifyOnSourceUpdated = true,
-                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-            });
+            
 
             this.SetBinding(TitleProperty, new Binding()
             {
@@ -462,7 +429,7 @@ namespace M138ADemo
                     if (headerIndex <= 26 && headerIndex > 0)
                     {
                         viewModel.SelectedColumn = headerIndex + IsExtendedWorkSpace;
-                        HighlightSelectedRow(int.Parse((string)header.Content) + 2 + IsExtendedWorkSpace);
+                        HighlightSelectedColumn(int.Parse((string)header.Content) + 2 + IsExtendedWorkSpace);
                         this.myGrid.Focus();
                     }
                 }
@@ -481,12 +448,12 @@ namespace M138ADemo
             SetBackGround();
             if (Configuration.Automatic && Configuration.Encrypt)
             {
-                HighlightSelectedRow(3 + IsExtendedWorkSpace);
+                HighlightSelectedColumn(3 + IsExtendedWorkSpace);
             }
             if (Configuration.Automatic && Configuration.Decrypt)
             {
-                HighlightSelectedRow(2 + Configuration.DecryptIndex + IsExtendedWorkSpace);
-                HighlightSelectedRow(3 + IsExtendedWorkSpace);
+                HighlightSelectedColumn(2 + Configuration.DecryptIndex + IsExtendedWorkSpace);
+                HighlightSelectedColumn(3 + IsExtendedWorkSpace);
             }
         }
 
@@ -494,7 +461,7 @@ namespace M138ADemo
         /// Highlights the selected row.
         /// </summary>
         /// <param name="col">Col.</param>
-        private void HighlightSelectedRow(int col)
+        private void HighlightSelectedColumn(int col)
         {
             for (int i = 0; i < viewModel.Keys.Count; ++i)
             {
@@ -698,9 +665,9 @@ namespace M138ADemo
             Console.WriteLine(e.GetPosition(this).X.ToString() + " " + e.GetPosition(this).Y.ToString());
             Console.WriteLine();
             //60 - по моим измерениям
-            if (e.GetPosition(this).Y > this.Height - 60) return;
+            if (e.GetPosition(this).Y > this.ActualHeight - 60) return;
 
-            if (this.Width - 35.5 <= e.GetPosition(this).X) return;
+            if (this.ActualWidth - 35.5 <= e.GetPosition(this).X) return;
 
             if (e.GetPosition(this).Y < 30)
             {

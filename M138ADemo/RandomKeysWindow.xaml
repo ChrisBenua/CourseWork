@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:M138ADemo"
         mc:Ignorable="d"
-        Title="RandomKeysWindow" Height="450" Width="800">
+        Title="Случайные ключи" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition></RowDefinition>
@@ -26,6 +26,6 @@
         </Border>
 
         <Button x:Name="generateButton" Grid.Row="3" Grid.Column="1" Template="{StaticResource RoundButton}" Background="Aqua"
-                Margin="40,10, 40, 10" FontSize="15" Content="Generate Keys"></Button>
+                Margin="40,10, 40, 10" FontSize="15" Content="Сгенерировать"></Button>
     </Grid>
 </Window>

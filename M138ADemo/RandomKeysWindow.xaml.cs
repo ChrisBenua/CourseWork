@@ -43,7 +43,7 @@ namespace M138ADemo
             var result = MessageBox.Show(messageBoxText, messageBoxCaption, MessageBoxButton.OK);
             if (result == MessageBoxResult.OK)
             {
-                if (messageBoxCaption[0] == 'У')
+                if (success)
                 {
                     Configuration.KeyList.Clear();
                     foreach (var el in Generator.GenerateRandomKeys(res))

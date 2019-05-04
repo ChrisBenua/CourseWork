@@ -96,22 +96,6 @@ namespace M138ADemo
         {
             get
             {
-                /*if (_shift >= 0)
-                {
-
-                    var fSlice = Helper.Slice(_keyarr, 0, _keyarr.Length - _shift);
-                    var keyarr = Helper.Slice(_keyarr, 0, _keyarr.Length);
-                    fSlice = Helper.Concat(keyarr, fSlice);
-                    List<string> Idnum = new List<string>();
-                    Idnum.Add(StrIdNumber);
-                    var mainPart = Helper.Concat(Idnum, fSlice);
-                    List<string> left = Helper.CreateList<string>(_shift, " ");
-                    
-                    mainPart = Helper.Concat<string>(left, mainPart);
-                    
-                    return mainPart.ToArray();
-                }
-                else*/
                 {
                     if (Configuration.IsCompactWorkSpace)
                     {
@@ -138,6 +122,7 @@ namespace M138ADemo
 
                         //var temp = Helper.Concat(Idnum, keyarr);
                         var temp = Idnum.Concat(_keyarr);
+                        temp = temp.Concat(_keyarr);
                         //temp = Helper.Concat(temp, keyarr);
                         temp = temp.Concat(Helper.CreateList<string>(-_shift, " "));
                         //temp = Helper.Concat(temp, Helper.CreateList<string>(-_shift, " "));

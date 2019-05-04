@@ -132,7 +132,7 @@ namespace M138ADemo.MainClasses
         /// Gets the file path.
         /// </summary>
         /// <returns>The file path.</returns>
-        private string getFilePath()
+        private string GetFilePath()
         {
             string filePath = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
             if (this == machineStatesShared)
@@ -151,14 +151,14 @@ namespace M138ADemo.MainClasses
         /// </summary>
         public void LoadFilesFromDisk()
         {
-            var fileInfo = new System.IO.FileInfo(getFilePath());
+            var fileInfo = new System.IO.FileInfo(GetFilePath());
             if (!fileInfo.Exists)
             {
                 fileInfo.Create();
             }
             try
             {
-                using (System.IO.StreamReader reader = new System.IO.StreamReader(getFilePath()))
+                using (System.IO.StreamReader reader = new System.IO.StreamReader(GetFilePath()))
                 {
                     while (!reader.EndOfStream)
                     {
@@ -179,7 +179,7 @@ namespace M138ADemo.MainClasses
         private void RenewStoredRecentList()
         {
             this.RecentFileNames = this.RecentFileNames.Distinct().ToList();
-            using (System.IO.StreamWriter writer = new System.IO.StreamWriter(getFilePath()))
+            using (System.IO.StreamWriter writer = new System.IO.StreamWriter(GetFilePath()))
             {
                 foreach (var fileName in RecentFileNames)
                 {

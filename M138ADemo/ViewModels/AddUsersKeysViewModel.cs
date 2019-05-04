@@ -191,7 +191,7 @@ namespace M138ADemo.ViewModels
         /// <returns><c>true</c>, if sequence was ised, <c>false</c> otherwise.</returns>
         /// <param name="row">Row.</param>
         /// <param name="newText">New text.</param>
-        public bool isSequence(int row, string newText)
+        public bool IsSequence(int row, string newText)
         {
             HashSet<char> set = new HashSet<char>();
             set.Add(Char.ToLower(newText[0]));

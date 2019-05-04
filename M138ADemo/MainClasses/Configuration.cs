@@ -18,11 +18,11 @@ namespace M138ADemo
         /// <summary>
         /// The decrypt flag.
         /// </summary>
-        private static bool decrypt;
+        private static bool decrypt = false;
         /// <summary>
         /// The encrypt flag.
         /// </summary>
-        private static bool encrypt;
+        private static bool encrypt = true;
         /// <summary>
         /// The manual flag.
         /// </summary>

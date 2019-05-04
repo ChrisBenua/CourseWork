@@ -400,11 +400,16 @@ namespace M138ADemo
         public object ConvertBack(object value, Type targetType,
             object parameter, CultureInfo culture)
         {
-            if (((string) value).Length == 0)
+            if (((string) value).Length < beginning.Length)
             {
                 return null;
             }
-            return int.Parse((string)value);
+            var integer = ((string)value).Substring(beginning.Length);
+            if (int.TryParse(integer, out int parsedValue))
+            {
+                return parsedValue;
+            }
+            return null;
         }
     }
 
@@ -556,66 +561,7 @@ namespace M138ADemo
             object parameter, CultureInfo culture)
         {
             // Do the conversion from visibility to bool
-            return 1;
-        }
-    }
-
-    /// <summary>
-    /// Length to color converter.
-    /// </summary>
-    public class LengthToColorConverter : IValueConverter
-    {
-        /// <summary>
-        /// The default color.
-        /// </summary>
-        Brush defaultColor;
-        Brush disabledColor;
-        public LengthToColorConverter(Brush defaul, Brush disabled)
-        {
-            defaultColor = defaul;
-            disabledColor = disabled;
-        }
-
-        /// <summary>
-        /// Convert the specified value, targetType, parameter and culture.
-        /// </summary>
-        /// <returns>The convert.</returns>
-        /// <param name="value">Value.</param>
-        /// <param name="targetType">Target type.</param>
-        /// <param name="parameter">Parameter.</param>
-        /// <param name="culture">Culture.</param>
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return (int)value > 0;
-            //return defaultColor;
-        }
-
-        public object ConvertBack(object value, Type targetType,
-            object parameter, CultureInfo culture)
-        {
-            // Do the conversion from visibility to bool
-            return 1;
-        }
-    }
-
-    public class CharToStringConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType,
-            object parameter, CultureInfo culture)
-        {
-            // Do the conversion from bool to visibility
-            return ((Char)value).ToString();
-        }
-
-        public object ConvertBack(object value, Type targetType,
-            object parameter, CultureInfo culture)
-        {
-            // Do the conversion from visibility to bool
-            if (((String)value).Length == 0)
-            {
-                return "";
-            }
-            return new string((char)value, 1);
+            return (value as Brush) == defaultColor;
         }
     }
 }

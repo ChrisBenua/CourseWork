@@ -107,7 +107,6 @@ namespace M138ADemo
             Binding openRecentFilesMenuItemsBinding = new Binding
             {
                 Source = viewModel.MenuItems,
-                BindsDirectlyToSource = true,
                 NotifyOnSourceUpdated = true,
                 UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
             };
@@ -115,6 +114,18 @@ namespace M138ADemo
             mOpenRecentKeysMenuItem.SetBinding(MenuItem.ItemsSourceProperty, openRecentFilesMenuItemsBinding);
 
             viewModel.NotifyToCloseEvent += ViewModel_NotifyToCloseEvent;
+            /*viewModel.PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName != "MenuItems")
+                {
+                    return;
+                }
+                mOpenRecentKeysMenuItem.SetBinding(MenuItem.ItemsSourceProperty, new Binding()
+                {
+                    Source = viewModel.MenuItems,
+
+                })
+            };*/
         }
 
         /// <summary>

@@ -41,7 +41,7 @@ namespace M138ADemo.ViewModels
         /// <summary>
         /// The title.
         /// </summary>
-        string _title;
+        string _title = "Untitled";
 
         /// <summary>
         /// The should force close.
@@ -124,6 +124,35 @@ namespace M138ADemo.ViewModels
             {
                 _keys = value;
                 OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// saving currently opened document
+        /// </summary>
+        private RelayCommand _saveCommand;
+
+        public RelayCommand SaveCommand
+        {
+            get
+            {
+                return _saveCommand ?? (_saveCommand = new RelayCommand(obj =>
+                {
+                    var fileName = this.Title;
+                    if (fileName == "Untitled")
+                    {
+                        dialogService.ShowMessage("Вы еще не сохранили состояние крипто-устройства в файл, используйте пункт Save As", "Ошибка");
+                    }
+                    else
+                    {
+                        var savedState = IOHelper.SaveDeviceState(fileName, new List<KeyModel>(Keys));
+                        if (savedState != null)
+                        {
+                            LastState.SafeInit(savedState.keys);
+                            dialogService.ShowMessage("Изменения сохранены успешно", "Успех");
+                        }
+                    }
+                }));
             }
         }
 

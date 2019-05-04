@@ -1,0 +1,331 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="M138ADemo.AddKeys" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="3" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>AddKeys.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="M138ADemo.AddUsersKey" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="6.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AddUsersKey.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="M138ADemo.App" Collapsed="true">
+    <Position X="8.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>App.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="M138ADemo.DecryptAddKeys" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="4.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAEBAAAAARAAIQAAAAAAIAAAAAAAAAAAQ=</HashCode>
+      <FileName>DecryptAddKeys.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="M138ADemo.DocsWindow" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="11.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DocsWindow.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="M138ADemo.DragAndDrop" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="4.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACgJAQSACAAIIAAAAACQMAAAkoAAJABgwwwAEIABACA=</HashCode>
+      <FileName>DragAndDrop.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="M138ADemo.KeysForPair" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="11.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAIQAAAAAAAAAAAAAAAAAAAAAABAAAAA=</HashCode>
+      <FileName>KeysForPair.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="M138ADemo.Configuration" Collapsed="true">
+    <Position X="13.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ARAAAAEAQAAAAMCQAAAQEAwAAAAIAABAAAAAIAAAACA=</HashCode>
+      <FileName>MainClasses\Configuration.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="M138ADemo.Generator" Collapsed="true">
+    <Position X="8.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIAAAAAAAAAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>MainClasses\Generator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="M138ADemo.IOHelper" Collapsed="true">
+    <Position X="3" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAAAAAAAAAQAIAAAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>MainClasses\Helper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="M138ADemo.Helper" Collapsed="true">
+    <Position X="10" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAACAAAAAAAAIIAEAGIAIAAAAAAAAAAAAAAgIA=</HashCode>
+      <FileName>MainClasses\Helper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="M138ADemo.InverseBoolConverter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="13.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MainClasses\Helper.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="M138ADemo.IntToStringConverter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="11.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAAAAAAAAIAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MainClasses\Helper.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="M138ADemo.WarningIntToStringConverter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="11.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MainClasses\Helper.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="M138ADemo.WarningIntToBoolConverter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="10" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MainClasses\Helper.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="M138ADemo.IsEnabledToColorConverter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="4.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAgAAAAAAABAAAAIAAA=</HashCode>
+      <FileName>MainClasses\Helper.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="M138ADemo.CharToStringConverter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="11.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MainClasses\Helper.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="M138ADemo.KeyModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="8.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAICAAAAAIwAQgCAAAAAgAAQAABAAAIAAABIACA=</HashCode>
+      <FileName>MainClasses\Key.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="M138ADemo.DeviceState" Collapsed="true">
+    <Position X="10" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAIgAA=</HashCode>
+      <FileName>MainClasses\Key.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="M138ADemo.KeyForPersistance" Collapsed="true">
+    <Position X="6.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAICAAACAAAAAAQAABAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MainClasses\Key.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="M138ADemo.KeysContainer" Collapsed="true">
+    <Position X="10" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MainClasses\Key.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="M138ADemo.MainSettings" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="3" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAIAABAAAQAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MainSettings.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="M138ADemo.RandomKeysWindow" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="8.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAA=</HashCode>
+      <FileName>RandomKeysWindow.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="M138ADemo.ShowKeys" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="6.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ShowKeys.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="M138ADemo.TodayKeysWindow" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="8.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAA=</HashCode>
+      <FileName>TodayKeysWindow.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="M138ADemo.MainSettingsViewModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="6.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>oAEAAAABBBIAAAAAIkAgAFBA0AAAQDIQAQhAAgAAAAA=</HashCode>
+      <FileName>ViewModels\MainSettingsViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="M138ADemo.MainClasses.DataGridExtensions" Collapsed="true">
+    <Position X="3" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>RAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>MainClasses\Extensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="M138ADemo.MainClasses.RecentFiles" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="10" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAYAgAEGAAEJAYAAiAAAAIAAgAAAAAAAAAAAAIEEAAE=</HashCode>
+      <FileName>MainClasses\RecentFiles.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="M138ADemo.MainClasses.RelayCommand" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="11.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAQAAEAEAABAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MainClasses\RelayCommand.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="M138ADemo.MainClasses.ShowAndAddKeysInteractor" Collapsed="true">
+    <Position X="4.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAEAAAAABAAAAQEAACAAAAEAAIAQAEAAAAAAA=</HashCode>
+      <FileName>MainClasses\ShowAndAddKeysInteractor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AsyncUtils" Collapsed="true">
+    <Position X="10" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MainClasses\Helper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="M138ADemo.Models.DocsWindowModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="13.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIAACAAACgAAAAIAAAABAAAAAAAA=</HashCode>
+      <FileName>Models\DocsWindowModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="M138ADemo.Models.MainSettingsModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="4.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAgAAAAKAAAAAIAAAAAAAgAAIAAAAEAAAIAAAAAA=</HashCode>
+      <FileName>Models\MainSettingsModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="M138ADemo.Properties.Resources" Collapsed="true">
+    <Position X="13.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAABEAAAAQAAAAAAAAAAAAAAAIA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="M138ADemo.Properties.Settings" Collapsed="true">
+    <Position X="3" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAIAAAAAABAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="M138ADemo.Services.DefaultDialogService" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="8.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAAAAAAAAAAAAAAAAEAAAAAAAABAAAQAAAA=</HashCode>
+      <FileName>Services\DefaultDialogService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="M138ADemo.ViewModels.AddKeysViewModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="4.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAwAACBQAAAABAAKAAECEAAmAAAAAIgRAAAEAAAAAA=</HashCode>
+      <FileName>ViewModels\AddKeysViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="M138ADemo.ViewModels.AddUsersKeysViewModel" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAACAABAAgCgAwAIAAIgAAUgSAAAAAAAAAAAAACAAQ=</HashCode>
+      <FileName>ViewModels\AddUsersKeysViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="M138ADemo.ViewModels.DecryptAddKeysViewModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="6.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAABAADAAAAAKEAggAAAwACAQEAACAAAEAAABAA=</HashCode>
+      <FileName>ViewModels\DecryptAddKeysViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="M138ADemo.ViewModels.DocsWIndowViewModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="3" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIAAQAAAIAAAAAAAoAAAAAAAAAAAAQAAAAA=</HashCode>
+      <FileName>ViewModels\DocsWIndowViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="M138ADemo.ViewModels.DragAndDropViewModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="6.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAARAwAJBMAAKEAAKgAQAAAAwECDAAJAgAQCEAAAAAA=</HashCode>
+      <FileName>ViewModels\DragAndDropViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="M138ADemo.ViewModels.ShowKeysViewModel" Collapsed="true">
+    <Position X="0.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAQACAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\ShowKeysViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="M138ADemo.Services.IDialogService" Collapsed="true">
+    <Position X="3" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAAAAAAAAAAAAAAAAEAAAAAAAABAAAQAAAA=</HashCode>
+      <FileName>Services\IDialogService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

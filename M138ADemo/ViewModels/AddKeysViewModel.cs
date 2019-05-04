@@ -74,28 +74,36 @@ namespace M138ADemo.ViewModels
         /// <summary>
         /// The menu items.
         /// </summary>
-        private List<MenuItem> _menuItems;
+        private ObservableCollection<MenuItem> _menuItems;
 
         /// <summary>
         /// Gets the menu items.
         /// </summary>
         /// <value>The menu items.</value>
-        public List<MenuItem> MenuItems
+        public ObservableCollection<MenuItem> MenuItems
         {
             get
             {
                 return _menuItems;
             }
 
-            private set
+            set
             {
                 _menuItems = value;
-                for (int i = 0; i < _menuItems.Count; ++i)
-                {
-                    _menuItems[i].Command = this.OpenRecentFileCommand;
-                    _menuItems[i].CommandParameter = i;
-                }
+                SetCommands();
                 OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Sets Command and its parametr when collection changes
+        /// </summary>
+        private void SetCommands()
+        {
+            for (int i = 0; i < _menuItems.Count; ++i)
+            {
+                _menuItems[i].Command = this.OpenRecentFileCommand;
+                _menuItems[i].CommandParameter = i;
             }
         }
 
@@ -117,6 +125,7 @@ namespace M138ADemo.ViewModels
                     int callerIndex = (int)obj;
 
                     string filePath = RecentFiles.KeysCollectionShared.RecentFileNames[callerIndex];
+                    Console.WriteLine("Opening File " + filePath);
                     this.Keys.Clear();
                     foreach (var el in IOHelper.LoadKeysContainer(filePath).keys)
                     {
@@ -240,6 +249,7 @@ namespace M138ADemo.ViewModels
             {
                 this.Keys = Configuration.KeyList;
             }
+            Configuration.DeviceState = null;
         }
 
         /// <summary>
@@ -260,7 +270,14 @@ namespace M138ADemo.ViewModels
         {
             if (e.PropertyName == RecentFiles.shortenedNamesMenuItemsPropertyName)
             {
-                MenuItems = RecentFiles.KeysCollectionShared.ShortenedNamesMenuItems;
+                this.MenuItems.Clear();
+                foreach (var el in RecentFiles.KeysCollectionShared.ShortenedNamesMenuItems)
+                {
+                    MenuItems.Add(el);
+                }
+                //MenuItems.AddRange(RecentFiles.KeysCollectionShared.ShortenedNamesMenuItems);
+                OnPropertyChanged(nameof(MenuItems));
+                //MenuItems = RecentFiles.KeysCollectionShared.ShortenedNamesMenuItems;
             }
         }
 
@@ -272,7 +289,8 @@ namespace M138ADemo.ViewModels
         {
             this.dialogService = dialogService;
             RecentFiles.KeysCollectionShared.PropertyChanged += KeysCollectionShared_PropertyChanged;
-            MenuItems = RecentFiles.KeysCollectionShared.ShortenedNamesMenuItems;
+            MenuItems = new ObservableCollection<MenuItem>(RecentFiles.KeysCollectionShared.ShortenedNamesMenuItems);
+            MenuItems.CollectionChanged += (s, e) => { SetCommands(); OnPropertyChanged(nameof(MenuItems)); };
         }
 
         /// <summary>

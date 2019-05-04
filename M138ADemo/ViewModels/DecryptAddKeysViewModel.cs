@@ -22,6 +22,61 @@ namespace M138ADemo.ViewModels
         /// </summary>
         private IDialogService dialogService;
 
+
+        private ObservableCollection<System.Windows.Controls.MenuItem> _menuItems;
+
+        public ObservableCollection<System.Windows.Controls.MenuItem> MenuItems
+        {
+            get => _menuItems;
+
+            private set
+            {
+                _menuItems = value;
+                SetCommands();
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Sets Command and its parametr when collection changes
+        /// </summary>
+        private void SetCommands()
+        {
+            for (int i = 0; i < _menuItems.Count; ++i)
+            {
+                _menuItems[i].Command = this.OpenRecentFileCommand;
+                _menuItems[i].CommandParameter = i;
+            }
+        }
+
+        /// <summary>
+        /// The open recent file command.
+        /// </summary>
+        private RelayCommand _openRecentFileCommand;
+
+        /// <summary>
+        /// Gets the open recent file command.
+        /// </summary>
+        /// <value>The open recent file command.</value>
+        public RelayCommand OpenRecentFileCommand
+        {
+            get
+            {
+                return _openRecentFileCommand ?? (_openRecentFileCommand = new RelayCommand(obj =>
+                {
+                    int callerIndex = (int)obj;
+
+                    string filePath = RecentFiles.KeysCollectionShared.RecentFileNames[callerIndex];
+                    Console.WriteLine("Opening File " + filePath);
+                    this.Keys.Clear();
+                    foreach (var el in IOHelper.LoadKeysContainer(filePath).keys)
+                    {
+                        this.Keys.Add((el.Id, el.Key));
+                    }
+                }));
+            }
+        }
+
         /// <summary>
         /// The keys.
         /// </summary>
@@ -219,9 +274,26 @@ namespace M138ADemo.ViewModels
         public DecryptAddKeysViewModel()
         {
             this.Keys = Configuration.KeyList;
+            
             this.NextButtonColor = Brushes.LightGray;
             dialogService = new DefaultDialogService();
             ColumnNumberText = "";
+            this.MenuItems = new ObservableCollection<System.Windows.Controls.MenuItem>(RecentFiles.KeysCollectionShared.ShortenedNamesMenuItems);
+            this.MenuItems.CollectionChanged += (s, e) => { SetCommands(); OnPropertyChanged(nameof(MenuItems)); };
+            RecentFiles.KeysCollectionShared.PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName == RecentFiles.shortenedNamesMenuItemsPropertyName)
+                {
+                    this.MenuItems.Clear();
+                    foreach (var el in RecentFiles.KeysCollectionShared.ShortenedNamesMenuItems)
+                    {
+                        MenuItems.Add(el);
+                    }
+                    //MenuItems.AddRange(RecentFiles.KeysCollectionShared.ShortenedNamesMenuItems);
+                    OnPropertyChanged(nameof(MenuItems));
+                    //MenuItems = RecentFiles.KeysCollectionShared.ShortenedNamesMenuItems;
+                }
+            };
         }
 
         /// <summary>
