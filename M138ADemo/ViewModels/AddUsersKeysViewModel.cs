@@ -140,7 +140,7 @@ namespace M138ADemo.ViewModels
                     string text = tuple.Item1;
                     var e = tuple.Item2;
                     int temp = 0;
-                    if (Helper.reg.IsMatch(text) && int.TryParse(text, out temp) && temp <= Helper.MaxKeys)
+                    if (Helper.reg.IsMatch(text) && int.TryParse(text, out temp) && temp <= 200)
                     {
                         e.Handled = false;
                     }
@@ -191,10 +191,13 @@ namespace M138ADemo.ViewModels
         /// <returns><c>true</c>, if sequence was ised, <c>false</c> otherwise.</returns>
         /// <param name="row">Row.</param>
         /// <param name="newText">New text.</param>
-        public bool IsSequence(int row, string newText)
+        public bool IsSequence(int row, string newText, bool shouldAddNewText = false)
         {
             HashSet<char> set = new HashSet<char>();
-            set.Add(Char.ToLower(newText[0]));
+            if (shouldAddNewText)
+            {
+                set.Add(Char.ToLower(newText[0]));
+            }
             for (int i = 0; i < UserKeys[row].KeyArr.Length; ++i)
             {
                 if (UserKeys[row].KeyArr[i].Length > 0)
@@ -206,6 +209,7 @@ namespace M138ADemo.ViewModels
                         {
                             return false;
                         }
+                        set.Add(str);
                     }
                 }
             }

@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 namespace M138ADemo
 {
 
+    /// <summary>
+    /// Class-extension for shuffling array
+    /// </summary>
     public static class RandomShuffler
     {
         public static void Shuffle<T>(this IList<T> list, Random rnd)
@@ -21,9 +24,23 @@ namespace M138ADemo
             }
         }
     }
+
+    /// <summary>
+    /// Class for generating random Keys
+    /// </summary>
     public static class Generator
     {
+        ///<summary>
+        /// Max number of keys allowed to generate
+        ///</summary>
         private readonly static int maxNumberOfKeys = 100;
+
+        ///<summary>
+        /// Generates random keys
+        ///</summary>
+        ///<param name="numberOfKeys">amount of keys to generate</param>
+        ///<param name="seed"> seed for random </param>
+        ///<returns> generated keys </returns>
         public static ObservableCollection<(int, string)> GenerateRandomKeys(int numberOfKeys = 20, int seed = -1)
         {
             Random rnd;

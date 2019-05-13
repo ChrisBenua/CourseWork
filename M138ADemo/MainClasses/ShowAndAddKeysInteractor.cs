@@ -161,6 +161,7 @@ namespace M138ADemo.MainClasses
             factory.SetValue(TextBox.IsEnabledProperty, true);
             factory.SetValue(TextBox.BorderBrushProperty, Brushes.Transparent);
             factory.SetValue(TextBox.BorderThicknessProperty, new Thickness(0));
+            //factory.SetValue(TextBox.pa)
             if (index == 1)
             {
                 factory.AddHandler(TextBox.PreviewTextInputEvent, new TextCompositionEventHandler(KeyNumberOnPreviewTextInput));
@@ -248,19 +249,40 @@ namespace M138ADemo.MainClasses
         /// <param name="e">E.</param>
         public void TextBoxOnTextChanged(object sender, TextChangedEventArgs e)
         {
-            TextBox textBox = (TextBox)sender;
-            //textBox.Text = Helper.Strip(textBox.Text).ToUpper().Substring(0, Math.Min(1, textBox.Text.Length));
-            textBox.Text = textBox.Text.Trim().ToUpper().Substring(0, Math.Min(1, textBox.Text.Length));
 
-            var sourceCell = DataGridExtensions.FindVisualParent<DataGridCell>(textBox);
-            var gridRow = DataGridExtensions.FindVisualParent<DataGridRow>(sourceCell);
-            int row = dataGrid.ItemContainerGenerator.IndexFromContainer(gridRow);
-            int col = sourceCell.Column.DisplayIndex + 1;
-            if (col != dataGrid.Columns.Count) {
-                var cell = dataGrid.GetCell(row, col);
-                (DataGridExtensions.GetVisualChild<TextBox>(cell) as TextBox).Focus();
-                
-                
+            DependencyObject dep = (DependencyObject)e.OriginalSource;
+
+            while ((dep != null) && !(dep is DataGridRow))
+            {
+                dep = VisualTreeHelper.GetParent(dep);
+            }
+
+            if (dep is DataGridRow)
+            {
+                TextBox textBox = (TextBox)sender;
+
+                {
+                    DataGridRow roww = dep as DataGridRow;
+                    int ind = FindRowIndex(roww);
+
+                    //textBox.Text = Helper.Strip(textBox.Text).ToUpper().Substring(0, Math.Min(1, textBox.Text.Length));
+                    textBox.Text = textBox.Text.Trim().ToUpper().Substring(0, Math.Min(1, textBox.Text.Length));
+                    if (!viewModel.IsSequence(ind, textBox.Text))
+                    {
+                        textBox.Text = "";
+                        return;
+                    }
+                }
+                var sourceCell = DataGridExtensions.FindVisualParent<DataGridCell>(textBox);
+                var gridRow = DataGridExtensions.FindVisualParent<DataGridRow>(sourceCell);
+                int row = dataGrid.ItemContainerGenerator.IndexFromContainer(gridRow);
+                int col = sourceCell.Column.DisplayIndex + 1;
+                if (col != dataGrid.Columns.Count)
+                {
+                    var cell = dataGrid.GetCell(row, col);
+                    (DataGridExtensions.GetVisualChild<TextBox>(cell) as TextBox).Focus();
+
+                }
             }
 
         }
@@ -285,7 +307,7 @@ namespace M138ADemo.MainClasses
                 int ind = FindRowIndex(row);
                 TextBox textBox = (TextBox)sender;
 
-                if (Helper.isAlphaString(e.Text) && textBox.Text.Length + e.Text.Length == 1 && viewModel.IsSequence(ind, e.Text))
+                if (Helper.isAlphaString(e.Text) && textBox.Text.Length + e.Text.Length == 1 && viewModel.IsSequence(ind, e.Text, true))
                 {
                     e.Handled = false;
                 }
