@@ -21,6 +21,11 @@ namespace M138ADemo.MainClasses
     public class ShowAndAddKeysInteractor
     {
         /// <summary>
+        /// current moving rows
+        /// </summary>
+        private int currRowIndex = -1;//Helper for drag and drop
+
+        /// <summary>
         /// The default row brush.
         /// </summary>
         public static ImageBrush DefaultRowBrush = new ImageBrush(Helper.PapSource);
@@ -45,6 +50,7 @@ namespace M138ADemo.MainClasses
             this.dataGrid = grid;
             dataGrid.EnableColumnVirtualization = false;
             dataGrid.EnableRowVirtualization = false;
+            
             this.viewModel = model;
 
             dataGrid.CellStyle = new Style()
@@ -87,6 +93,10 @@ namespace M138ADemo.MainClasses
             dataGrid.ItemsSource = viewModel.UserKeys;
             dataGrid.IsReadOnly = true;
 
+            dataGrid.AllowDrop = true;
+            dataGrid.Drop += DataGrid_Drop;
+            dataGrid.PreviewMouseLeftButtonDown += DataGrid_PreviewMouseLeftButtonDown;
+
             for (int i = 0; i < 26 + 2; ++i)
             {
                 if (i < 1)
@@ -112,6 +122,91 @@ namespace M138ADemo.MainClasses
                 }
             }
         }
+
+        public delegate Point GetPosition(IInputElement element);
+
+        private void DataGrid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            //throw new NotImplementedException();
+            Console.WriteLine(e.GetPosition(dataGrid));
+            Console.WriteLine(dataGrid.ActualHeight);
+            Console.WriteLine(dataGrid.ActualWidth);
+            if (e.GetPosition(dataGrid).Y > dataGrid.ActualHeight - 22 ) return;
+            if (e.GetPosition(dataGrid).X > dataGrid.ActualWidth - 22) return;
+            if (e.GetPosition(dataGrid).X < 107) return;
+            
+            if (VisualTreeHelper.GetParent(e.OriginalSource as DependencyObject).GetType() != typeof(DataGridCell)) { return; }
+
+            currRowIndex = GetCurrentRowIndex(e.GetPosition);
+            dataGrid.SelectedIndex = currRowIndex;
+            if (currRowIndex < 0)
+            {
+                return;
+            }
+            var selectedEmp = dataGrid.Items[currRowIndex] as KeyForPersistance;
+            if (selectedEmp == null)
+            {
+                return;
+            }
+            DragDropEffects dragDropEffects = DragDropEffects.Move;
+            DragDrop.DoDragDrop(dataGrid, selectedEmp, dragDropEffects);
+
+        }
+
+        private bool GetMouseTargetRow(Visual theTarget, GetPosition position)
+        {
+            if (theTarget == null)
+            {
+                return false;
+            }
+            Rect rect = VisualTreeHelper.GetDescendantBounds(theTarget);
+            Point point = position((IInputElement)theTarget);
+            return rect.Contains(point);
+        }
+
+        int GetCurrentRowIndex(GetPosition pos)
+        {
+            int curIndex = -1;
+            for (int i = 0; i < dataGrid.Items.Count; i++)
+            {
+                DataGridRow itm = this.dataGrid.GetRow(i);
+                if (GetMouseTargetRow(itm, pos))
+                {
+                    curIndex = i;
+                    break;
+                }
+            }
+            Console.WriteLine("GetCurrentRowIndex : " + curIndex);
+            return curIndex;
+        }
+
+        private void DataGrid_Drop(object sender, DragEventArgs e)
+        {
+            int index;
+            if (currRowIndex < 0)
+            {
+                return;
+            }
+
+            index = GetCurrentRowIndex(e.GetPosition);
+
+            if (index < 0)
+                return;
+            if (index == currRowIndex)
+                return;
+            if (index == dataGrid.Items.Count - 1)
+            {
+                MessageBox.Show("Нельзя вставить сюда этот ряд");
+                return;
+            }
+
+            var changedProduct = viewModel.UserKeys[currRowIndex];
+
+            viewModel.UserKeys.RemoveAt(currRowIndex);
+            viewModel.UserKeys.Insert(index, changedProduct);
+        }
+
+
 
         /// <summary>
         /// Gets the data template.
@@ -157,6 +252,10 @@ namespace M138ADemo.MainClasses
             DataTemplate template = new DataTemplate();
             FrameworkElementFactory factory = new FrameworkElementFactory(typeof(TextBox));
             factory.SetValue(TextBox.FontSizeProperty, 15.0);
+            if (index > 1)
+            {
+                factory.SetValue(TextBox.MarginProperty, new Thickness(4, 0, 4, 0));
+            }
             factory.SetValue(TextBox.BackgroundProperty, Brushes.Transparent);
             factory.SetValue(TextBox.IsEnabledProperty, true);
             factory.SetValue(TextBox.BorderBrushProperty, Brushes.Transparent);
@@ -334,5 +433,8 @@ namespace M138ADemo.MainClasses
 
             return index;
         }
+        
+
     }
+
 }

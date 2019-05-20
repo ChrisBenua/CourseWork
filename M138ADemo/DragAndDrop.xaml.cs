@@ -258,16 +258,27 @@ namespace M138ADemo
                     };
                     if (Configuration.IsCompactWorkSpace)
                     {
-                        column.Header = (i - 2).ToString();
-                        
+                        column.Header = new DataGridColumnHeader();
+                        (column.Header as DataGridColumnHeader).Content = (i - 2).ToString();
+                        if (Configuration.Message != null && Configuration.Message.Any())
+                        {
+                            (column.Header as DataGridColumnHeader).ToolTip = Configuration.Message;
+                        }
                     }
                     else
                     {
                         if (i - 2 - 26 >= 0)
                         {
-                            column.Header = (i - 2 - 26).ToString();
+                            column.Header = new DataGridColumnHeader();
+                            (column.Header as DataGridColumnHeader).Content = (i - 2 - 26).ToString();
+                            if (Configuration.Message != null && Configuration.Message.Any())
+                            {
+                                (column.Header as DataGridColumnHeader).ToolTip = Configuration.Message;
+                            }
                         }
+                   
                     }
+                    
                     myGrid.Columns.Add(column);
 
                 }
@@ -641,7 +652,7 @@ namespace M138ADemo
                 return;
             if (index == myGrid.Items.Count - 1)
             {
-                MessageBox.Show("This row-index cannot be drop");
+                MessageBox.Show("Нельзя вставить сюда этот ряд");
                 return;
             }
             
@@ -696,7 +707,6 @@ namespace M138ADemo
             if (DragDrop.DoDragDrop(myGrid, selectedEmp, dragDropEffects)
                 != DragDropEffects.None)
             {
-                myGrid.SelectedItem = selectedEmp;
             }
         }
 
